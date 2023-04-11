@@ -1,0 +1,70 @@
+.component {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+  flex-direction: column;
+
+  >.header {
+    margin-bottom: 20px;
+
+    :global {
+      .el-input-group__append {
+        background-color: #409eff;
+        color: #fff;
+        border-color: #409eff;
+      }
+
+      .el-input-group .el-input__inner {
+        border-right-color: #409eff;
+      }
+    }
+  }
+
+  >.table {
+    flex: 1;
+    overflow: hidden;
+
+    &.theme-gray {
+      :global {
+
+        .el-table tr td:first-child .cell,
+        .el-table tr th:first-child .cell {
+          padding-left: 20px;
+        }
+
+        .el-table td,
+        .el-table th.is-leaf {
+          border-bottom: unset;
+        }
+
+        .el-table td {
+          padding: 6px 0;
+        }
+
+        .el-table__expanded-cell {
+          >.el-form {
+            margin-left: 60px;
+
+            .el-form-item {
+              margin-bottom: 4px;
+            }
+
+            .el-form-item__label {
+              color: #99a9bf;
+            }
+          }
+        }
+      }
+
+      th {
+        background: #f5f5f5;
+      }
+    }
+  }
+
+
+  >.footer {
+    text-align: right;
+    margin-top: 20px;
+  }
+}

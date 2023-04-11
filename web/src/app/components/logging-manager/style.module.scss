@@ -1,0 +1,32 @@
+.manager {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+  box-sizing: border-box;
+
+
+  >.table {
+    flex: 1;
+    overflow: hidden;
+
+    :global {
+      .cell {
+        white-space: nowrap;
+      }
+    }
+  }
+
+  .actions {
+    >.remove {
+      color: #f56c6c;
+    }
+
+    :global {
+      .el-button {
+        padding: 0;
+      }
+    }
+  }
+
+}

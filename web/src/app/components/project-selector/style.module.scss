@@ -1,0 +1,33 @@
+.toolbar {
+  display: flex;
+  background: #323232;
+  padding-left: 10px;
+  color: #fff;
+  user-select: none;
+
+  >.textBt {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+
+    svg {
+      width: 20px;
+      height: 20px;
+      fill: #fff;
+      margin-right: 4px;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &.remove {
+      color: #F56C6C;
+
+      svg {
+        fill: #F56C6C;
+      }
+    }
+  }
+}

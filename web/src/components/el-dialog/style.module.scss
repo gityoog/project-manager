@@ -1,0 +1,70 @@
+.loadMsg {
+  display: inline-block;
+  color: red;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  width: calc(100% - 200px);
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+.editor :global(.el-dialog__header) {
+  padding: 10px 20px 10px;
+  background-color: #4A8CCE;
+}
+
+.editor :global(.el-dialog__title) {
+  line-height: 24px;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.editor :global(.el-dialog__headerbtn .el-dialog__close) {
+  color: #ffffff;
+}
+
+.editor :global(.el-dialog__headerbtn .el-dialog__close:hover) {
+  color: #d6d6d6;
+}
+
+.editor :global(.el-dialog__headerbtn) {
+  font-size: 22px;
+  top: 10px;
+}
+
+.editor :global(.el-dialog__body) {
+  padding: 30px 20px 0 20px;
+}
+
+.editor :global(.el-dialog) {
+  border-radius: 5px;
+}
+
+.editor :global(.el-dialog__header) {
+  border-radius: 5px 5px 0 0;
+  text-align: left;
+}
+
+.editor :global(.el-dialog__headerbtn) {
+  text-align: right;
+}
+
+.editor :global(.el-form fieldset) {
+  border-radius: 4px;
+  border-color: #D8E8F5;
+  border-style: solid;
+  border-width: 1px;
+  margin-bottom: 20px;
+  padding-bottom: 0;
+  padding-top: 12px;
+  background: #fcfeff;
+}
+
+.editor :global(.el-form legend) {
+  padding: 0 6px;
+  color: #2872B5;
+  background: #fcfeff;
+  border-radius: 8px;
+}
