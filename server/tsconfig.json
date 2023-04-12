@@ -1,12 +1,25 @@
 {
   "compilerOptions": {
-    "target": "es2016",
-    "module": "commonjs",
+    "strict": true,
+    "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true
+    "module": "CommonJS",
+    "downlevelIteration": true,
+    "target": "ES6",
+    "baseUrl": ".",
+    "resolveJsonModule": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "lib": [
+      "esnext"
+    ],
+    "sourceMap": false,
+    "outDir": "dist"
   }
 }
