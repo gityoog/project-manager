@@ -123,8 +123,7 @@ export default class NormalConfig implements iBaseConfigComponent {
       },
       output: {
         // publicPath: './',
-        filename: 'static/js/[name].js',
-        globalObject: 'window'
+        filename: 'static/js/[name].js'
       },
       experiments: {
         lazyCompilation: {
@@ -156,14 +155,13 @@ export default class NormalConfig implements iBaseConfigComponent {
       output: {
         clean: true,
         publicPath: './',
-        filename: 'static/js/[name].[contenthash].js',
-        globalObject: 'this'
+        filename: 'static/js/[name].[contenthash].js'
       },
       module: {
         rules: [
           {
             test: /\.(m?js)$/,
-            exclude: path => /node_modules/.test(path) && !/node_modules[\\/](xterm|xterm\-addon\-fit|gojs|bpmn-js|qrcode|@bpmn-io|debug|color|wrequest|crypto-js|xlsx)/.test(path),
+            exclude: path => /node_modules/.test(path) && !/node_modules[\\/](socket\.io|engine\.io|axios|xterm|xterm\-addon\-fit|gojs|bpmn-js|qrcode|@bpmn-io|debug|color|wrequest|crypto-js|xlsx)/.test(path),
             enforce: 'post',
             use: (data: {
               resource: string
@@ -182,10 +180,10 @@ export default class NormalConfig implements iBaseConfigComponent {
                         dynamicImport: true
                       },
                       target: "es5",
-                      loose: true
+                      loose: true,
                     },
                     module: {
-                      type: /\.mjs$/.test(data.resource) ? 'es6' : 'commonjs'
+                      type: 'es6'
                     }
                   }
                 }
@@ -194,21 +192,21 @@ export default class NormalConfig implements iBaseConfigComponent {
         ]
       },
       optimization: {
-        // splitChunks: {
-        //   chunks: chunk => chunk.name !== 'polyfill',
-        //   minSize: 0,
-        //   minChunks: 1,
-        //   cacheGroups: {
-        //     vendors: {
-        //       test: /node_modules/,
-        //       name: 'vendors'
-        //     }
-        //   }
-        // },
+        splitChunks: {
+          chunks: chunk => chunk.name !== 'polyfill',
+          minSize: 0,
+          minChunks: 1,
+          cacheGroups: {
+            vendors: {
+              test: /node_modules/,
+              name: 'vendors'
+            }
+          }
+        },
         minimize: !this.options.hasAnalyzer(),
         minimizer: [
           new EsbuildPlugin({
-            target: 'es6',
+            target: 'es5',
             include: /static[\\/]js/
           }),
         ]
