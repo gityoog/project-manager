@@ -1,5 +1,3 @@
-# project-manager-webpack-plugin
-
 ## webpack plugin for project-manager
 
 send webpack dev url and outpath to project-manager
