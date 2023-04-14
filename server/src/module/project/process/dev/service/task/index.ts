@@ -63,13 +63,13 @@ export default class DevTaskService {
     }
   }
 
-  run() {
+  run(shell: string) {
     if (!this.project.dev) {
       return false
     }
     return this.pty.run({
-      shell: 'cmd.exe',
-      command: `/C ` + this.project.dev,
+      shell,
+      command: this.project.dev,
       cwd: this.project.context,
     })
   }

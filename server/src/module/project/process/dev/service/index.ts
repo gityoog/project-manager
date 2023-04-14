@@ -1,3 +1,4 @@
+import ConfigService from "@/module/config/service"
 import ProjectBus from "@/module/project/bus"
 import ProjectService from "@/module/project/service"
 import ProjectEntity from "@/module/project/service/entity"
@@ -14,15 +15,17 @@ export default class ProjectProcessDevService {
     private bus: ProjectProcessDevBus,
     private project: ProjectService,
     private projectBus: ProjectBus,
-    private ipc: NodeIpcService
+    private ipc: NodeIpcService,
+    private config: ConfigService
   ) {
     this.init()
   }
   async run(id: string) {
     const row = await this.project.detail(id)
+    const shell = await this.config.getShell()
     if (row) {
       const task = this.factory(row)
-      return task.run()
+      return task.run(shell)
     }
     return false
   }

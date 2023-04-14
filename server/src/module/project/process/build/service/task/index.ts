@@ -76,13 +76,13 @@ export default class BuildTaskService {
     }
   }
 
-  run() {
+  run(shell: string) {
     if (!this.project.build) {
       return false
     }
     return this.pty.run({
-      shell: 'cmd.exe',
-      command: `/C ` + this.project.build,
+      shell,
+      command: this.project.build,
       cwd: this.project.context,
     })
   }
