@@ -14,4 +14,7 @@ export default {
     url: "/project/output/remove",
   }),
   download: Request.main.url((data: { id: string }) => `/project/output/download?id=${data.id}`),
+  clear: Request.main({
+    url: "/project/output/clear",
+  })
 }

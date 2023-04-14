@@ -18,5 +18,8 @@ export default {
     id: string
   }, boolean>({
     url: "/logging/remove",
+  }),
+  clear: Request.main({
+    url: "/logging/clear",
   })
 }

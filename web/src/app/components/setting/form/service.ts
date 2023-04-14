@@ -1,4 +1,5 @@
 import AppApi from "@/app/api"
+import Confirm from "@/common/comfirm"
 import ElMessage from "@/common/element-ui/message"
 import Status from "@/common/status"
 import { Service, Already } from "ioc-di"
@@ -43,10 +44,32 @@ export default class ISettingForm implements iSettingForm {
   }
 
   clearOutput() {
-    ElMessage.warning('暂未实现')
+    Confirm({
+      title: '清空打包记录',
+      message: '确定要清空所有打包记录和文件吗？',
+      callback: ({ status, close }) => {
+        status.use(
+          AppApi.project.output.clear().success(() => {
+            ElMessage.success('清空成功')
+            close()
+          })
+        )
+      }
+    })
   }
 
   clearLog() {
-    ElMessage.warning('暂未实现')
+    Confirm({
+      title: '清空日志记录',
+      message: '确定要清空所有日志记录吗？',
+      callback: ({ status, close }) => {
+        status.use(
+          AppApi.logging.clear().success(() => {
+            ElMessage.success('清空成功')
+            close()
+          })
+        )
+      }
+    })
   }
 }
