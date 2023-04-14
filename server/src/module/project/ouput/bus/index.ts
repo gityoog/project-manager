@@ -17,4 +17,11 @@ export default class ProjectOutputBus extends EntityEmitter<ProjectOutputEntity>
       })
     })
   }
+  clear() {
+    this.logging.save({
+      action: 'Clear',
+      target: 'Output',
+      description: 'Clear all outputs',
+    })
+  }
 }

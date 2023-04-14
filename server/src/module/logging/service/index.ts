@@ -45,4 +45,12 @@ export default class LoggingService {
       user: this.user.name
     })
   }
+  async clear() {
+    await this.main.clear()
+    this.save({
+      target: 'Logging',
+      action: 'Clear',
+      description: 'Clear all logs'
+    })
+  }
 }

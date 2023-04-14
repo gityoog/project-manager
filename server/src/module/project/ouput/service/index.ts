@@ -53,4 +53,8 @@ export default class ProjectOutputService {
     this.bus.add(row)
     return row
   }
+  async clear() {
+    await this.main.clear()
+    this.bus.clear()
+  }
 }

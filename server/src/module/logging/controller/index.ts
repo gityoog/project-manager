@@ -4,7 +4,7 @@ import LoggingService from "../service"
 @Controller('/logging')
 export default class LoggingController {
   constructor(
-    @Inject(LoggingService) private project: LoggingService
+    @Inject(LoggingService) private service: LoggingService
   ) { }
 
   @All('/query')
@@ -13,6 +13,11 @@ export default class LoggingController {
     size?: number,
     params?: {}
   }) {
-    return this.project.query(data)
+    return this.service.query(data)
+  }
+
+  @All('/clear')
+  clear() {
+    return this.service.clear()
   }
 }

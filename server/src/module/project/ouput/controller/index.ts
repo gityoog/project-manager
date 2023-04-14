@@ -29,4 +29,9 @@ export default class ProjectOutputController {
     response.attachment(file.name + formatDate(file.created_at, 'YYYYMMDDHHmmss') + '.zip')
     response.send(file.content)
   }
+
+  @All('/clear')
+  clear() {
+    return this.service.clear()
+  }
 }
