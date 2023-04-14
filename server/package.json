@@ -1,6 +1,6 @@
 {
   "name": "project-manager-server",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/index.js",
   "bin": "dist/bin/index.js",
@@ -19,7 +19,7 @@
     "type": "git",
     "url": "https://github.com/gityoog/project-manager.git"
   },
-  "homepage": "https://github.com/gityoog/project-manager",
+  "homepage": "https://github.com/gityoog/project-manager/tree/main/server",
   "license": "ISC",
   "dependencies": {
     "@achrinza/node-ipc": "^10.1.7",
