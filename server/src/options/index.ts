@@ -11,15 +11,18 @@ export default class Options {
   }
   port
   db
-  constructor({ port, db }: {
+  web?: string
+  constructor({ port, db, web }: {
     port: number
     db: string
+    web?: string
   }) {
     if (Options._instance) {
       throw new Error("Options already initialized")
     }
     this.port = port
     this.db = db
+    this.web = web
   }
 }
 
