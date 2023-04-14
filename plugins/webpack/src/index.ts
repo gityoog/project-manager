@@ -4,8 +4,9 @@ import ipc from '@achrinza/node-ipc'
 
 export default class ProjectManagerWebpackPlugin {
   private name = 'ProjectManagerNoticePlugin'
-  private server = 'PROJECT_MANAGER_IPC_SERVER'
-  private child = 'PROJECT_MANAGER_IPC_CHILD'
+  private server!: string
+  private serverKey = 'PROJECT_MANAGER_IPC_SERVER'
+  private childKey = 'PROJECT_MANAGER_IPC_CHILD'
   private key?: string
   private logger!: {
     error(...args: any[]): void
@@ -18,9 +19,10 @@ export default class ProjectManagerWebpackPlugin {
     devInfo?: () => { host: string, port: number }
   }) { }
   apply(compiler: Compiler) {
-    this.key = process.env[this.child]
+    this.key = process.env[this.childKey]
     this.logger = compiler.getInfrastructureLogger(this.name)
     if (this.key) {
+      this.server = process.env[this.serverKey] || this.serverKey /** old version */
       ipc.config.id = this.key
       ipc.config.retry = 10 * 1000
       ipc.connectTo(this.server)
@@ -48,7 +50,7 @@ export default class ProjectManagerWebpackPlugin {
         }
       })
     } else {
-      this.logger.warn(`env.${this.child} is not defined`)
+      this.logger.warn(`env.${this.childKey} is not defined`)
     }
   }
 

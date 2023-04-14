@@ -28,3 +28,5 @@ const webpackConfig = {
 ```
 
 ### Changelog
+
+2023-04-14 v1.0.7 support custom server id

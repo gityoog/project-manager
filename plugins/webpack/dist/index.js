@@ -8,13 +8,14 @@ class ProjectManagerWebpackPlugin {
     constructor(options) {
         this.options = options;
         this.name = 'ProjectManagerNoticePlugin';
-        this.server = 'PROJECT_MANAGER_IPC_SERVER';
-        this.child = 'PROJECT_MANAGER_IPC_CHILD';
+        this.serverKey = 'PROJECT_MANAGER_IPC_SERVER';
+        this.childKey = 'PROJECT_MANAGER_IPC_CHILD';
     }
     apply(compiler) {
-        this.key = process.env[this.child];
+        this.key = process.env[this.childKey];
         this.logger = compiler.getInfrastructureLogger(this.name);
         if (this.key) {
+            this.server = process.env[this.serverKey] || this.serverKey; /** old version */
             node_ipc_1.default.config.id = this.key;
             node_ipc_1.default.config.retry = 10 * 1000;
             node_ipc_1.default.connectTo(this.server);
@@ -46,7 +47,7 @@ class ProjectManagerWebpackPlugin {
             });
         }
         else {
-            this.logger.warn(`env.${this.child} is not defined`);
+            this.logger.warn(`env.${this.childKey} is not defined`);
         }
     }
     getClient() {

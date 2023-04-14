@@ -3,7 +3,8 @@ export default class ProjectManagerWebpackPlugin {
     private options;
     private name;
     private server;
-    private child;
+    private serverKey;
+    private childKey;
     private key?;
     private logger;
     constructor(options: {
