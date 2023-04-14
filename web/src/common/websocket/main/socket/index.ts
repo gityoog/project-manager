@@ -23,9 +23,10 @@ class MySocket<TOn extends { [key: string]: any[] } = {}, TEmit extends { [key: 
     const { url, namesapce, data, token } = this.options
     const { query, namesapce: suffixNamespace = '', options: exOptions } = data || {}
     const { protocol, host, pathname } = getRealPathDetail(url)
+
     this.socket = io(protocol + '//' + host + namesapce + suffixNamespace, {
       ...exOptions,
-      path: pathname + '/socket.io',
+      path: pathname + 'socket.io',
       autoConnect: false,
       query: Object.assign({}, query, token ? { token } : {}),
     })
@@ -90,17 +91,18 @@ class MySocket<TOn extends { [key: string]: any[] } = {}, TEmit extends { [key: 
   }
 }
 
-function getRealPathDetail(url: string) {
-  let a = document.createElement('a')
-  a.href = url
+
+
+function getRealPathDetail(address: string) {
+  let url = new URL(address, location.href)
   const result = {
-    url: a.href,
-    host: a.host,
-    search: a.search,
-    pathname: a.pathname,
-    protocol: a.protocol
+    url: url.href,
+    host: url.host,
+    search: url.search,
+    pathname: url.pathname,
+    protocol: url.protocol
   }
-  a = null!
+  url = null!
   return result
 }
 
