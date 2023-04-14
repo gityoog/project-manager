@@ -11,6 +11,7 @@
     "target": "ES6",
     "baseUrl": ".",
     "resolveJsonModule": true,
+    "declaration": true,
     "paths": {
       "@/*": [
         "./src/*"
