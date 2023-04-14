@@ -16,6 +16,7 @@ import { DataSource } from 'typeorm'
 import { Request, RequestHandler } from "express"
 import { Socket } from 'socket.io'
 import { ServeStaticModule } from '@nestjs/serve-static'
+import ConfigModule from "./config"
 
 @Global()
 @Module({
@@ -56,6 +57,7 @@ import { ServeStaticModule } from '@nestjs/serve-static'
     }),
     ProjectModule,
     LoggingModule,
+    ConfigModule,
     ServeStaticModule.forRootAsync({
       inject: [Options],
       useFactory: (options: Options) => options.web ? [{
