@@ -15,6 +15,7 @@ import store from 'better-sqlite3-session-store'
 import { DataSource } from 'typeorm'
 import { Request, RequestHandler } from "express"
 import { Socket } from 'socket.io'
+import { ServeStaticModule } from '@nestjs/serve-static'
 
 @Global()
 @Module({
@@ -54,7 +55,13 @@ import { Socket } from 'socket.io'
       })
     }),
     ProjectModule,
-    LoggingModule
+    LoggingModule,
+    ServeStaticModule.forRootAsync({
+      inject: [Options],
+      useFactory: (options: Options) => options.web ? [{
+        rootPath: options.web,
+      }] : []
+    })
   ],
   providers: [
     Logger,
