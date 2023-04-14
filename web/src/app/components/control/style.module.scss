@@ -1,11 +1,7 @@
 @import 'app/style/base.scss';
 
 .app {
-  :global {
-    .el-loading-mask {
-      background-color: rgba(30, 30, 30, 0.9);
-    }
-  }
+
 
   height: 100%;
   display: flex;
@@ -70,6 +66,12 @@
   }
 
   >.content {
+    :global {
+      .el-loading-mask {
+        background-color: rgba(30, 30, 30, 0.9);
+      }
+    }
+
     flex: 1;
     overflow: hidden;
     padding: 10px;
