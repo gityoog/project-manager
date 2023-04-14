@@ -1,10 +1,13 @@
 {
   "name": "project-manager-server",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "bin": "dist/bin/index.js",
   "scripts": {
-    "dev": "nodemon ./src/index.ts dev"
+    "dev": "nodemon ./src/dev.ts dev",
+    "cli": "node -r ts-swc-register ./src/bin/index.ts start --port 4000 --db ./config/app.db",
+    "build": "nest build -p tsconfig.json"
   },
   "nodemonConfig": {
     "execMap": {
@@ -16,6 +19,7 @@
     "type": "git",
     "url": "https://github.com/gityoog/project-manager.git"
   },
+  "homepage": "https://github.com/gityoog/project-manager",
   "license": "ISC",
   "dependencies": {
     "@achrinza/node-ipc": "^10.1.7",
@@ -23,6 +27,7 @@
     "@nestjs/core": "^9.3.9",
     "@nestjs/platform-express": "^9.3.9",
     "@nestjs/platform-socket.io": "^9.3.12",
+    "@nestjs/serve-static": "^3.0.1",
     "@nestjs/typeorm": "^9.0.1",
     "@nestjs/websockets": "^9.3.12",
     "better-sqlite3": "^8.2.0",
@@ -35,6 +40,7 @@
     "node-pty": "^0.10.1",
     "pidusage": "^3.0.2",
     "process-tree": "^1.0.3",
+    "yargs": "^17.7.1",
     "zip-local": "^0.3.5"
   },
   "devDependencies": {
@@ -42,6 +48,7 @@
     "@types/express-session": "^1.17.7",
     "@types/node-ipc": "^9.2.0",
     "@types/pidusage": "^2.0.2",
+    "@types/yargs": "^17.0.24",
     "nodemon": "^2.0.21",
     "ts-swc-register": "^1.2.2"
   }
