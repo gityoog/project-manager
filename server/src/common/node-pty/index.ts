@@ -20,7 +20,8 @@ export default class NodePtyService {
   }) {
     if (!this.process) {
       this.state.setStatus(true)
-      this.process = spawn(shell, command, {
+      const args = shell.split(' ')
+      this.process = spawn(args[0], args.slice(1).concat(command), {
         cwd,
         env: {
           ...process.env as Record<string, string>,
