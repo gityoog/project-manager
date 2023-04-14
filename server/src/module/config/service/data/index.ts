@@ -3,6 +3,7 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from 'typeorm'
 import os from 'os'
 import ConfigEntity from "../entity"
+import LoggingService from "@/module/logging/service"
 
 type item = {
   name: string
@@ -25,30 +26,41 @@ export default class ConfigData {
   } = {}
   constructor(
     @InjectRepository(ConfigEntity) private main: Repository<ConfigEntity>,
+    private logging: LoggingService
   ) {
 
   }
   async set(key: keyof data, value: string) {
     const item = this.data[key]
-    const config = await this.main.findOneBy({ name: item.name })
-    if (config) {
-      config.value = value
-      await this.main.save(config)
-    } else {
-      await this.main.save({ name: item.name, value })
-    }
+    await this.save(item.name, value)
     this.cache[key] = value
+    this.logging.save({
+      target: 'Config',
+      action: 'Set',
+      description: `${item.name}: ${value}`
+    })
   }
   async get(key: keyof data) {
-    const item = this.data[key]
-    if (this.cache[key]) {
-      return this.cache[key]!
+    if (!(key in this.cache)) {
+      const item = this.data[key]
+      const row = await this.main.findOneBy({ name: item.name })
+      if (row) {
+        this.cache[key] = row.value
+      } else {
+        const value = item.default()
+        await this.save(item.name, value)
+        this.cache[key] = value
+      }
     }
-    const config =
-      await this.main.findOneBy({ name: item.name })
-      || await this.main.save({ name: item.name, value: item.default() })
-    this.cache[key] = config.value
     return this.cache[key]!
   }
 
+  private async save(name: string, value: string) {
+    const row = await this.main.findOneBy({ name })
+    if (row) {
+      await this.main.save(this.main.merge(row, { value }))
+    } else {
+      await this.main.save({ name, value })
+    }
+  }
 }
