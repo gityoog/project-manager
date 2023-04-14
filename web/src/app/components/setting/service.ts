@@ -8,15 +8,14 @@ import ISettingForm from "./form/service"
 @Service()
 export default class IAppSetting implements iAppSetting {
   dialog = new IElDialog({
-    footer: false
+    footer: false,
+    onFirstOpen: () => {
+      this.init()
+    }
   })
   category?: IProjectCategoryManager = null!
   logging?: ILoggingManager = null!
   form?: ISettingForm = null!
-
-  constructor() {
-    this.init()
-  }
 
   @Already
   private init() {
@@ -26,6 +25,8 @@ export default class IAppSetting implements iAppSetting {
   activeForm() {
     if (!this.form) {
       this.form = Concat(this, new ISettingForm(), ISettingForm)
+    } else {
+      this.form.refresh()
     }
   }
 
