@@ -19,7 +19,7 @@ export default class NormalConfig implements iBaseConfigComponent {
       output: {
         path: this.options.outPath,
       },
-      entry: this.options.entry,
+      entry: this.options.getEntry(),
       context: this.options.context,
       plugins: [
         new ProcessPlugin({
@@ -145,9 +145,6 @@ export default class NormalConfig implements iBaseConfigComponent {
       },
       mode: 'production',
       target: ['web', 'es5'],
-      entry: {
-        polyfill: ['core-js/stable', 'regenerator-runtime/runtime']
-      },
       performance: {
         maxAssetSize: 10 * 1024 * 1024,
         maxEntrypointSize: 10 * 1024 * 1024

@@ -6,6 +6,12 @@ enum Mode {
   Dev = 'development',
   Prod = 'production',
 }
+
+type env = {
+  mainApi: string
+  socketApi: string
+}
+
 @Service()
 export default class WebProjectOptions {
   devPort
@@ -13,26 +19,28 @@ export default class WebProjectOptions {
   version
   title
   context
-  entry
   realDevPort
   private analyzer = false
   constructor(private options: {
     devPort?: number
     proxyApi?: string
     socketApi?: string
-    outPath: string
     title?: string
     context: string
-    entry: EntryObject
-    env?: Record<string, any>
+    app: string | string[]
+    polyfill?: string | string[]
+    outPath: string
     analyzer?: boolean
+    env: {
+      dev: env
+      build: env
+    }
   }) {
     this.devPort = this.options.devPort || 9000
     this.realDevPort = this.devPort
     this.outPath = this.options.outPath
     this.title = this.options.title || 'default-project'
     this.context = this.options.context
-    this.entry = this.options.entry
     this.analyzer = this.options.analyzer || false
     const date = new Date()
     this.version = `${date.getFullYear()}${(date.getMonth() + 1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}${date.getHours().toString().padStart(2, '0')}${date.getMinutes().toString().padStart(2, '0')}${date.getSeconds().toString().padStart(2, '0')}`
@@ -56,13 +64,20 @@ export default class WebProjectOptions {
   hasAnalyzer() {
     return this.analyzer
   }
+  getEntry() {
+    const entry: EntryObject = {
+      app: this.options.app
+    }
+    if (!this.isDevMode() && this.options.polyfill) {
+      entry.polyfill = this.options.polyfill
+    }
+    return entry
+  }
   getEnv() {
     const env: Record<string, any> = {
       version: this.version,
       isDev: this.isDevMode(),
-      mainApi: './api/',
-      socketApi: './socket/',
-      ...this.options.env
+      ...this.isDevMode() ? this.options.env.dev : this.options.env.build
     }
     return env
   }
