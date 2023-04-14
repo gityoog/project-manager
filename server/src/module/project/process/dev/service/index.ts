@@ -1,8 +1,9 @@
 import ConfigService from "@/module/config/service"
+import LoggingService from "@/module/logging/service"
 import ProjectBus from "@/module/project/bus"
 import ProjectService from "@/module/project/service"
 import ProjectEntity from "@/module/project/service/entity"
-import { Injectable } from "@nestjs/common"
+import { Injectable, Logger } from "@nestjs/common"
 import NodeIpcService from "../../node-ipc"
 import ProjectProcessDevBus from "../bus"
 import DevTaskService from "./task"
@@ -16,7 +17,8 @@ export default class ProjectProcessDevService {
     private project: ProjectService,
     private projectBus: ProjectBus,
     private ipc: NodeIpcService,
-    private config: ConfigService
+    private config: ConfigService,
+    private logging: LoggingService
   ) {
     this.init()
   }
@@ -61,7 +63,8 @@ export default class ProjectProcessDevService {
     if (!task) {
       const task = new DevTaskService({
         project,
-        bus: this.bus
+        bus: this.bus,
+        logging: this.logging
       })
       this.data[id] = task
       this.keyDict[task.key] = task

@@ -4,8 +4,8 @@ import ProjectProcessBuildBus from "../../bus"
 import zipper from "zip-local"
 import ProjectOutputService from "@/module/project/ouput/service"
 import BuildTaskStatus from "./status"
-import { ClsService, ClsServiceManager } from "nestjs-cls"
-import UserStore from "@/service/user-store"
+import { ClsServiceManager } from "nestjs-cls"
+import LoggingService from "@/module/logging/service"
 
 export default class BuildTaskService {
   private project: ProjectEntity
@@ -15,13 +15,16 @@ export default class BuildTaskService {
   private status = new BuildTaskStatus()
   private output
   private clsStore
-  constructor({ project, bus, output }: {
+  private logging
+  constructor({ project, bus, output, logging }: {
     project: ProjectEntity,
     bus: ProjectProcessBuildBus,
-    output: ProjectOutputService
+    output: ProjectOutputService,
+    logging: LoggingService
   }) {
     this.project = project
     this.bus = bus
+    this.logging = logging
     this.output = output
     this.key = `build_${project.id}`
     this.pty = new NodePtyService(this.key, { stats: false })
@@ -80,15 +83,26 @@ export default class BuildTaskService {
     if (!this.project.build) {
       return false
     }
-    return this.pty.run({
+    const pid = this.pty.run({
       shell,
       command: this.project.build,
       cwd: this.project.context,
     })
+    this.logging.save({
+      target: 'BuildProcess',
+      action: 'Run',
+      description: `${this.project.name}: ${pid}`
+    })
+    return pid
   }
 
   stop() {
     if (this.status.canStop()) {
+      this.logging.save({
+        target: 'BuildProcess',
+        action: 'Stop',
+        description: `${this.project.name}`
+      })
       return this.pty.stop()
     }
     return false

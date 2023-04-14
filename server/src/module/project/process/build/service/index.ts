@@ -1,10 +1,10 @@
 import ConfigService from "@/module/config/service"
+import LoggingService from "@/module/logging/service"
 import ProjectBus from "@/module/project/bus"
 import ProjectOutputService from "@/module/project/ouput/service"
 import ProjectService from "@/module/project/service"
 import ProjectEntity from "@/module/project/service/entity"
 import { Injectable } from "@nestjs/common"
-import { ClsServiceManager } from "nestjs-cls"
 import NodeIpcService from "../../node-ipc"
 import ProjectProcessBuildBus from "../bus"
 import BuildTaskService from "./task"
@@ -19,7 +19,8 @@ export default class ProjectProcessBuildService {
     private projectBus: ProjectBus,
     private ipc: NodeIpcService,
     private output: ProjectOutputService,
-    private config: ConfigService
+    private config: ConfigService,
+    private logging: LoggingService
   ) {
     this.init()
   }
@@ -66,7 +67,8 @@ export default class ProjectProcessBuildService {
       const task = new BuildTaskService({
         project,
         bus: this.bus,
-        output: this.output
+        output: this.output,
+        logging: this.logging
       })
       this.data[id] = task
       this.keyDict[task.key] = task

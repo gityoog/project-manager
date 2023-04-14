@@ -1,6 +1,7 @@
 import ProjectEntity from "@/module/project/service/entity"
 import NodePtyService from "@/common/node-pty"
 import ProjectProcessDevBus from "../../bus"
+import LoggingService from "@/module/logging/service"
 
 type url = {
   host: string
@@ -12,13 +13,16 @@ export default class DevTaskService {
   key
   private pty
   private url: url = null
-  private bus: ProjectProcessDevBus
-  constructor({ project, bus }: {
+  private bus
+  private logging
+  constructor({ project, bus, logging }: {
     project: ProjectEntity,
-    bus: ProjectProcessDevBus
+    bus: ProjectProcessDevBus,
+    logging: LoggingService
   }) {
     this.project = project
     this.bus = bus
+    this.logging = logging
     this.key = `dev_${project.id}`
     this.pty = new NodePtyService(this.key)
 
@@ -67,15 +71,26 @@ export default class DevTaskService {
     if (!this.project.dev) {
       return false
     }
-    return this.pty.run({
+    const pid = this.pty.run({
       shell,
       command: this.project.dev,
       cwd: this.project.context,
     })
+    this.logging.save({
+      target: 'DevProcess',
+      action: 'Run',
+      description: `${this.project.name}: ${pid}`
+    })
+    return pid
   }
 
   stop() {
     this.setUrl(null)
+    this.logging.save({
+      target: 'DevProcess',
+      action: 'Stop',
+      description: `${this.project.name}`
+    })
     return this.pty.stop()
   }
 
