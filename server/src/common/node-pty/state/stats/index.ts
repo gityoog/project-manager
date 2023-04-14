@@ -32,7 +32,7 @@ export default class PtyUsageStats {
       this.timeout = undefined
     }
     this.query(pid, (err, stats) => {
-      if (err) return
+      if (err) return console.log(err)
       if (index !== this.index) return
       if (!this.running) return
       this.setData(stats || null)
@@ -50,6 +50,7 @@ export default class PtyUsageStats {
           pids.push(child.pid)
         }
       }
+      if (pids.length === 0) return callback(null, undefined)
       pidusage(pids, (err, stats) => {
         if (err) return callback(err)
         const data = Object.values(stats).reduce((total, cur) => ({
