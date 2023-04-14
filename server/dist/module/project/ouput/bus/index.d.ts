@@ -4,4 +4,5 @@ import ProjectOutputEntity from "../service/entity";
 export default class ProjectOutputBus extends EntityEmitter<ProjectOutputEntity> {
     private logging;
     constructor(logging: LoggingService);
+    clear(): void;
 }

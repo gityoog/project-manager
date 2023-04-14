@@ -16,4 +16,5 @@ export default class ProjectOutputService {
         name: string;
         content: Buffer;
     }): Promise<ProjectOutputEntity>;
+    clear(): Promise<void>;
 }

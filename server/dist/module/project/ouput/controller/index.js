@@ -48,6 +48,9 @@ let ProjectOutputController = class ProjectOutputController {
             response.send(file.content);
         });
     }
+    clear() {
+        return this.service.clear();
+    }
 };
 __decorate([
     (0, common_1.All)('/query'),
@@ -71,6 +74,12 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProjectOutputController.prototype, "download", null);
+__decorate([
+    (0, common_1.All)('/clear'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], ProjectOutputController.prototype, "clear", null);
 ProjectOutputController = __decorate([
     (0, common_1.Controller)('/project/output'),
     __metadata("design:paramtypes", [service_1.default])

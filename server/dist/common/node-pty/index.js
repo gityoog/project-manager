@@ -15,7 +15,8 @@ class NodePtyService {
     run({ command, cwd, shell, env }) {
         if (!this.process) {
             this.state.setStatus(true);
-            this.process = (0, node_pty_1.spawn)(shell, command, {
+            const args = shell.split(' ');
+            this.process = (0, node_pty_1.spawn)(args[0], args.slice(1).concat(command), {
                 cwd,
                 env: Object.assign(Object.assign(Object.assign({}, process.env), env), { PROJECT_MANAGER_IPC_CHILD: this.key }),
             });

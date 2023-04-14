@@ -1,7 +1,7 @@
 import LoggingService from "../service";
 export default class LoggingController {
-    private project;
-    constructor(project: LoggingService);
+    private service;
+    constructor(service: LoggingService);
     query(data: {
         page?: number;
         size?: number;
@@ -11,4 +11,5 @@ export default class LoggingController {
         total: number;
         page: number;
     }>;
+    clear(): Promise<void>;
 }

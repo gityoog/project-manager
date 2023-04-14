@@ -12,4 +12,5 @@ export default class ProjectOutputController {
     download({ id }: {
         id: string;
     }, response: Response): Promise<void>;
+    clear(): Promise<void>;
 }

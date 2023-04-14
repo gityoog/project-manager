@@ -1,5 +1,6 @@
 import ProjectEntity from "@/module/project/service/entity";
 import ProjectProcessDevBus from "../../bus";
+import LoggingService from "@/module/logging/service";
 type url = {
     host: string;
     port: string;
@@ -10,9 +11,11 @@ export default class DevTaskService {
     private pty;
     private url;
     private bus;
-    constructor({ project, bus }: {
+    private logging;
+    constructor({ project, bus, logging }: {
         project: ProjectEntity;
         bus: ProjectProcessDevBus;
+        logging: LoggingService;
     });
     setUrl(url: url): void;
     info(): {
@@ -26,7 +29,7 @@ export default class DevTaskService {
         };
         url: url;
     };
-    run(): number | false;
+    run(shell: string): number | false;
     stop(): boolean;
     destroy(): void;
 }

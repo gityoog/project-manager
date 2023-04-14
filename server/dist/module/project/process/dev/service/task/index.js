@@ -5,10 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_pty_1 = __importDefault(require("../../../../../../common/node-pty"));
 class DevTaskService {
-    constructor({ project, bus }) {
+    constructor({ project, bus, logging }) {
         this.url = null;
         this.project = project;
         this.bus = bus;
+        this.logging = logging;
         this.key = `dev_${project.id}`;
         this.pty = new node_pty_1.default(this.key);
         this.pty.onStatusChange(status => {
@@ -49,18 +50,29 @@ class DevTaskService {
             url: this.url
         };
     }
-    run() {
+    run(shell) {
         if (!this.project.dev) {
             return false;
         }
-        return this.pty.run({
-            shell: 'cmd.exe',
-            command: `/C ` + this.project.dev,
+        const pid = this.pty.run({
+            shell,
+            command: this.project.dev,
             cwd: this.project.context,
         });
+        this.logging.save({
+            target: 'DevProcess',
+            action: 'Run',
+            description: `${this.project.name}: ${pid}`
+        });
+        return pid;
     }
     stop() {
         this.setUrl(null);
+        this.logging.save({
+            target: 'DevProcess',
+            action: 'Stop',
+            description: `${this.project.name}`
+        });
         return this.pty.stop();
     }
     destroy() {

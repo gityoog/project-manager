@@ -21,18 +21,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const service_1 = __importDefault(require("../../../../config/service"));
+const service_2 = __importDefault(require("../../../../logging/service"));
 const bus_1 = __importDefault(require("../../../bus"));
-const service_1 = __importDefault(require("../../../service"));
+const service_3 = __importDefault(require("../../../service"));
 const common_1 = require("@nestjs/common");
 const node_ipc_1 = __importDefault(require("../../node-ipc"));
 const bus_2 = __importDefault(require("../bus"));
 const task_1 = __importDefault(require("./task"));
 let ProjectProcessDevService = class ProjectProcessDevService {
-    constructor(bus, project, projectBus, ipc) {
+    constructor(bus, project, projectBus, ipc, config, logging) {
         this.bus = bus;
         this.project = project;
         this.projectBus = projectBus;
         this.ipc = ipc;
+        this.config = config;
+        this.logging = logging;
         this.data = {};
         this.keyDict = {};
         this.init();
@@ -40,9 +44,10 @@ let ProjectProcessDevService = class ProjectProcessDevService {
     run(id) {
         return __awaiter(this, void 0, void 0, function* () {
             const row = yield this.project.detail(id);
+            const shell = yield this.config.getShell();
             if (row) {
                 const task = this.factory(row);
-                return task.run();
+                return task.run(shell);
             }
             return false;
         });
@@ -80,7 +85,8 @@ let ProjectProcessDevService = class ProjectProcessDevService {
         if (!task) {
             const task = new task_1.default({
                 project,
-                bus: this.bus
+                bus: this.bus,
+                logging: this.logging
             });
             this.data[id] = task;
             this.keyDict[task.key] = task;
@@ -95,8 +101,10 @@ let ProjectProcessDevService = class ProjectProcessDevService {
 ProjectProcessDevService = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [bus_2.default,
-        service_1.default,
+        service_3.default,
         bus_1.default,
-        node_ipc_1.default])
+        node_ipc_1.default,
+        service_1.default,
+        service_2.default])
 ], ProjectProcessDevService);
 exports.default = ProjectProcessDevService;

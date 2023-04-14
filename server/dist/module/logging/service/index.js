@@ -60,6 +60,16 @@ let LoggingService = class LoggingService {
             user: this.user.name
         });
     }
+    clear() {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield this.main.clear();
+            this.save({
+                target: 'Logging',
+                action: 'Clear',
+                description: 'Clear all logs'
+            });
+        });
+    }
 };
 LoggingService = __decorate([
     (0, common_1.Injectable)(),

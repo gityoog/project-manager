@@ -27,67 +27,66 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
 const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
-const bus_1 = __importDefault(require("../../bus"));
-const bus_2 = __importDefault(require("../bus"));
-const entity_1 = __importDefault(require("./entity"));
-let ProjectOutputService = class ProjectOutputService {
-    constructor(main, projectBus, bus) {
+const os_1 = __importDefault(require("os"));
+const entity_1 = __importDefault(require("../entity"));
+const service_1 = __importDefault(require("../../../logging/service"));
+let ConfigData = class ConfigData {
+    constructor(main, logging) {
         this.main = main;
-        this.projectBus = projectBus;
-        this.bus = bus;
-        this.projectBus.beforeRemove((row, manager, onFinish) => __awaiter(this, void 0, void 0, function* () {
-            const rows = yield this.main.findBy({ project: row.id });
-            yield manager.remove(rows);
-            onFinish(() => this.bus.remove(rows));
-        }));
+        this.logging = logging;
+        this.data = {
+            shell: {
+                name: 'shell',
+                default: () => os_1.default.platform() === 'win32' ? 'cmd.exe /C' : 'sh -c'
+            }
+        };
+        this.cache = {};
     }
-    query(project) {
-        return this.main.find({
-            select: ['id', 'name', 'size', 'created_at'],
-            where: { project },
-            order: { created_at: 'DESC' }
+    set(key, value) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const item = this.data[key];
+            yield this.save(item.name, value);
+            this.cache[key] = value;
+            this.logging.save({
+                target: 'Config',
+                action: 'Set',
+                description: `${item.name}: ${value}`
+            });
         });
     }
-    remove(id) {
+    get(key) {
         return __awaiter(this, void 0, void 0, function* () {
-            const row = yield this.main.findOneByOrFail({ id });
-            const origin = this.main.create(row);
-            yield this.main.remove(row);
-            this.bus.remove(origin);
-            return origin;
+            if (!(key in this.cache)) {
+                const item = this.data[key];
+                const row = yield this.main.findOneBy({ name: item.name });
+                if (row) {
+                    this.cache[key] = row.value;
+                }
+                else {
+                    const value = item.default();
+                    yield this.save(item.name, value);
+                    this.cache[key] = value;
+                }
+            }
+            return this.cache[key];
         });
     }
-    read(id) {
+    save(name, value) {
         return __awaiter(this, void 0, void 0, function* () {
-            const data = yield this.main.findOneBy({ id });
-            return data;
-        });
-    }
-    save({ project, name, content }) {
-        return __awaiter(this, void 0, void 0, function* () {
-            const entity = new entity_1.default();
-            entity.project = project;
-            entity.name = name;
-            entity.content = content;
-            const length = content.length;
-            entity.size = `${(length / 1024 / 1024).toFixed(2)}MB`;
-            const row = yield this.main.save(entity);
-            this.bus.add(row);
-            return row;
-        });
-    }
-    clear() {
-        return __awaiter(this, void 0, void 0, function* () {
-            yield this.main.clear();
-            this.bus.clear();
+            const row = yield this.main.findOneBy({ name });
+            if (row) {
+                yield this.main.save(this.main.merge(row, { value }));
+            }
+            else {
+                yield this.main.save({ name, value });
+            }
         });
     }
 };
-ProjectOutputService = __decorate([
+ConfigData = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(entity_1.default)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
-        bus_1.default,
-        bus_2.default])
-], ProjectOutputService);
-exports.default = ProjectOutputService;
+        service_1.default])
+], ConfigData);
+exports.default = ConfigData;

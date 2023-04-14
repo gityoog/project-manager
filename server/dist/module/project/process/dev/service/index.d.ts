@@ -1,3 +1,5 @@
+import ConfigService from "@/module/config/service";
+import LoggingService from "@/module/logging/service";
 import ProjectBus from "@/module/project/bus";
 import ProjectService from "@/module/project/service";
 import NodeIpcService from "../../node-ipc";
@@ -7,9 +9,11 @@ export default class ProjectProcessDevService {
     private project;
     private projectBus;
     private ipc;
+    private config;
+    private logging;
     private data;
     private keyDict;
-    constructor(bus: ProjectProcessDevBus, project: ProjectService, projectBus: ProjectBus, ipc: NodeIpcService);
+    constructor(bus: ProjectProcessDevBus, project: ProjectService, projectBus: ProjectBus, ipc: NodeIpcService, config: ConfigService, logging: LoggingService);
     run(id: string): Promise<number | false>;
     stop(id: string): void;
     info(id: string): {

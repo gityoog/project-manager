@@ -33,7 +33,7 @@ class PtyUsageStats {
         }
         this.query(pid, (err, stats) => {
             if (err)
-                return;
+                return console.log(err);
             if (index !== this.index)
                 return;
             if (!this.running)
@@ -54,6 +54,8 @@ class PtyUsageStats {
                     pids.push(child.pid);
                 }
             }
+            if (pids.length === 0)
+                return callback(null, undefined);
             (0, pidusage_1.default)(pids, (err, stats) => {
                 if (err)
                     return callback(err);

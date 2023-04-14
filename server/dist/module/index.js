@@ -31,6 +31,7 @@ const session_1 = require("../service/session");
 const better_sqlite3_session_store_1 = __importDefault(require("better-sqlite3-session-store"));
 const typeorm_2 = require("typeorm");
 const serve_static_1 = require("@nestjs/serve-static");
+const config_1 = __importDefault(require("./config"));
 let AppModule = class AppModule {
     constructor(session, db) {
         this.session = session;
@@ -85,11 +86,12 @@ AppModule = __decorate([
             }),
             project_1.default,
             logging_1.default,
+            config_1.default,
             serve_static_1.ServeStaticModule.forRootAsync({
                 inject: [options_1.default],
-                useFactory: (options) => ([{
+                useFactory: (options) => options.web ? [{
                         rootPath: options.web,
-                    }])
+                    }] : []
             })
         ],
         providers: [

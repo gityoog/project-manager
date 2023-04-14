@@ -10,18 +10,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
+const typeorm_1 = require("@nestjs/typeorm");
 const controller_1 = __importDefault(require("./controller"));
 const service_1 = __importDefault(require("./service"));
+const data_1 = __importDefault(require("./service/data"));
+const entity_1 = __importDefault(require("./service/entity"));
 let ConfigModule = class ConfigModule {
 };
 ConfigModule = __decorate([
     (0, common_1.Global)(),
     (0, common_1.Module)({
+        imports: [
+            typeorm_1.TypeOrmModule.forFeature([entity_1.default])
+        ],
         controllers: [
             controller_1.default
         ],
         providers: [
-            service_1.default
+            service_1.default,
+            data_1.default
         ],
         exports: [
             service_1.default

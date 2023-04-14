@@ -21,4 +21,5 @@ export default class LoggingService {
         target: string;
         description: string;
     }): void;
+    clear(): Promise<void>;
 }

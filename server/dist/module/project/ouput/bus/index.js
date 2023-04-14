@@ -27,6 +27,13 @@ let ProjectOutputBus = class ProjectOutputBus extends entity_emitter_1.default {
             });
         });
     }
+    clear() {
+        this.logging.save({
+            action: 'Clear',
+            target: 'Output',
+            description: 'Clear all outputs',
+        });
+    }
 };
 ProjectOutputBus = __decorate([
     (0, common_1.Injectable)(),

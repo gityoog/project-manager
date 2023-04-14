@@ -8,10 +8,11 @@ const zip_local_1 = __importDefault(require("zip-local"));
 const status_1 = __importDefault(require("./status"));
 const nestjs_cls_1 = require("nestjs-cls");
 class BuildTaskService {
-    constructor({ project, bus, output }) {
+    constructor({ project, bus, output, logging }) {
         this.status = new status_1.default();
         this.project = project;
         this.bus = bus;
+        this.logging = logging;
         this.output = output;
         this.key = `build_${project.id}`;
         this.pty = new node_pty_1.default(this.key, { stats: false });
@@ -60,18 +61,29 @@ class BuildTaskService {
             stdout: this.pty.info().stdout
         };
     }
-    run() {
+    run(shell) {
         if (!this.project.build) {
             return false;
         }
-        return this.pty.run({
-            shell: 'cmd.exe',
-            command: `/C ` + this.project.build,
+        const pid = this.pty.run({
+            shell,
+            command: this.project.build,
             cwd: this.project.context,
         });
+        this.logging.save({
+            target: 'BuildProcess',
+            action: 'Run',
+            description: `${this.project.name}: ${pid}`
+        });
+        return pid;
     }
     stop() {
         if (this.status.canStop()) {
+            this.logging.save({
+                target: 'BuildProcess',
+                action: 'Stop',
+                description: `${this.project.name}`
+            });
             return this.pty.stop();
         }
         return false;

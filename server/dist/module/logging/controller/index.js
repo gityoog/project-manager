@@ -18,11 +18,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const common_1 = require("@nestjs/common");
 const service_1 = __importDefault(require("../service"));
 let LoggingController = class LoggingController {
-    constructor(project) {
-        this.project = project;
+    constructor(service) {
+        this.service = service;
     }
     query(data) {
-        return this.project.query(data);
+        return this.service.query(data);
+    }
+    clear() {
+        return this.service.clear();
     }
 };
 __decorate([
@@ -32,6 +35,12 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], LoggingController.prototype, "query", null);
+__decorate([
+    (0, common_1.All)('/clear'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], LoggingController.prototype, "clear", null);
 LoggingController = __decorate([
     (0, common_1.Controller)('/logging'),
     __param(0, (0, common_1.Inject)(service_1.default)),
