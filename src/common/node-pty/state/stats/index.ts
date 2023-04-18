@@ -42,7 +42,7 @@ export default class PtyUsageStats {
   private query(pid: number, callback: (err: null | Error, stats?: stats) => void) {
     ProcessTree(pid, (err, children) => {
       if (err) return callback(err)
-      const pids: number[] = []
+      const pids: number[] = [pid]
       while (children.length) {
         const child = children.shift()
         if (child) {
@@ -50,7 +50,6 @@ export default class PtyUsageStats {
           pids.push(child.pid)
         }
       }
-      if (pids.length === 0) return callback(null, undefined)
       pidusage(pids, (err, stats) => {
         if (err) return callback(err)
         const data = Object.values(stats).reduce((total, cur) => ({
