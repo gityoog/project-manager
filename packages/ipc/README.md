@@ -1,4 +1,4 @@
-## ipc for project-manager
+# ipc for project-manager
 
 send message to project-manager
 
@@ -18,7 +18,6 @@ const ipc = new ProjectManagerIpc({
   serverKey: string // optional default: 'PROJECT_MANAGER_IPC_SERVER'
   log: (msg: string) {} // optional
 })
-
 ipc.connect({
   success: () => {
 
@@ -33,6 +32,7 @@ ipc.setLogger((msg: string) => {
 ipc.emitDist('/path/to/dist')
 ipc.emitUrl('0.0.0.0', 9000)
 ipc.emitError('error message')
+ipc.disconnect()
 ipc.destroy()
 ```
 

@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_ipc_1 = __importDefault(require("@achrinza/node-ipc"));
 class ProjectManagerIpc {
-    constructor({ id, idKey = 'PROJECT_MANAGER_IPC_CHILD', serverKey = 'PROJECT_MANAGER_IPC_SERVER', log } = {}) {
-        this.id = id || process.env[idKey];
+    constructor({ idKey = 'PROJECT_MANAGER_IPC_CHILD', serverKey = 'PROJECT_MANAGER_IPC_SERVER', log } = {}) {
+        this.id = process.env[idKey];
         this.server = process.env[serverKey] || serverKey;
         if (log) {
             node_ipc_1.default.config.logger = log;
@@ -16,7 +16,7 @@ class ProjectManagerIpc {
     setLogger(log) {
         node_ipc_1.default.config.logger = log;
     }
-    connect({ success, fail }) {
+    connect({ success, fail } = {}) {
         if (this.id) {
             node_ipc_1.default.config.id = this.id;
             node_ipc_1.default.connectTo(this.server, () => {
@@ -33,31 +33,35 @@ class ProjectManagerIpc {
         }
     }
     getClient() {
-        if (!this.id || !node_ipc_1.default.of[this.server])
-            throw new Error('ipc client is not connected');
-        return node_ipc_1.default.of[this.server];
+        return node_ipc_1.default.of ? node_ipc_1.default.of[this.server] : undefined;
     }
     emitUrl(host, port) {
-        this.getClient().emit('url', {
+        var _a;
+        (_a = this.getClient()) === null || _a === void 0 ? void 0 : _a.emit('url', {
             id: this.id,
             host,
             port
         });
     }
     emitDist(path) {
-        this.getClient().emit('dist', {
+        var _a;
+        (_a = this.getClient()) === null || _a === void 0 ? void 0 : _a.emit('dist', {
             id: this.id,
             path
         });
     }
     emitError(message) {
-        this.getClient().emit('fail', {
+        var _a;
+        (_a = this.getClient()) === null || _a === void 0 ? void 0 : _a.emit('fail', {
             id: this.id,
             message
         });
     }
-    destroy() {
+    disconnect() {
         node_ipc_1.default.disconnect(this.server);
+    }
+    destroy() {
+        this.disconnect();
     }
 }
 exports.default = ProjectManagerIpc;

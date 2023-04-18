@@ -3,13 +3,12 @@ import ipc from '@achrinza/node-ipc'
 export default class ProjectManagerIpc {
   private id
   private server
-  constructor({ id, idKey = 'PROJECT_MANAGER_IPC_CHILD', serverKey = 'PROJECT_MANAGER_IPC_SERVER', log }: {
-    id?: string
+  constructor({ idKey = 'PROJECT_MANAGER_IPC_CHILD', serverKey = 'PROJECT_MANAGER_IPC_SERVER', log }: {
     idKey?: string
     serverKey?: string
     log?: (msg: string) => void
   } = {}) {
-    this.id = id || process.env[idKey]
+    this.id = process.env[idKey]
     this.server = process.env[serverKey] || serverKey
     if (log) {
       ipc.config.logger = log
@@ -22,7 +21,7 @@ export default class ProjectManagerIpc {
   connect({ success, fail }: {
     success?: () => void
     fail?: (err: string) => void
-  }) {
+  } = {}) {
     if (this.id) {
       ipc.config.id = this.id
       ipc.connectTo(this.server, () => {
@@ -38,29 +37,31 @@ export default class ProjectManagerIpc {
     }
   }
   private getClient() {
-    if (!this.id || !ipc.of[this.server]) throw new Error('ipc client is not connected')
-    return ipc.of[this.server]
+    return ipc.of ? ipc.of[this.server] : undefined
   }
   emitUrl(host: string, port: number) {
-    this.getClient().emit('url', {
+    this.getClient()?.emit('url', {
       id: this.id,
       host,
       port
     })
   }
   emitDist(path: string) {
-    this.getClient().emit('dist', {
+    this.getClient()?.emit('dist', {
       id: this.id,
       path
     })
   }
   emitError(message: string) {
-    this.getClient().emit('fail', {
+    this.getClient()?.emit('fail', {
       id: this.id,
       message
     })
   }
-  destroy() {
+  disconnect() {
     ipc.disconnect(this.server)
+  }
+  destroy() {
+    this.disconnect()
   }
 }

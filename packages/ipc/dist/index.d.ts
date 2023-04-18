@@ -1,14 +1,13 @@
 export default class ProjectManagerIpc {
     private id;
     private server;
-    constructor({ id, idKey, serverKey, log }?: {
-        id?: string;
+    constructor({ idKey, serverKey, log }?: {
         idKey?: string;
         serverKey?: string;
         log?: (msg: string) => void;
     });
     setLogger(log: (msg: string) => void): void;
-    connect({ success, fail }: {
+    connect({ success, fail }?: {
         success?: () => void;
         fail?: (err: string) => void;
     }): void;
@@ -16,5 +15,6 @@ export default class ProjectManagerIpc {
     emitUrl(host: string, port: number): void;
     emitDist(path: string): void;
     emitError(message: string): void;
+    disconnect(): void;
     destroy(): void;
 }
