@@ -1,6 +1,6 @@
 {
   "name": "project-manager-webpack-plugin",
-  "version": "1.0.7",
+  "version": "1.0.*",
   "description": "project manager webpack plugin",
   "main": "./dist/index.js",
   "scripts": {
@@ -14,11 +14,10 @@
   "homepage": "https://github.com/gityoog/project-manager/tree/main/plugins/webpack",
   "license": "ISC",
   "devDependencies": {
-    "@types/node-ipc": "^9.2.0",
     "rimraf": "^3.0.2",
     "webpack": "^5.75.0"
   },
   "dependencies": {
-    "@achrinza/node-ipc": "^10.1.7"
+    "project-manager-ipc": "^1.0.3"
   }
 }

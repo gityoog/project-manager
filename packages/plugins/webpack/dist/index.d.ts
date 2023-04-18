@@ -1,0 +1,14 @@
+import { Compiler } from 'webpack';
+export default class ProjectManagerWebpackPlugin {
+    private options;
+    private name;
+    private logger;
+    private ipc;
+    constructor(options: {
+        devInfo?: () => {
+            host: string;
+            port: number;
+        };
+    });
+    apply(compiler: Compiler): void;
+}
