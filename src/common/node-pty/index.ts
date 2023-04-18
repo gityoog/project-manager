@@ -85,6 +85,7 @@ export default class NodePtyService {
     this.listeners.forEach(listener => listener.dispose())
     this.listeners = []
     if (this.process) {
+      this.process.write('\x03')
       this.process.destroy()
       this.process = undefined
     }
