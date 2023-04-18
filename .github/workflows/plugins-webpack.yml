@@ -3,9 +3,9 @@ name: publish plugins/webpack
 on:
   push:
     branches:
-    - main
+      - main
     paths:
-    - plugins/webpack/package.json
+      - packages/plugins/webpack/package.json
 
 jobs:
   publish-gpr:
@@ -20,7 +20,7 @@ jobs:
           node-version: 16
           registry-url: https://registry.npmjs.org/
       - run: |
-          cd ./plugins/webpack
+          cd ./packages/plugins/webpack
           npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
