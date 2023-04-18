@@ -11,11 +11,12 @@ yargs(hideBin(process.argv))
   .command({
     command: '*',
     handler(data) {
-      const web = path.resolve(__dirname, '../web')
+      const web = path.resolve(__dirname, './web')
+      const web2 = path.resolve(__dirname, '../web')
       ProjectManager({
         port: data.port,
         db: path.resolve(process.cwd(), data.db),
-        web: fs.existsSync(web) ? web : undefined
+        web: fs.existsSync(web) ? web : fs.existsSync(web2) ? web2 : undefined
       })
     }
   })
