@@ -1,0 +1,23 @@
+{
+  "name": "project-manager-ipc",
+  "version": "1.0.0",
+  "description": "project manager ipc service",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "rimraf ./dist && tsc"
+  },
+  "author": "gityoog",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gityoog/project-manager.git"
+  },
+  "homepage": "https://github.com/gityoog/project-manager/tree/main/ipc",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node-ipc": "^9.2.0",
+    "rimraf": "^3.0.2"
+  },
+  "dependencies": {
+    "@achrinza/node-ipc": "^10.1.7"
+  }
+}
