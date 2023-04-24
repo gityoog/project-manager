@@ -4,9 +4,8 @@
   "description": "",
   "scripts": {
     "dev": "nodemon ./src/dev.ts dev",
-    "cli": "node -r ts-swc-register ./src/bin/index.ts",
-    "build": "nest build -p tsconfig.json",
-    "pkg": "cd ./packages/web && npm run build && cd ../../ && ncc build ./src/bin/index.ts -t -o dist"
+    "cli": "node -r ts-swc-register ./src/bin.ts",
+    "build": "node -r ts-swc-register ./script/build.ts"
   },
   "nodemonConfig": {
     "execMap": {
@@ -47,7 +46,9 @@
     "@types/node-ipc": "^9.2.0",
     "@types/pidusage": "^2.0.2",
     "@types/yargs": "^17.0.24",
+    "@vercel/ncc": "^0.36.1",
     "nodemon": "^2.0.21",
+    "rimraf": "^5.0.0",
     "ts-swc-register": "^1.2.2"
   }
 }
