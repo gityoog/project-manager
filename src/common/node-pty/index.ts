@@ -34,7 +34,7 @@ export default class NodePtyService {
       if (this.options.stats !== false) {
         this.state.activeStats(this.process.pid)
       }
-      this.tip('start')
+      this.tip('start\n')
       this.listeners.push(
         this.process.onData(data => {
           this.state.writeStdout(data)
