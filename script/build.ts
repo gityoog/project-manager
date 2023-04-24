@@ -12,6 +12,7 @@ import fs from 'fs'
   await buildWeb(cwd)
   console.log('Building server...')
   await buildServer(cwd)
+  console.log('Build success!')
 })()
 
 async function buildWeb(cwd: string) {
