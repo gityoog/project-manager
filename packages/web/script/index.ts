@@ -8,8 +8,8 @@ const project = new WebProject({
   app: './index.ts',
   polyfill: './polyfill/index.ts',
   analyzer: process.argv.some(arg => arg === '--analyzer'),
-  proxyApi: 'http://localhost:4000',
-  socketApi: 'ws://localhost:4000',
+  proxyApi: 'http://localhost:3737',
+  socketApi: 'ws://localhost:3737',
   env: {
     dev: {
       mainApi: './api/',
