@@ -3,9 +3,14 @@ import path from 'path'
 import { spawn } from 'child_process'
 import Ncc from '@vercel/ncc'
 import fs from 'fs'
+import Ipc from 'project-manager-ipc'
 
 (async () => {
   const cwd = path.resolve(__dirname, '../')
+  const ipc = new Ipc({
+    log: () => { }
+  })
+  ipc.connect()
   console.log('Clear ...')
   rimrafSync(path.resolve(cwd, './dist'))
   console.log('Building web...')
@@ -13,6 +18,8 @@ import fs from 'fs'
   console.log('Building server...')
   await buildServer(cwd)
   console.log('Build success!')
+  ipc.emitDist(path.resolve(cwd, './dist'))
+  ipc.destroy()
 })()
 
 async function buildWeb(cwd: string) {
@@ -20,7 +27,10 @@ async function buildWeb(cwd: string) {
     const child = spawn(process.platform === 'win32' ? 'npm.cmd' : 'npm', ['run', 'build'], {
       cwd: path.resolve(cwd, './packages/web'),
       stdio: 'inherit',
-      env: process.env
+      env: {
+        ...process.env,
+        PROJECT_MANAGER_IPC_CHILD: undefined
+      }
     })
     child.on('exit', (code) => {
       resolve(code)
