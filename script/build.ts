@@ -6,11 +6,11 @@ import fs from 'fs'
 
 (async () => {
   const cwd = path.resolve(__dirname, '../')
-  console.log('\nClear ...\n')
+  console.log('Clear ...')
   rimrafSync(path.resolve(cwd, './dist'))
-  console.log('\nBuilding web...\n')
+  console.log('Building web...')
   await buildWeb(cwd)
-  console.log('\nBuilding server...\n')
+  console.log('Building server...')
   await buildServer(cwd)
 })()
 
@@ -40,6 +40,10 @@ async function buildServer(cwd: string) {
     }
     fs.writeFileSync(path.resolve(dist, 'index.js'), code)
     for (const name in assets) {
+      // exclude client-dist
+      if (/^client-dist/.test(name)) {
+        continue
+      }
       const file = path.resolve(dist, name)
       const content = assets[name]
       const dir = path.dirname(file)
