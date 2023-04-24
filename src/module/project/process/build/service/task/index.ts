@@ -77,6 +77,10 @@ export default class BuildTaskService {
     })
   }
 
+  update(project: ProjectEntity) {
+    this.project = project
+  }
+
   info() {
     return {
       status: this.status.get(),

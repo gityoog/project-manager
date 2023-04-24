@@ -47,6 +47,12 @@ export default class ProjectProcessDevService {
         delete this.keyDict[task.key]
       }
     })
+    this.projectBus.onUpdate(row => {
+      const task = this.data[row.id]
+      if (task) {
+        task.update(row)
+      }
+    })
     this.ipc.on('url', data => {
       const task = this.keyDict[data.id]
       if (task) {

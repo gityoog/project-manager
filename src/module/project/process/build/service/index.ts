@@ -53,6 +53,12 @@ export default class ProjectProcessBuildService {
         delete this.keyDict[task.key]
       }
     })
+    this.projectBus.onUpdate(row => {
+      const task = this.data[row.id]
+      if (task) {
+        task.update(row)
+      }
+    })
     this.ipc.on('dist', data => {
       const task = this.keyDict[data.id]
       if (task) {

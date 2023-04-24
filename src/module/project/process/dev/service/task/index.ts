@@ -53,6 +53,10 @@ export default class DevTaskService {
     })
   }
 
+  update(project: ProjectEntity) {
+    this.project = project
+  }
+
   setUrl(url: url) {
     if (this.url !== url) {
       this.url = url
