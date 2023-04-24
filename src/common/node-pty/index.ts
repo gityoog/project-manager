@@ -34,7 +34,7 @@ export default class NodePtyService {
       if (this.options.stats !== false) {
         this.state.activeStats(this.process.pid)
       }
-      this.tip('start\n')
+      this.tip('start')
       this.listeners.push(
         this.process.onData(data => {
           this.state.writeStdout(data)
@@ -61,9 +61,11 @@ export default class NodePtyService {
   }
 
   tip(name: string, detail?: string) {
-    this.state.writeStdout('\n' +
-      `------${name}------` +
-      (detail ? `\n${detail}\n------${name}------` : '')
+    this.state.writeStdout(`------${name}------` +
+      (detail ? `\n${detail}\n^^^^^^${name}^^^^^^` : ''),
+      {
+        LF: true
+      }
     )
   }
 

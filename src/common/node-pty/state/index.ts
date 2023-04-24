@@ -37,11 +37,18 @@ class PtyState {
   }
 
   private stdoutCallback?: (data: string) => void
-  writeStdout(data: string) {
-    this.stdout.push(data)
+  writeStdout(data: string, { LF }: { LF?: boolean } = { LF: false }) {
     if (this.stdout.length > 10) {
       this.stdout.shift()
     }
+    const last = this.stdout[this.stdout.length - 1]
+    if (LF && last) {
+      const ending = last[last.length - 1]
+      if (ending && ending !== '\n' && ending !== '\r') {
+        data = '\n' + data
+      }
+    }
+    this.stdout.push(data)
     this.stdoutCallback?.(data)
   }
   onStdoutPush(callback: (data: string) => void) {
