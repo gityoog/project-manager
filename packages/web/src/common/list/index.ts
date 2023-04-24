@@ -91,8 +91,10 @@ class ListService<T = any, P extends Record<string, any> = object, U extends boo
   getRow(index: number) {
     return this.data[index]
   }
-  removeRow(index: number) {
-    this.data.splice(index, 1)
+  removeRow(index: number, data?: T) {
+    if (!data || data === this.data[index]) {
+      this.data.splice(index, 1)
+    }
   }
   destroy() {
     this.data = []

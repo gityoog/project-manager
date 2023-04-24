@@ -42,7 +42,7 @@ export default class ITableList<T = any, P extends Record<string, any> = object,
               title: '删除操作',
               message: '删除成功'
             })
-            this.list.removeRow(index)
+            this.list.removeRow(index, data)
           })
         )
       }
