@@ -3,11 +3,11 @@ import path from 'path'
 import { spawn } from 'child_process'
 import Ncc from '@vercel/ncc'
 import fs from 'fs'
-import Ipc from 'project-manager-ipc'
+import ProjectManagerIpc from 'project-manager-ipc'
 
 (async () => {
   const cwd = path.resolve(__dirname, '../')
-  const ipc = new Ipc({
+  const ipc = new ProjectManagerIpc({
     log: () => { }
   })
   ipc.connect()
@@ -17,7 +17,6 @@ import Ipc from 'project-manager-ipc'
   await buildWeb(cwd)
   console.log('Building server...')
   await buildServer(cwd)
-  console.log('Build success!')
   ipc.emitDist(path.resolve(cwd, './dist'))
   ipc.destroy()
 })()
