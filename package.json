@@ -8,6 +8,9 @@
     "build": "node -r ts-swc-register ./script/build.ts"
   },
   "nodemonConfig": {
+    "ignore": [
+      "packages/*"
+    ],
     "execMap": {
       "ts": "node -r ts-swc-register"
     }
