@@ -93,14 +93,15 @@ export default class BuildTaskService {
     }
   }
 
-  run(shell: string) {
+  run(shell: string, type: PtyService.Type) {
     if (!this.project.build) {
       return false
     }
     const pid = this.pty.run({
       shell,
       command: this.project.build,
-      cwd: this.project.context
+      cwd: this.project.context,
+      type
     })
     this.logging.save({
       target: 'BuildProcess',

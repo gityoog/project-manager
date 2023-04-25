@@ -22,6 +22,16 @@ namespace PtyService {
 }
 
 class PtyService {
+  static Types: {
+    name: string
+    value: PtyService.Type
+  }[] = [{
+    name: 'node-pty',
+    value: 'node-pty'
+  }, {
+    name: 'child_process',
+    value: 'child_process'
+  }]
   private state = new PtyState({ onError: this.options.onError })
   private process?: iPtyProcess
   constructor(protected options: {

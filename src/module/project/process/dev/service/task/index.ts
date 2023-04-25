@@ -80,14 +80,15 @@ export default class DevTaskService {
     }
   }
 
-  run(shell: string) {
+  run(shell: string, type: PtyService.Type) {
     if (!this.project.dev) {
       return false
     }
     const pid = this.pty.run({
       shell,
       command: this.project.dev,
-      cwd: this.project.context
+      cwd: this.project.context,
+      type
     })
     this.logging.save({
       target: 'DevProcess',

@@ -4,6 +4,7 @@ import { Repository } from 'typeorm'
 import os from 'os'
 import ConfigEntity from "../entity"
 import LoggingService from "@/module/logging/service"
+import PtyService from "@/common/pty"
 
 type item = {
   name: string
@@ -11,6 +12,7 @@ type item = {
 }
 type data = {
   shell: item
+  pty: item
 }
 
 @Injectable()
@@ -19,6 +21,10 @@ export default class ConfigData {
     shell: {
       name: 'shell',
       default: () => os.platform() === 'win32' ? 'cmd.exe /C' : 'sh -c'
+    },
+    pty: {
+      name: 'pty',
+      default: () => PtyService.Types[0].value
     }
   }
   private cache: {

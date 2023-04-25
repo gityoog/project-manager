@@ -26,9 +26,10 @@ export default class ProjectProcessDevService {
   async run(id: string) {
     const row = await this.project.detail(id)
     const shell = await this.config.getShell()
+    const type = await this.config.getPty()
     if (row) {
       const task = this.factory(row)
-      return task.run(shell)
+      return task.run(shell, type)
     }
     return false
   }
