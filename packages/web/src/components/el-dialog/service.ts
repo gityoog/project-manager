@@ -1,6 +1,7 @@
 import Status from "@/common/status"
 import { iElDialog } from "."
 import { Message } from "element-ui"
+import i18n from "./i18n"
 
 export default class IElDialog implements iElDialog {
   visible: boolean
@@ -30,7 +31,7 @@ export default class IElDialog implements iElDialog {
     isCanSubmit = true,
     onOpened, onClose, onSubmit, onFirstOpen,
     footer = true,
-    title = '数据编辑',
+    title = '',
     closeOnClickModal = ENV.isDev,
     appendToBody
   }: {
@@ -70,7 +71,7 @@ export default class IElDialog implements iElDialog {
       if (!this.status.loading) {
         done()
       } else {
-        Message.warning('请稍后')
+        Message.warning(i18n.t.wait)
       }
     }
   }
@@ -97,7 +98,7 @@ export default class IElDialog implements iElDialog {
       return this.status.fail(this.loading.msg)
     }
     if (this.loading.loading) {
-      return this.status.fail('请等待数据加载完成')
+      return this.status.fail(i18n.t.wait)
     }
     this.onSubmit?.(this.status)
   }

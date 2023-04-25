@@ -8,18 +8,19 @@ import { iSettingForm } from "."
 
 @Service()
 export default class ISettingForm implements iSettingForm {
-  @Inject() private locale!: LocaleService
-
+  @Inject() locale!: LocaleService
+  private get $t() {
+    return this.locale.t.setting.base
+  }
   status = new Status
   data = {
     shell: '',
     pty: '',
     lang: ''
   }
-  langs: {
-    name: string
-    value: string
-  }[] = []
+  get langs() {
+    return this.locale.langs
+  }
   ptys: {
     name: string
     value: string
@@ -29,7 +30,6 @@ export default class ISettingForm implements iSettingForm {
   }
   @Already
   private init() {
-    this.langs = this.locale.langs
     AppApi.config.ptys().success(data => {
       this.ptys = data
     })
@@ -59,18 +59,18 @@ export default class ISettingForm implements iSettingForm {
         pty: this.data.pty
       }).success(() => {
         this.locale.lang = this.data.lang
-        ElMessage.success('保存成功')
+        ElMessage.success(this.$t.saveSuccess)
       })
     )
   }
   clearOutput() {
     Confirm({
-      title: '清空打包记录',
-      message: '确定要清空所有打包记录和文件吗？',
+      title: this.$t.clearOutputTitle,
+      message: this.$t.clearOutputMessage,
       callback: ({ status, close }) => {
         status.use(
           AppApi.project.output.clear().success(() => {
-            ElMessage.success('清空成功')
+            ElMessage.success(this.$t.clearOutputSuccess)
             close()
           })
         )
@@ -80,12 +80,12 @@ export default class ISettingForm implements iSettingForm {
 
   clearLog() {
     Confirm({
-      title: '清空日志记录',
-      message: '确定要清空所有日志记录吗？',
+      title: this.$t.clearLogTitle,
+      message: this.$t.clearLogMessage,
       callback: ({ status, close }) => {
         status.use(
           AppApi.logging.clear().success(() => {
-            ElMessage.success('清空成功')
+            ElMessage.success(this.$t.clearLogSuccess)
             close()
           })
         )

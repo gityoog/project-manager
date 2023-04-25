@@ -1,10 +1,13 @@
 import AppApi from "app/api"
 import ITableList from "@/components/table-list/service"
-import { Service } from "ioc-di"
+import { Inject, Service } from "ioc-di"
 import { iLoggingManager } from "."
+import LocaleService from "@/app/common/locale"
 
 @Service()
 export default class ILoggingManager implements iLoggingManager {
+  @Inject() locale!: LocaleService
+
   remove(index: number) {
     this.table.remove(index, data => AppApi.logging.remove(data))
   }

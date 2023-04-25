@@ -4,6 +4,7 @@ import ElNotification from "@/common/element-ui/notification"
 import IElDialog from "components/el-dialog/service"
 import { Inject, Service } from "ioc-di"
 import { iProjectEditor } from "."
+import LocaleService from "@/app/common/locale"
 
 type data = {
   id: string
@@ -30,7 +31,9 @@ const defData = {
 @Service()
 export default class IProjectEditor implements iProjectEditor {
   @Inject() private category!: ProjectCategoryService
-  dialog = new IElDialog({ title: '项目信息' })
+  @Inject() locale!: LocaleService
+
+  dialog = new IElDialog()
   data = { ...defData }
   get types() {
     return this.category.data

@@ -7,6 +7,7 @@ import AppWs from "app/ws"
 import AppApi from "app/api"
 import ElMessage from "@/common/element-ui/message"
 import IProjectBuilder from "../project-builder/service"
+import LocaleService from "@/app/common/locale"
 
 @Container()
 @Service()
@@ -14,6 +15,10 @@ export default class IProjectCard implements iProjectCard {
   @Inject() private editor!: IProjectEditor
   @Inject() private selector!: IProjectSelector
   @Inject() private builder!: IProjectBuilder
+  @Inject() locale!: LocaleService
+  private get $t() {
+    return this.locale.t.project.card
+  }
   private ws
   private data: Project.data
   id: string
@@ -111,7 +116,7 @@ export default class IProjectCard implements iProjectCard {
       id: this.id
     }).validate(data => data !== false)
       .fail(err => {
-        ElMessage.warning(`启动失败`)
+        ElMessage.warning(this.$t.runFail)
       })
       .success(() => {
         this.updateStatus(true)

@@ -4,10 +4,15 @@ import ElMessage from "@/common/element-ui/message"
 import ITableList from "@/components/table-list/service"
 import { Already, Inject, Service } from "ioc-di"
 import { iProjectCategoryManager } from "."
+import LocaleService from "@/app/common/locale"
 
 @Service()
 export default class IProjectCategoryManager implements iProjectCategoryManager {
   @Inject() private category!: ProjectCategoryService
+  @Inject() locale!: LocaleService
+  private get $t() {
+    return this.locale.t.category
+  }
   loading = false
   form = {
     id: '',
@@ -50,7 +55,7 @@ export default class IProjectCategoryManager implements iProjectCategoryManager 
   }
   save() {
     if (!this.form.name) {
-      return ElMessage.warning('请输入分类名称')
+      return ElMessage.warning(this.$t.tip.name)
     }
     AppApi.project.category.save(this.form)
       .success(() => {

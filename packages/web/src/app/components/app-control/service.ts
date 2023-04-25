@@ -8,6 +8,7 @@ import IProjectSelector from "../project-selector/service"
 import ProjectCategoryService from "app/common/project-category"
 import IProjectListCache from "app/common/project-list-cache"
 import IProjectBuilder from "../project-builder/service"
+import LocaleService from "@/app/common/locale"
 
 type tab = {
   name: string
@@ -23,6 +24,7 @@ export default class IAppControl implements iAppControl {
   @Inject() builder!: IProjectBuilder
   @Inject() private category!: ProjectCategoryService
   @Inject() private cache!: IProjectListCache
+  @Inject() private locale!: LocaleService
 
   private tab = new TabSelect<tab>({
     data: [],
@@ -71,7 +73,9 @@ export default class IAppControl implements iAppControl {
             data: item,
             visible: true
           })), {
-            name: '其他',
+            get name() {
+              return self.locale.t.tabs.other
+            },
             data: null,
             get visible() {
               return self.cache.showUncategorized

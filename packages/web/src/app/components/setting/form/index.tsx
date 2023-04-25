@@ -7,6 +7,7 @@ import ElOption from '@/common/element-ui/option'
 import { FC } from '@/common/vue'
 import ElLoading, { iElLoading } from '@/components/el-loading'
 import style from './style.module.scss'
+import LocaleService from '@/app/common/locale'
 
 export interface iSettingForm {
   data: {
@@ -24,6 +25,7 @@ export interface iSettingForm {
   }[]
   status: iElLoading
   saveLoading: boolean
+  locale: LocaleService
   save(): void
   refresh(): void
   clearOutput(): void
@@ -34,29 +36,30 @@ const SettingForm = FC<{ service: iSettingForm }>({
   functional: true,
   render(h, context) {
     const service = context.props.service
-    const { data, status, saveLoading, ptys, langs } = service
+    const { data, status, saveLoading, ptys, langs, locale } = service
+    const $t = locale.t.setting.base
     return <ElLoading status={status} class={style.form}>
       <ElForm size='small' labelWidth='60px' labelPosition='left'>
-        <ElFormItem label='cache'>
-          <ElButton onClick={() => service.clearOutput()} type='text'>清空输出</ElButton>
-          <ElButton onClick={() => service.clearLog()} type='text'>清空日志</ElButton>
+        <ElFormItem label={$t.cache}>
+          <ElButton onClick={() => service.clearOutput()} type='text'>{$t.clearOutput}</ElButton>
+          <ElButton onClick={() => service.clearLog()} type='text'>{$t.clearLog}</ElButton>
         </ElFormItem>
-        <ElFormItem label='lang'>
+        <ElFormItem label={$t.lang}>
           <ElSelect vModel={data.lang} style="width: 240px;">
             {langs.map(lang => <ElOption value={lang.value} label={lang.name}></ElOption>)}
           </ElSelect>
         </ElFormItem>
-        <ElFormItem label='shell'>
+        <ElFormItem label={$t.shell}>
           <ElInput v-model={data.shell} style="width: 240px;"></ElInput>
         </ElFormItem>
-        <ElFormItem label='pty'>
+        <ElFormItem label={$t.pty}>
           <ElSelect vModel={data.pty} style="width: 240px;">
             {ptys.map(pty => <ElOption value={pty.value} label={pty.name}></ElOption>)}
           </ElSelect>
         </ElFormItem>
         <ElFormItem>
-          <ElButton onClick={() => service.refresh()}>重置</ElButton>
-          <ElButton loading={saveLoading} onClick={() => service.save()} type='primary'>保存</ElButton>
+          <ElButton onClick={() => service.refresh()}>{$t.reset}</ElButton>
+          <ElButton loading={saveLoading} onClick={() => service.save()} type='primary'>{$t.save}</ElButton>
         </ElFormItem>
       </ElForm>
     </ElLoading>

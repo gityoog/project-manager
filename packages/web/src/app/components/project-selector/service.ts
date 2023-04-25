@@ -1,11 +1,16 @@
 import AppApi from "app/api"
 import Confirm from "@/common/comfirm"
-import { Destroy, Service } from "ioc-di"
+import { Destroy, Inject, Service } from "ioc-di"
 import { iProjectSelector } from "."
 import IProjectList from "../project-list/service"
+import LocaleService from "@/app/common/locale"
 
 @Service()
 export default class IProjectSelector implements iProjectSelector {
+  @Inject() private locale!: LocaleService
+  private get $t() {
+    return this.locale.t.selector
+  }
   private list: IProjectList | null = null
   visible = false
   isAllChecked() {
@@ -20,8 +25,8 @@ export default class IProjectSelector implements iProjectSelector {
     const data = this.list?.getChecked() ?? []
     if (data.length > 0) {
       Confirm({
-        title: '删除项目',
-        message: `确定删除${data.length}个项目吗？`,
+        title: this.$t.confirm.title,
+        message: this.$t.confirm.message(data.length),
         callback: ({ status, close }) => {
           status.use(
             AppApi.project.manager.remove({

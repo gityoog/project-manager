@@ -1,3 +1,4 @@
+import LocaleService from '@/app/common/locale'
 import ElTabs from '@/common/element-ui/tabs'
 import ElTabPane from '@/common/element-ui/tabs/pane'
 import { FC } from '@/common/vue'
@@ -12,6 +13,7 @@ export interface iAppSetting {
   form?: iSettingForm
   category?: iProjectCategoryManager
   logging?: iLoggingManager
+  locale: LocaleService
   activeForm(): void
   activeCategory(): void
   activeLogging(): void
@@ -21,24 +23,26 @@ const AppSetting = FC<{ service: iAppSetting }>({
   functional: true,
   render(h, context) {
     const service = context.props.service
-    const { dialog, category, logging, form } = service
-    return <ElDialog class={style.setting} width='60vw' title='系统设置' fullHeight service={dialog}>
+    const { dialog, category, logging, form, locale } = service
+    const $t = locale.t.setting
+
+    return <ElDialog class={style.setting} width='60vw' title={$t.title} fullHeight service={dialog}>
       <ElTabs on-tab-click={(tab) => {
-        if (tab.label === '分类管理') {
+        if (tab.label === $t.category.title) {
           service.activeCategory()
-        } else if (tab.label === '操作日志') {
+        } else if (tab.label === $t.logging.title) {
           service.activeLogging()
-        } else if (tab.label === '基础设置') {
+        } else if (tab.label === $t.base.title) {
           service.activeForm()
         }
       }} class={style.tabs}>
-        <ElTabPane label='基础设置'>
+        <ElTabPane label={$t.base.title}>
           {form && <SettingForm service={form} />}
         </ElTabPane>
-        <ElTabPane label='分类管理'>
+        <ElTabPane label={$t.category.title}>
           {category && <ProjectCategoryManager service={category} />}
         </ElTabPane>
-        <ElTabPane label='操作日志'>
+        <ElTabPane label={$t.logging.title}>
           {logging && <LoggingManager service={logging} />}
         </ElTabPane>
       </ElTabs>

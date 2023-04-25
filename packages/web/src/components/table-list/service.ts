@@ -4,9 +4,14 @@ import ListService from "@/common/list"
 import WRequest from "wrequest"
 import { iTableList } from "."
 import IPageInfo from "../page-info/service"
+import i18n from './i18n'
 
 export default class ITableList<T = any, P extends Record<string, any> = object, U extends boolean | IPageInfo.Options | void = void> implements iTableList<T, P> {
+  static i18n = i18n
   private list
+  get $t() {
+    return i18n.t
+  }
   get status() {
     return this.list.status
   }
@@ -32,15 +37,15 @@ export default class ITableList<T = any, P extends Record<string, any> = object,
   remove(index: number, callback: (data: T) => WRequest<any>) {
     const data = this.list.getRow(index)
     Confirm({
-      title: '删除确认',
-      message: '删除后不可恢复, 是否继续',
+      title: this.$t.remove.confirm.title,
+      message: this.$t.remove.confirm.message,
       callback: ({ status, close }) => {
         status.use(
           callback(data).success(() => {
             close()
             ElNotification.success({
-              title: '删除操作',
-              message: '删除成功'
+              title: this.$t.remove.success.title,
+              message: this.$t.remove.success.message
             })
             this.list.removeRow(index, data)
           })

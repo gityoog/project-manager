@@ -1,5 +1,6 @@
+import LocaleService from "@/app/common/locale"
 import IElDialog from "@/components/el-dialog/service"
-import { Already, Concat, Service } from "ioc-di"
+import { Already, Concat, Inject, Service } from "ioc-di"
 import { iAppSetting } from "."
 import IProjectCategoryManager from "../category-manager/service"
 import ILoggingManager from "../logging-manager/service"
@@ -7,6 +8,7 @@ import ISettingForm from "./form/service"
 
 @Service()
 export default class IAppSetting implements iAppSetting {
+  @Inject() locale!: LocaleService
   dialog = new IElDialog({
     footer: false,
     onFirstOpen: () => {

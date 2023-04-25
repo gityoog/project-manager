@@ -4,6 +4,7 @@ import ElLoading, { iElLoading } from 'components/el-loading'
 import style from './style.module.scss'
 import ElScrollbar from '@/common/element-ui/scrollbar'
 import ElButton from '@/common/element-ui/button'
+import i18n from './i18n'
 
 export interface iElDialog {
   visible: boolean
@@ -33,8 +34,11 @@ export interface iElDialog {
   center?: boolean
 }
 
+Vue.observable(i18n)
+
 @Component
 export default class ElDialog extends Vue {
+  static i18n = i18n
   $props!: {
     service: iElDialog
     top?: string
@@ -72,6 +76,7 @@ export default class ElDialog extends Vue {
   }
 
   protected render() {
+    const $t = i18n.t
     return (
       <Dialog
         class={style.editor}
@@ -101,12 +106,12 @@ export default class ElDialog extends Vue {
           <span slot="footer">
             {this.service.status.error ? <div class={[style.loadMsg, 'el-dialog__footer-msg']}>{this.service.status.msg}</div> : null}
             {this.$slots.footer}
-            <ElButton size="small" onClick={() => this.service.close()} >取 消</ElButton>
-            <ElButton loading={this.service.status.loading} size="small" type="primary" onClick={() => this.service.submit()}>确 定</ElButton>
+            <ElButton size="small" onClick={() => this.service.close()} >{$t.cancel}</ElButton>
+            <ElButton loading={this.service.status.loading} size="small" type="primary" onClick={() => this.service.submit()}>{$t.sbumit}</ElButton>
           </span> :
           <span slot="footer">
             {this.$slots.footer}
-            <ElButton size="small" onClick={() => this.service.close()}>关 闭</ElButton>
+            <ElButton size="small" onClick={() => this.service.close()}>{$t.close}</ElButton>
           </span>)}
       </Dialog>
     )

@@ -2,17 +2,21 @@ import AppApi from "app/api"
 import IElDialog from "@/components/el-dialog/service"
 import ITableList from "@/components/table-list/service"
 import TerminalService from "@/components/terminal/service"
-import { Service } from "ioc-di"
+import { Inject, Service } from "ioc-di"
 import { iProjectBuilder } from "."
 import AppWs from "@/app/ws"
+import LocaleService from "@/app/common/locale"
 
 type ws = ReturnType<typeof AppWs.process.build>
 
 @Service()
 export default class IProjectBuilder implements iProjectBuilder {
+  @Inject() locale!: LocaleService
+  private get $t() {
+    return this.locale.t.project.build
+  }
   private id: string = ''
   dialog = new IElDialog({
-    title: '打包',
     onClose: () => {
       this.clear()
     }
@@ -41,14 +45,14 @@ export default class IProjectBuilder implements iProjectBuilder {
     if (this.status) {
       AppApi.project.process.build.stop({
         id: this.id
-      }).validate(value => value ? true : '停止失败')
+      }).validate(value => value ? true : this.$t.tip.stopFail)
         .success(() => {
           this.status = false
         })
     } else {
       AppApi.project.process.build.start({
         id: this.id
-      }).validate(value => value ? true : '启动失败')
+      }).validate(value => value ? true : this.$t.tip.runFail)
         .success(() => {
           this.status = true
         })

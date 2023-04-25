@@ -8,6 +8,7 @@ import UnCheckSvg from 'app/images/uncheck.svg'
 import PlayIcon from 'app/images/play.svg'
 import PauseIcon from 'app/images/pause.svg'
 import TerminalComponent, { iTerminal } from 'components/terminal'
+import LocaleService from '@/app/common/locale'
 
 export interface iProjectCard {
   id: string
@@ -19,6 +20,7 @@ export interface iProjectCard {
   showCheck: boolean
   checked: boolean
   url: string | null
+  locale: LocaleService
   open(): void
   stop(): void
   run(): void
@@ -31,7 +33,8 @@ const ProjectCard = FC<{ service: iProjectCard }>({
   functional: true,
   render(h, context) {
     const service = context.props.service
-    const { status, url, cpuUsage, memoryUsage, terminal } = service
+    const { status, url, cpuUsage, memoryUsage, terminal, locale } = service
+    const $t = locale.t.project.card
     return <div key={service.id} class={style.card}>
       <div v-show={service.showCheck} onClick={() => service.toggleCheck()} class={style.check}>{service.checked ? <CheckSvg /> : <UnCheckSvg />}</div>
       <div onClick={() => status ? service.stop() : service.run()} class={[style.status, status ? style.enabled : undefined]}>
@@ -41,9 +44,9 @@ const ProjectCard = FC<{ service: iProjectCard }>({
         <div class={style.title}>
           <div class={style.left}>
             <div onClick={() => service.edit()} class={style.name}>{service.name}</div>
-            <div class={[style.status, status ? style.enabled : undefined]}>{status ? '运行中' : '已停止'}</div>
+            <div class={[style.status, status ? style.enabled : undefined]}>{status ? $t.running : $t.exited}</div>
           </div>
-          <div class={style.buildBt} onClick={() => service.build()} ><DBIcon size="24px" fill="#fff" ></DBIcon>打包</div>
+          <div class={style.buildBt} onClick={() => service.build()} ><DBIcon size="24px" fill="#fff" ></DBIcon>{$t.build}</div>
         </div>
         {status && <div class={style.info}>
           <div class={style.stat}>

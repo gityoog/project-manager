@@ -8,9 +8,11 @@ import ArrowUpSvg from 'app/images/arrow-up.svg'
 import ElButton from '@/common/element-ui/button'
 import TableList, { iTableList } from '@/components/table-list'
 import ElTableColumn from '@/common/element-ui/table/column'
+import LocaleService from '@/app/common/locale'
 
 export interface iProjectBuilder {
   dialog: iElDialog
+  locale: LocaleService
   expanded: boolean
   terminal: iTerminal
   status: boolean
@@ -24,8 +26,9 @@ const ProjectBuilder = FC<{ service: iProjectBuilder }>({
   functional: true,
   render(h, context) {
     const service = context.props.service
-    const { dialog, status, terminal, table } = service
-    return <ElDialog class={style.builder} width='60vw' fullHeight service={dialog}>
+    const { dialog, status, terminal, table, locale } = service
+    const $t = locale.t.project.build
+    return <ElDialog title={$t.title} class={style.builder} width='60vw' fullHeight service={dialog}>
       <div class={style.container}>
         <div class={style.top}>
           <div class={style.console}>
@@ -36,17 +39,19 @@ const ProjectBuilder = FC<{ service: iProjectBuilder }>({
               {service.expanded ? <ArrowUpSvg /> : <ArrowDownSvg />}
             </div>
           </div>
-          <ElButton size='mini' icon={status ? 'el-icon-close' : 'el-icon-s-promotion'} class={style.bt} type={status ? 'danger' : 'primary'} onClick={() => service.toggleStatus()}>{status ? '停止' : '打包'}</ElButton>
+          <ElButton size='mini' icon={status ? 'el-icon-close' : 'el-icon-s-promotion'} class={style.bt} type={status ? 'danger' : 'primary'} onClick={() => service.toggleStatus()}>
+            {status ? $t.stop : $t.run}
+          </ElButton>
         </div>
         <div class={style.list}>
           <TableList size='mini' service={table}>
-            <ElTableColumn label='名称' prop="name" />
-            <ElTableColumn label='时间' prop="created_at" />
-            <ElTableColumn label='大小' prop="size" />
-            <ElTableColumn label='操作' width="140px" align="center" scopedSlots={{
+            <ElTableColumn label={$t.list.name} prop="name" />
+            <ElTableColumn label={$t.list.time} prop="created_at" />
+            <ElTableColumn label={$t.list.size} prop="size" />
+            <ElTableColumn label={$t.list.action} width="160px" align="center" scopedSlots={{
               default: ({ $index }) => <div class={style.actions}>
-                <ElButton type='text' onClick={() => service.download($index)}>下载</ElButton>
-                <ElButton class={style.remove} type='text' onClick={() => service.remove($index)}>删除</ElButton>
+                <ElButton type='text' onClick={() => service.download($index)}>{$t.download}</ElButton>
+                <ElButton class={style.remove} type='text' onClick={() => service.remove($index)}>{$t.remove}</ElButton>
               </div>
             }} />
           </TableList>

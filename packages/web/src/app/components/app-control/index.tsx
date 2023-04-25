@@ -34,11 +34,11 @@ export interface iAppControl {
 @DIComponent
 export default class AppControl extends Vue {
   @Inject(IAppControl) private service!: iAppControl
-  @Inject() private l!: LocaleService
+  @Inject() private locale!: LocaleService
 
   protected render() {
     const { tabs, list, editor, setting, selector, builder } = this.service
-    const { t } = this.l
+    const $t = this.locale.t
     return <div class={style.app}>
       <AppSetting service={setting} />
       <ProjectEditor service={editor} />
@@ -46,7 +46,7 @@ export default class AppControl extends Vue {
       <div class={style.header}>
         <div class={style.logo}>
           <LogoSvg size="32px" fill='#fff'></LogoSvg>
-          <div class={style.text}>{t.title}</div></div>
+          <div class={style.text}>{$t.title}</div></div>
         <div class={style.nav}>
           {tabs.map((item, index) => <div v-show={item.visible} onClick={() => this.service.active(index)} class={[style.item, this.service.isActived(index) && style.actived]}>
             {item.name}
