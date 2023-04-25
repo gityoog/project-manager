@@ -17,7 +17,7 @@ const ElLoading = FC<{
       {...context.data}
       attrs={{
         ...context.data.attrs,
-        'element-loading-text': status.msg || '加载中',
+        'element-loading-text': status.msg || 'Loading',
         'element-loading-spinner': status.error ? 'el-icon-close' : undefined,
         status: undefined,
         fail: undefined

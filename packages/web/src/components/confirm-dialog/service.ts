@@ -5,7 +5,7 @@ import { iConfirmDialog } from "."
 export default class IConfirmDialog implements iConfirmDialog {
   dialog = new IElDialog({
     onClose: this.options.onClose,
-    title: '询问',
+    title: 'Confrim',
     width: '400px'
   })
   message = ''

@@ -12,7 +12,7 @@ export default class Status {
       if (this.wrequest !== wrequest) {
         return
       }
-      this.msg = '请稍后'
+      this.msg = 'Loading'
       this.loading = true
     }).after.success(() => {
       if (this.wrequest !== wrequest) {
