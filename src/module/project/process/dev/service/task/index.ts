@@ -93,7 +93,7 @@ export default class DevTaskService {
     this.logging.save({
       target: 'DevProcess',
       action: 'Run',
-      description: `${this.project.name}: ${pid}`
+      description: `${this.project.name} ${type}: ${pid}`
     })
     return pid
   }

@@ -106,7 +106,7 @@ export default class BuildTaskService {
     this.logging.save({
       target: 'BuildProcess',
       action: 'Run',
-      description: `${this.project.name}: ${pid}`
+      description: `${this.project.name} ${type}: ${pid}`
     })
     return pid
   }
