@@ -53,7 +53,17 @@ const MainRequest: MainRequest = <T = void, R = void>(config: AxiosRequestConfig
 
 let errorHandler = (error: string) => { console.error(error) }
 
-MainRequest.url = callback => data => service.defaults.baseURL + callback(data)
+MainRequest.url = callback => data => {
+  const url = callback(data)
+  const base = service.defaults.baseURL!
+  if (base.endsWith('/') && url.startsWith('/')) {
+    return base + url.slice(1)
+  } else if (!base.endsWith('/') && !url.startsWith('/')) {
+    return base + '/' + url
+  } else {
+    return base + url
+  }
+}
 MainRequest.page = (config) => MainRequest(config)
 MainRequest.bindBaseUrl = url => service.defaults.baseURL = url
 MainRequest.bindErrorhandler = callback => errorHandler = callback
