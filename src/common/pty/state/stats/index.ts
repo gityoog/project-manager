@@ -14,6 +14,7 @@ export default class PtyUsageStats {
   private index = 0
   private running = false
   private data: stats | null = null
+  constructor(private options: { onError?: (name: string, err: Error) => void } = {}) { }
   getData() {
     return this.data
   }
@@ -32,16 +33,16 @@ export default class PtyUsageStats {
       this.timeout = undefined
     }
     this.query(pid, (err, stats) => {
-      if (err) return console.log(err)
+      if (err) return this.options.onError ? this.options.onError(err.name, err.err) : console.log(err.name, err.err.message)
       if (index !== this.index) return
       if (!this.running) return
       this.setData(stats || null)
       this.timeout = setTimeout(() => this.start(pid), 1000)
     })
   }
-  private query(pid: number, callback: (err: null | Error, stats?: stats) => void) {
+  private query(pid: number, callback: (err: null | ({ name: string, err: Error }), stats?: stats) => void) {
     ProcessTree(pid, (err, children) => {
-      if (err) return callback(err)
+      if (err) return callback({ err, name: `QueryProcessTree: ${pid}` })
       const pids: number[] = [pid]
       while (children.length) {
         const child = children.shift()
@@ -51,7 +52,7 @@ export default class PtyUsageStats {
         }
       }
       pidusage(pids, (err, stats) => {
-        if (err) return callback(err)
+        if (err) return callback({ err, name: `QueryProcessUsage: ${pids.join(',')}` })
         const data = Object.values(stats).reduce((total, cur) => ({
           cpu: total.cpu + cur.cpu,
           memory: total.memory + cur.memory,
@@ -64,6 +65,7 @@ export default class PtyUsageStats {
     })
   }
   stop() {
+    pidusage.clear()
     this.running = false
     this.setData(null)
     if (this.timeout) {

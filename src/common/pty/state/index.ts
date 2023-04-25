@@ -1,4 +1,5 @@
 import PtyUsageStats from "./stats"
+import boxen from 'boxen'
 
 namespace PtyState {
   export type url = {
@@ -14,8 +15,8 @@ namespace PtyState {
 class PtyState {
   private stdout: string[] = []
   private status = false
-  private stats = new PtyUsageStats
-
+  private stats = new PtyUsageStats({ onError: this.options.onError })
+  constructor(private options: { onError?: (name: string, err: Error) => void } = {}) { }
   activeStats(pid: number) {
     if (pid) {
       this.stats.start(pid)
@@ -51,6 +52,10 @@ class PtyState {
     this.stdout.push(data)
     this.stdoutCallback?.(data)
   }
+  writeMessage(name: string, detail?: string) {
+    this.writeStdout(boxen(detail || name, { title: detail ? name : undefined, padding: { left: 1, right: 1 } }), { LF: true })
+  }
+
   onStdoutPush(callback: (data: string) => void) {
     this.stdoutCallback = callback
   }
