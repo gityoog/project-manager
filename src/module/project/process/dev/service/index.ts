@@ -18,7 +18,8 @@ export default class ProjectProcessDevService {
     private projectBus: ProjectBus,
     private ipc: NodeIpcService,
     private config: ConfigService,
-    private logging: LoggingService
+    private logging: LoggingService,
+    private logger: Logger
   ) {
     this.init()
   }
@@ -71,7 +72,8 @@ export default class ProjectProcessDevService {
         project,
         bus: this.bus,
         logging: this.logging,
-        ipc: this.ipc
+        ipc: this.ipc,
+        logger: this.logger
       })
       this.data[id] = task
       this.keyDict[task.key] = task
