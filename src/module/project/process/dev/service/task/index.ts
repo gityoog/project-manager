@@ -1,8 +1,9 @@
 import ProjectEntity from "@/module/project/service/entity"
-import NodePtyService from "@/common/node-pty"
 import ProjectProcessDevBus from "../../bus"
 import LoggingService from "@/module/logging/service"
 import NodeIpcService from "../../../node-ipc"
+import PtyService from "@/common/pty"
+import { Logger } from "@nestjs/common"
 
 type url = {
   host: string
@@ -16,18 +17,22 @@ export default class DevTaskService {
   private url: url = null
   private bus
   private logging
-  constructor({ project, bus, logging, ipc }: {
+  constructor({ project, bus, logging, ipc, logger }: {
     project: ProjectEntity,
     bus: ProjectProcessDevBus,
     logging: LoggingService,
-    ipc: NodeIpcService
+    ipc: NodeIpcService,
+    logger: Logger
   }) {
     this.project = project
     this.bus = bus
     this.logging = logging
     this.key = `dev_${project.id}`
-    this.pty = new NodePtyService({
-      env: ipc.env(this.key)
+    this.pty = new PtyService({
+      env: ipc.env(this.key),
+      onError: (name, err) => {
+        logger.log(`${name} ${err.message}`, 'DevTaskService')
+      }
     })
 
     this.pty.onStatusChange(status => {
@@ -82,7 +87,7 @@ export default class DevTaskService {
     const pid = this.pty.run({
       shell,
       command: this.project.dev,
-      cwd: this.project.context,
+      cwd: this.project.context
     })
     this.logging.save({
       target: 'DevProcess',

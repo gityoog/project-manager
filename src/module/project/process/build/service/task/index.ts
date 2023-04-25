@@ -1,5 +1,4 @@
 import ProjectEntity from "@/module/project/service/entity"
-import NodePtyService from "@/common/node-pty"
 import ProjectProcessBuildBus from "../../bus"
 import zipper from "zip-local"
 import ProjectOutputService from "@/module/project/ouput/service"
@@ -7,6 +6,8 @@ import BuildTaskStatus from "./status"
 import { ClsServiceManager } from "nestjs-cls"
 import LoggingService from "@/module/logging/service"
 import NodeIpcService from "../../../node-ipc"
+import PtyService from "@/common/pty"
+import { Logger } from "@nestjs/common"
 
 export default class BuildTaskService {
   private project: ProjectEntity
@@ -17,21 +18,25 @@ export default class BuildTaskService {
   private output
   private clsStore
   private logging
-  constructor({ project, bus, output, logging, ipc }: {
+  constructor({ project, bus, output, logging, ipc, logger }: {
     project: ProjectEntity,
     bus: ProjectProcessBuildBus,
     output: ProjectOutputService,
     logging: LoggingService,
-    ipc: NodeIpcService
+    ipc: NodeIpcService,
+    logger: Logger
   }) {
     this.project = project
     this.bus = bus
     this.logging = logging
     this.output = output
     this.key = `build_${project.id}`
-    this.pty = new NodePtyService({
+    this.pty = new PtyService({
       stats: false,
-      env: ipc.env(this.key)
+      env: ipc.env(this.key),
+      onError: (name, err) => {
+        logger.log(`${name} ${err.message}`, 'DevTaskService')
+      }
     })
 
     this.status.onChange(status => {
@@ -95,7 +100,7 @@ export default class BuildTaskService {
     const pid = this.pty.run({
       shell,
       command: this.project.build,
-      cwd: this.project.context,
+      cwd: this.project.context
     })
     this.logging.save({
       target: 'BuildProcess',
