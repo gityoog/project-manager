@@ -9,13 +9,21 @@ import { iSettingForm } from "."
 export default class ISettingForm implements iSettingForm {
   status = new Status
   data = {
-    shell: ''
+    shell: '',
+    pty: ''
   }
+  ptys: {
+    name: string
+    value: string
+  }[] = []
   constructor() {
     this.init()
   }
   @Already
   private init() {
+    AppApi.config.ptys().success(data => {
+      this.ptys = data
+    })
     this.query()
   }
 
@@ -23,26 +31,27 @@ export default class ISettingForm implements iSettingForm {
     this.status.use(
       AppApi.config.setting().success(data => {
         this.data.shell = data.shell
+        this.data.pty = data.pty
       })
     )
   }
   refresh() {
     this.query()
   }
-  private saveShellStatus = new Status
-  get saveShellLoading() {
-    return this.saveShellStatus.loading
+  private saveStatus = new Status
+  get saveLoading() {
+    return this.saveStatus.loading
   }
-  saveShell() {
-    this.saveShellStatus.use(
-      AppApi.config.saveShell({
-        shell: this.data.shell
+  save() {
+    this.saveStatus.use(
+      AppApi.config.save({
+        shell: this.data.shell,
+        pty: this.data.pty
       }).success(() => {
         ElMessage.success('保存成功')
       })
     )
   }
-
   clearOutput() {
     Confirm({
       title: '清空打包记录',

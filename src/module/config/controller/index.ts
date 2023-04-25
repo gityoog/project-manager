@@ -20,17 +20,16 @@ export default class ConfigController {
     return this.service.getPtys()
   }
 
-  @All('/shell/save')
-  saveShell(@Body() data: {
+  @All('/save')
+  async saveShell(@Body() data: {
     shell: string
-  }) {
-    return this.service.setShell(data.shell)
-  }
-
-  @All('/pty/save')
-  savePty(@Body() data: {
     pty: string
   }) {
-    return this.service.setPty(data.pty)
+    await this.service.setShell(data.shell)
+    await this.service.setPty(data.pty)
+    return {
+      shell: await this.service.getShell(),
+      pty: await this.service.getPty()
+    }
   }
 }
