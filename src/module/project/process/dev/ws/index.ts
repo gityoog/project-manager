@@ -1,4 +1,4 @@
-import { OnGatewayConnection, OnGatewayInit, WebSocketGateway } from "@nestjs/websockets"
+import { OnGatewayConnection, OnGatewayInit, WebSocketGateway, OnGatewayDisconnect } from "@nestjs/websockets"
 import { Server, Socket } from 'socket.io'
 import { Inject, Logger } from "@nestjs/common"
 import ProjectProcessDevBus from "../bus"
@@ -8,7 +8,7 @@ const nsRegx = /^\/project\/process\/dev\/([a-f0-9\-]+?)$/
 @WebSocketGateway({
   namespace: nsRegx
 })
-export default class ProjectProcessDevWsGateway implements OnGatewayInit, OnGatewayConnection {
+export default class ProjectProcessDevWsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @Inject() private logger!: Logger
   @Inject() private bus!: ProjectProcessDevBus
 
@@ -21,6 +21,9 @@ export default class ProjectProcessDevWsGateway implements OnGatewayInit, OnGate
     } else {
       this.logger.debug(`${socket.id} Has NoNRoom`, 'ProjectProcessDevWsGateway')
     }
+  }
+  handleDisconnect(socket: Socket) {
+    this.logger.debug(`${socket.id} Leave`, 'ProjectProcessDevWsGateway')
   }
   afterInit(server: Server) {
     this.bus.on((data) => {
