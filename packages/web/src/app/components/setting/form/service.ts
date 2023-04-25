@@ -1,17 +1,25 @@
 import AppApi from "@/app/api"
+import LocaleService from "@/app/common/locale"
 import Confirm from "@/common/comfirm"
 import ElMessage from "@/common/element-ui/message"
 import Status from "@/common/status"
-import { Service, Already } from "ioc-di"
+import { Service, Already, Inject } from "ioc-di"
 import { iSettingForm } from "."
 
 @Service()
 export default class ISettingForm implements iSettingForm {
+  @Inject() private locale!: LocaleService
+
   status = new Status
   data = {
     shell: '',
-    pty: ''
+    pty: '',
+    lang: ''
   }
+  langs: {
+    name: string
+    value: string
+  }[] = []
   ptys: {
     name: string
     value: string
@@ -21,6 +29,7 @@ export default class ISettingForm implements iSettingForm {
   }
   @Already
   private init() {
+    this.langs = this.locale.langs
     AppApi.config.ptys().success(data => {
       this.ptys = data
     })
@@ -28,6 +37,7 @@ export default class ISettingForm implements iSettingForm {
   }
 
   private query() {
+    this.data.lang = this.locale.lang
     this.status.use(
       AppApi.config.setting().success(data => {
         this.data.shell = data.shell
@@ -48,6 +58,7 @@ export default class ISettingForm implements iSettingForm {
         shell: this.data.shell,
         pty: this.data.pty
       }).success(() => {
+        this.locale.lang = this.data.lang
         ElMessage.success('保存成功')
       })
     )

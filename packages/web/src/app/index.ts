@@ -7,11 +7,14 @@ import AppControl from '@/app/components/app-control'
 import Request from '@/common/request'
 import ElNotification from '@/common/element-ui/notification'
 import Websocket from '@/common/websocket'
+import LocaleService from './common/locale'
 
 @Root()
 @Service()
 export default class App {
   @Inject() private provider!: VueDIProvider
+  @Inject() private locale!: LocaleService
+
   private token = `s_${Math.random().toString(36)}` //应用级身份标识
   vue!: Vue
   constructor() {
@@ -41,5 +44,6 @@ export default class App {
         return h(AppControl)
       }
     })
+    Vue.observable(this.locale)
   }
 }

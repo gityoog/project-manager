@@ -12,7 +12,12 @@ export interface iSettingForm {
   data: {
     shell: string
     pty: string
+    lang: string
   }
+  langs: {
+    name: string
+    value: string
+  }[]
   ptys: {
     name: string
     value: string
@@ -29,19 +34,24 @@ const SettingForm = FC<{ service: iSettingForm }>({
   functional: true,
   render(h, context) {
     const service = context.props.service
-    const { data, status, saveLoading, ptys } = service
+    const { data, status, saveLoading, ptys, langs } = service
     return <ElLoading status={status} class={style.form}>
       <ElForm size='small' labelWidth='60px' labelPosition='left'>
         <ElFormItem label='cache'>
           <ElButton onClick={() => service.clearOutput()} type='text'>清空输出</ElButton>
           <ElButton onClick={() => service.clearLog()} type='text'>清空日志</ElButton>
         </ElFormItem>
+        <ElFormItem label='lang'>
+          <ElSelect vModel={data.lang} style="width: 240px;">
+            {langs.map(lang => <ElOption value={lang.value} label={lang.name}></ElOption>)}
+          </ElSelect>
+        </ElFormItem>
         <ElFormItem label='shell'>
           <ElInput v-model={data.shell} style="width: 240px;"></ElInput>
         </ElFormItem>
         <ElFormItem label='pty'>
           <ElSelect vModel={data.pty} style="width: 240px;">
-            {ptys.map(pty => <ElOption value={pty.value}>{pty.name}</ElOption>)}
+            {ptys.map(pty => <ElOption value={pty.value} label={pty.name}></ElOption>)}
           </ElSelect>
         </ElFormItem>
         <ElFormItem>
