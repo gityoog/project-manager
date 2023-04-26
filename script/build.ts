@@ -7,9 +7,7 @@ import ProjectManagerIpc from 'project-manager-ipc'
 
 (async () => {
   const cwd = path.resolve(__dirname, '../')
-  const ipc = new ProjectManagerIpc({
-    log: () => { }
-  })
+  const ipc = new ProjectManagerIpc()
   ipc.connect()
   console.log('Clear ...')
   rimrafSync(path.resolve(cwd, './dist'))

@@ -52,7 +52,7 @@
     "@types/yargs": "^17.0.24",
     "@vercel/ncc": "^0.36.1",
     "nodemon": "^2.0.21",
-    "project-manager-ipc": "^1.0.4",
+    "project-manager-ipc": "^1.0.5",
     "rimraf": "^5.0.0",
     "ts-swc-register": "^1.2.2"
   }
