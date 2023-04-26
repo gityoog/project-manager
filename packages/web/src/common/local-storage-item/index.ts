@@ -63,6 +63,9 @@ export default class LocalStorageItem<T> {
       this.fireChange()
     }
   }
+  clear() {
+    localStorage.removeItem(this.key)
+  }
   destroy() {
     this.changeCallback = undefined
     window.removeEventListener("storage", this.onStorageChange)
