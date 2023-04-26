@@ -11,6 +11,9 @@ class ProjectManagerIpc {
         if (log) {
             node_ipc_1.default.config.logger = log;
         }
+        else {
+            node_ipc_1.default.config.logger = () => { };
+        }
         node_ipc_1.default.config.retry = 10 * 1000;
     }
     setLogger(log) {

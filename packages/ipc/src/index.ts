@@ -12,6 +12,8 @@ export default class ProjectManagerIpc {
     this.server = process.env[serverKey] || serverKey
     if (log) {
       ipc.config.logger = log
+    } else {
+      ipc.config.logger = () => { }
     }
     ipc.config.retry = 10 * 1000
   }
