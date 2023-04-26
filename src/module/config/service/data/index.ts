@@ -37,14 +37,16 @@ export default class ConfigData {
 
   }
   async set(key: keyof data, value: string) {
-    const item = this.data[key]
-    await this.save(item.name, value)
-    this.cache[key] = value
-    this.logging.save({
-      target: 'Config',
-      action: 'Set',
-      description: `${item.name}: ${value}`
-    })
+    if (await this.get(key) !== value) {
+      const item = this.data[key]
+      await this.save(item.name, value)
+      this.cache[key] = value
+      this.logging.save({
+        target: 'Config',
+        action: 'Set',
+        description: `${item.name}: ${value}`
+      })
+    }
   }
   async get<K extends keyof data>(key: K) {
     if (!(key in this.cache)) {
