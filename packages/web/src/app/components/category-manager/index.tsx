@@ -59,8 +59,8 @@ const ProjectCategoryManager = FC<{ service: iProjectCategoryManager }>({
           <ElTableColumn label={$t.time} prop="updated_at" />
           <ElTableColumn label={$t.action} width="140px" align="center" scopedSlots={{
             default: ({ $index }) => <div class={style.actions}>
-              <ElButton type='text' onClick={() => service.edit($index)}>{$t.edit}</ElButton>
-              <ElButton class={style.remove} type='text' onClick={() => service.remove($index)}>{$t.remove}</ElButton>
+              <ElButton size='mini' type='text' onClick={() => service.edit($index)}>{$t.edit}</ElButton>
+              <ElButton size='mini' class={style.remove} type='text' onClick={() => service.remove($index)}>{$t.remove}</ElButton>
             </div>
           }} />
         </TableList>

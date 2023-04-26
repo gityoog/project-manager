@@ -50,8 +50,8 @@ const ProjectBuilder = FC<{ service: iProjectBuilder }>({
             <ElTableColumn label={$t.list.size} prop="size" />
             <ElTableColumn label={$t.list.action} width="160px" align="center" scopedSlots={{
               default: ({ $index }) => <div class={style.actions}>
-                <ElButton type='text' onClick={() => service.download($index)}>{$t.download}</ElButton>
-                <ElButton class={style.remove} type='text' onClick={() => service.remove($index)}>{$t.remove}</ElButton>
+                <ElButton size='mini' type='text' onClick={() => service.download($index)}>{$t.download}</ElButton>
+                <ElButton size='mini' class={style.remove} type='text' onClick={() => service.remove($index)}>{$t.remove}</ElButton>
               </div>
             }} />
           </TableList>
