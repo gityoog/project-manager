@@ -1,0 +1,15 @@
+.line {
+  position: absolute;
+  height: 6px;
+  width: 100%;
+  cursor: n-resize;
+  left: 0;
+
+  &.top {
+    top: -3px;
+  }
+
+  &.bottom {
+    bottom: -3px;
+  }
+}
