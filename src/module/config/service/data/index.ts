@@ -6,13 +6,13 @@ import ConfigEntity from "../entity"
 import LoggingService from "@/module/logging/service"
 import PtyService from "@/common/pty"
 
-type item = {
+type Item<T = string> = {
   name: string
-  default: () => string
+  default: () => T
 }
 type data = {
-  shell: item
-  pty: item
+  shell: Item
+  pty: Item<PtyService.Type>
 }
 
 @Injectable()
@@ -46,7 +46,7 @@ export default class ConfigData {
       description: `${item.name}: ${value}`
     })
   }
-  async get(key: keyof data) {
+  async get<K extends keyof data>(key: K) {
     if (!(key in this.cache)) {
       const item = this.data[key]
       const row = await this.main.findOneBy({ name: item.name })
@@ -58,7 +58,7 @@ export default class ConfigData {
         this.cache[key] = value
       }
     }
-    return this.cache[key]!
+    return this.cache[key]! as ReturnType<data[K]['default']>
   }
 
   private async save(name: string, value: string) {
