@@ -4,22 +4,18 @@ import Confirm from "@/common/comfirm"
 import ElMessage from "@/common/element-ui/message"
 import Status from "@/common/status"
 import { Service, Already, Inject } from "ioc-di"
-import { iSettingForm } from "."
+import { iServerSetting } from "."
 
 @Service()
-export default class ISettingForm implements iSettingForm {
+export default class IServerSetting implements iServerSetting {
   @Inject() locale!: LocaleService
   private get $t() {
-    return this.locale.t.setting.base
+    return this.locale.t.setting.server
   }
   status = new Status
   data = {
     shell: '',
-    pty: '',
-    lang: ''
-  }
-  get langs() {
-    return this.locale.langs
+    pty: ''
   }
   ptys: {
     name: string
@@ -37,7 +33,6 @@ export default class ISettingForm implements iSettingForm {
   }
 
   private query() {
-    this.data.lang = this.locale.lang
     this.status.use(
       AppApi.config.setting().success(data => {
         this.data.shell = data.shell
@@ -58,7 +53,6 @@ export default class ISettingForm implements iSettingForm {
         shell: this.data.shell,
         pty: this.data.pty
       }).success(() => {
-        this.locale.lang = this.data.lang
         ElMessage.success(this.$t.saveSuccess)
       })
     )

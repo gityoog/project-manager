@@ -73,12 +73,17 @@ export default {
   },
   setting: {
     title: 'System Setting',
-    base: {
-      title: 'General',
+    local: {
+      title: 'Local',
+      language: 'Lang',
+      reset: 'Reset',
+      save: 'Save'
+    },
+    server: {
+      title: 'Server',
       cache: 'Clear',
       clearOutput: 'Output',
       clearLog: 'Log',
-      lang: 'Lang',
       shell: 'Shell',
       pty: 'Pty',
       reset: 'Reset',

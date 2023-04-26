@@ -73,12 +73,17 @@ export default {
   },
   setting: {
     title: '系统设置',
-    base: {
-      title: '基础设置',
+    local: {
+      title: '本地设置',
+      language: '语言',
+      reset: '重置',
+      save: '保存',
+    },
+    server: {
+      title: '后台设置',
       cache: '缓存',
       clearOutput: '清空输出',
       clearLog: '清空日志',
-      lang: '语言',
       shell: '命令',
       pty: '终端',
       reset: '重置',

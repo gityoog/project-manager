@@ -9,16 +9,11 @@ import ElLoading, { iElLoading } from '@/components/el-loading'
 import style from './style.module.scss'
 import LocaleService from '@/app/common/locale'
 
-export interface iSettingForm {
+export interface iServerSetting {
   data: {
     shell: string
     pty: string
-    lang: string
   }
-  langs: {
-    name: string
-    value: string
-  }[]
   ptys: {
     name: string
     value: string
@@ -32,22 +27,17 @@ export interface iSettingForm {
   clearLog(): void
 }
 
-const SettingForm = FC<{ service: iSettingForm }>({
+const ServerSetting = FC<{ service: iServerSetting }>({
   functional: true,
   render(h, context) {
     const service = context.props.service
-    const { data, status, saveLoading, ptys, langs, locale } = service
-    const $t = locale.t.setting.base
+    const { data, status, saveLoading, ptys, locale } = service
+    const $t = locale.t.setting.server
     return <ElLoading status={status} class={style.form}>
       <ElForm size='mini' labelWidth='60px' labelPosition='left'>
         <ElFormItem label={$t.cache}>
           <ElButton onClick={() => service.clearOutput()} type='text'>{$t.clearOutput}</ElButton>
           <ElButton onClick={() => service.clearLog()} type='text'>{$t.clearLog}</ElButton>
-        </ElFormItem>
-        <ElFormItem label={$t.lang}>
-          <ElSelect vModel={data.lang} style="width: 240px;">
-            {langs.map(lang => <ElOption value={lang.value} label={lang.name}></ElOption>)}
-          </ElSelect>
         </ElFormItem>
         <ElFormItem label={$t.shell}>
           <ElInput v-model={data.shell} style="width: 240px;"></ElInput>
@@ -65,4 +55,4 @@ const SettingForm = FC<{ service: iSettingForm }>({
     </ElLoading>
   }
 })
-export default SettingForm
+export default ServerSetting
