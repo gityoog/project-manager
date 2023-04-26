@@ -39,7 +39,7 @@ const SettingForm = FC<{ service: iSettingForm }>({
     const { data, status, saveLoading, ptys, langs, locale } = service
     const $t = locale.t.setting.base
     return <ElLoading status={status} class={style.form}>
-      <ElForm size='small' labelWidth='60px' labelPosition='left'>
+      <ElForm size='mini' labelWidth='60px' labelPosition='left'>
         <ElFormItem label={$t.cache}>
           <ElButton onClick={() => service.clearOutput()} type='text'>{$t.clearOutput}</ElButton>
           <ElButton onClick={() => service.clearLog()} type='text'>{$t.clearLog}</ElButton>
