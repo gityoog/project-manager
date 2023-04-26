@@ -24,6 +24,10 @@ export default class IProjectBuilder implements iProjectBuilder {
   expanded = false
   terminal = new TerminalService({ fontSize: 12 })
   status = false
+  stats: {
+    cpu: string
+    memory: string
+  } | null = null
   table = new ITableList({
     api: () => AppApi.project.output.query({
       project: this.id
@@ -63,15 +67,18 @@ export default class IProjectBuilder implements iProjectBuilder {
     this.clear()
     this.id = id
     this.table.refresh()
+    this.stats = null
     this.dialog.loading.use(
       AppApi.project.process.build.detail({
         id
       }).success(data => {
         if (data) {
           this.status = data.status
-          this.terminal.write(data.stdout)
+          this.stats = data.pty.stats
+          this.terminal.write(data.pty.stdout)
         } else {
           this.status = false
+          this.stats = null
           this.terminal.clear()
         }
         this.ws = AppWs.process.build({
@@ -85,6 +92,9 @@ export default class IProjectBuilder implements iProjectBuilder {
         })
         this.ws.on('new', () => {
           this.table.refresh()
+        })
+        this.ws.on('stats', data => {
+          this.stats = data.value
         })
       })
     )

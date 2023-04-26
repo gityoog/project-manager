@@ -2,7 +2,8 @@ import { FC } from '@/common/vue'
 import ElDialog, { iElDialog } from '@/components/el-dialog'
 import TerminalComponent, { iTerminal } from '@/components/terminal'
 import style from './style.module.scss'
-
+import CPUIcon from 'app/images/CPU.svg'
+import MemoryIcon from 'app/images/memory.svg'
 import ArrowDownSvg from 'app/images/arrow-down.svg'
 import ArrowUpSvg from 'app/images/arrow-up.svg'
 import ElButton from '@/common/element-ui/button'
@@ -16,6 +17,10 @@ export interface iProjectBuilder {
   expanded: boolean
   terminal: iTerminal
   status: boolean
+  stats: {
+    cpu: string
+    memory: string
+  } | null
   toggleStatus(): void
   table: iTableList
   download(index: number): void
@@ -26,9 +31,16 @@ const ProjectBuilder = FC<{ service: iProjectBuilder }>({
   functional: true,
   render(h, context) {
     const service = context.props.service
-    const { dialog, status, terminal, table, locale } = service
+    const { dialog, status, terminal, table, locale, stats } = service
     const $t = locale.t.project.build
-    return <ElDialog title={$t.title} class={style.builder} width='60vw' fullHeight service={dialog}>
+    return <ElDialog class={style.builder} width='60vw' fullHeight service={dialog}>
+      <div class={style.title} slot="title">
+        <div>{$t.title}</div>
+        {stats && <div class={style.stats}>
+          <CPUIcon /><span class={style.value}>{stats.cpu}</span>
+          <MemoryIcon /><span class={style.value}>{stats.memory}</span>
+        </div>}
+      </div>
       <div class={style.container}>
         <div class={style.top}>
           <div class={style.console}>
@@ -46,8 +58,8 @@ const ProjectBuilder = FC<{ service: iProjectBuilder }>({
         <div class={style.list}>
           <TableList size='mini' service={table}>
             <ElTableColumn label={$t.list.name} prop="name" />
-            <ElTableColumn label={$t.list.time} prop="created_at" />
-            <ElTableColumn label={$t.list.size} prop="size" />
+            <ElTableColumn label={$t.list.time} width="140" prop="created_at" />
+            <ElTableColumn label={$t.list.size} width="90" prop="size" />
             <ElTableColumn label={$t.list.action} width="160px" align="center" scopedSlots={{
               default: ({ $index }) => <div class={style.actions}>
                 <ElButton size='mini' type='text' onClick={() => service.download($index)}>{$t.download}</ElButton>

@@ -32,21 +32,24 @@ export default class BuildTaskService {
     this.output = output
     this.key = `build_${project.id}`
     this.pty = new PtyService({
-      stats: false,
       env: ipc.env(this.key),
       onError: (name, err) => {
-        logger.log(`${name} ${err.message}`, 'DevTaskService')
+        logger.log(`${name} ${err.message}`, 'BuildTaskService')
       }
     })
-
     this.status.onChange(status => {
       this.bus.emit({ id: this.project.id, action: 'status', value: status })
     })
-
+    this.pty.onStatsUpdate(stats => {
+      this.bus.emit({
+        id: this.project.id,
+        action: 'stats',
+        value: stats,
+      })
+    })
     this.pty.onStatusChange(status => {
       this.status.setPty(status)
     })
-
     this.pty.onStdoutPush(data => {
       this.bus.emit({
         id: this.project.id,
@@ -89,7 +92,7 @@ export default class BuildTaskService {
   info() {
     return {
       status: this.status.get(),
-      stdout: this.pty.info().stdout
+      pty: this.pty.info()
     }
   }
 

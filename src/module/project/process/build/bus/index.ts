@@ -13,6 +13,12 @@ type data = project & ({
   value: string
 } | {
   action: 'new'
+} | {
+  action: 'stats',
+  value: {
+    cpu: string
+    memory: string
+  } | null
 })
 
 @Injectable()

@@ -55,6 +55,13 @@ const AppWs = {
       new: [data: {
         id: string
       }]
+      stats: [data: {
+        id: string
+        value: {
+          cpu: string
+          memory: string
+        } | null
+      }]
     }, {}, `/${string}`>({
       namesapce: '/project/process/build'
     })

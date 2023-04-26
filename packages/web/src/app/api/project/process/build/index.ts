@@ -5,7 +5,13 @@ export default {
     id: string
   }, {
     status: boolean
-    stdout: string[]
+    pty: {
+      stdout: string[]
+      stats: {
+        cpu: string
+        memory: string
+      } | null
+    }
   } | null>({
     url: '/project/process/build/info'
   }),
