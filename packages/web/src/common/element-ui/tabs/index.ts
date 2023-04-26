@@ -10,5 +10,5 @@ export default ElTabs as Tsx.ClassComponent<{
   editable?: boolean
   stretch?: boolean
   tabPosition?: 'top' | 'right' | 'bottom' | 'left'
-  'on-tab-click'?: (tab: TabPane, event: Event) => void
+  'on-tab-click'?: (tab: TabPane & { index: string }, event: Event) => void
 }>
