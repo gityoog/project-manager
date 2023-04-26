@@ -17,6 +17,7 @@ export default class IProjectCardCache {
     this.bus.onProjectRemove(project => {
       const id = project.id
       if (this.data[id]) {
+        this.data[id].remove()
         this.data[id].destroy()
         delete this.data[id]
       }

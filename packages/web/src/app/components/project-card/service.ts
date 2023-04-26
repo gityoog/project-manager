@@ -8,6 +8,7 @@ import AppApi from "app/api"
 import ElMessage from "@/common/element-ui/message"
 import IProjectBuilder from "../project-builder/service"
 import LocaleService from "@/app/common/locale"
+import LocalStorageItem from "@/common/local-storage-item"
 
 @Container()
 @Service()
@@ -36,8 +37,19 @@ export default class IProjectCard implements iProjectCard {
   get sort() {
     return this.data.sort
   }
+  private heightLocal
+  get height() {
+    return this.heightLocal.get()
+  }
+  set height(value) {
+    this.heightLocal.set(value)
+  }
   constructor(data: Project.data) {
     this.id = data.id
+    this.heightLocal = new LocalStorageItem({
+      key: 'ProjectCardHeight' + '_' + this.id,
+      default: 120
+    })
     this.data = { ...data }
     this.ws = AppWs.process.dev({
       namesapce: `/${this.id}`
@@ -131,8 +143,12 @@ export default class IProjectCard implements iProjectCard {
   open() {
     window.open('//' + this.url)
   }
+  remove() {
+    this.heightLocal.clear()
+  }
   @Destroy
   destroy() {
+    this.heightLocal.destroy()
     this.ws.destroy()
   }
 }

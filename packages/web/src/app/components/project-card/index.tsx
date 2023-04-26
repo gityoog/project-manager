@@ -9,6 +9,7 @@ import PlayIcon from 'app/images/play.svg'
 import PauseIcon from 'app/images/pause.svg'
 import TerminalComponent, { iTerminal } from 'components/terminal'
 import LocaleService from '@/app/common/locale'
+import DragHeight from '@/components/drag-height'
 
 export interface iProjectCard {
   id: string
@@ -21,6 +22,7 @@ export interface iProjectCard {
   checked: boolean
   url: string | null
   locale: LocaleService
+  height: number
   open(): void
   stop(): void
   run(): void
@@ -61,9 +63,11 @@ const ProjectCard = FC<{ service: iProjectCard }>({
           }}>{url}</div>}
         </div>}
       </div>
-      {status ? <div class={style.terminal}>
-        <TerminalComponent service={terminal}></TerminalComponent>
-      </div> : <div></div>}
+      {status ?
+        <DragHeight class={style.terminal} min={120} vModel={service.height}>
+          <TerminalComponent service={terminal}></TerminalComponent>
+        </DragHeight>
+        : <div></div>}
     </div>
   }
 })
