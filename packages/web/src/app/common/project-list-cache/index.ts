@@ -6,7 +6,7 @@ import AppBus from "../bus"
 export default class IProjectListCache {
   @Inject() private bus!: AppBus
 
-  private uncategorized!: IProjectList
+  private other!: IProjectList
 
   private data: Record<string, IProjectList> = {}
 
@@ -14,15 +14,15 @@ export default class IProjectListCache {
     this.init()
   }
 
-  private uncategorizedActive = false
+  private otherActived = false
 
-  get showUncategorized() {
-    return !this.uncategorized.isEmpty || this.uncategorizedActive
+  get showOther() {
+    return !this.other.isEmpty || this.otherActived
   }
 
   @Already
   private init() {
-    this.uncategorized = Concat(this, new IProjectList(null))
+    this.other = Concat(this, new IProjectList(null))
     this.bus.onCategoryRemove(category => {
       const id = category.id
       if (this.data[id]) {
@@ -34,8 +34,8 @@ export default class IProjectListCache {
 
   factory(data: Project.category | null) {
     if (!data) {
-      this.uncategorizedActive = true
-      return this.uncategorized
+      this.otherActived = true
+      return this.other
     }
     const id = data.id
     if (!this.data[id]) {

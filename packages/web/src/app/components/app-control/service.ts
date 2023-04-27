@@ -78,7 +78,7 @@ export default class IAppControl implements iAppControl {
             },
             data: null,
             get visible() {
-              return self.cache.showUncategorized
+              return self.cache.showOther
             }
           }]
           const id = this.getActived()
