@@ -76,6 +76,8 @@ export default class LocalStorageItem<T> {
   bind<K extends string>(obj: { [key in K]: T }, key: K): T {
     this.binds.push({ obj, key })
     Object.defineProperty(obj, key, {
+      configurable: true,
+      enumerable: true,
       get: () => this.get(),
       set: (value) => {
         this.set(value)
@@ -90,6 +92,8 @@ export default class LocalStorageItem<T> {
   destroy() {
     this.binds.forEach(({ obj, key }) => {
       Object.defineProperty(obj, key, {
+        configurable: true,
+        enumerable: true,
         get: () => undefined,
         set: () => { },
       })
