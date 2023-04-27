@@ -15,7 +15,7 @@ export interface iProjectBuilder {
   dialog: iElDialog
   locale: LocaleService
   expanded: boolean
-  terminal: iTerminal
+  terminal: iTerminal | null
   status: boolean
   stats: {
     cpu: string
@@ -45,7 +45,7 @@ const ProjectBuilder = FC<{ service: iProjectBuilder }>({
         <div class={style.top}>
           <div class={style.console}>
             <div class={[style.terminal, service.expanded ? style.expanded : null]}>
-              <TerminalComponent service={terminal}></TerminalComponent>
+              {terminal && <TerminalComponent service={terminal}></TerminalComponent>}
             </div>
             <div onClick={() => service.expanded = !service.expanded} class={style.expand}>
               {service.expanded ? <ArrowUpSvg /> : <ArrowDownSvg />}

@@ -76,8 +76,12 @@ export default {
     local: {
       title: '本地设置',
       language: '语言',
+      pty: '终端',
+      fontSize: '字体大小',
+      fontFamily: '字体',
       reset: '重置',
       save: '保存',
+      saveSuccess: '保存成功',
     },
     server: {
       title: '后台设置',

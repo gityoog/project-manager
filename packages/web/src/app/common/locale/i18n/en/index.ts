@@ -76,8 +76,12 @@ export default {
     local: {
       title: 'Local',
       language: 'Lang',
+      pty: 'Pty',
+      fontSize: 'Font Size',
+      fontFamily: 'Font Family',
       reset: 'Reset',
-      save: 'Save'
+      save: 'Save',
+      saveSuccess: 'Save Success',
     },
     server: {
       title: 'Server',

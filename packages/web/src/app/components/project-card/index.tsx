@@ -17,7 +17,7 @@ export interface iProjectCard {
   cpuUsage: string
   memoryUsage: string
   status: boolean
-  terminal: iTerminal
+  terminal: iTerminal | null
   showCheck: boolean
   checked: boolean
   url: string | null
@@ -65,7 +65,7 @@ const ProjectCard = FC<{ service: iProjectCard }>({
       </div>
       {status ?
         <DragHeight class={style.terminal} min={120} vModel={service.height}>
-          <TerminalComponent service={terminal}></TerminalComponent>
+          {terminal && <TerminalComponent service={terminal}></TerminalComponent>}
         </DragHeight>
         : <div></div>}
     </div>

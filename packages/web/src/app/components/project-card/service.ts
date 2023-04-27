@@ -9,6 +9,7 @@ import ElMessage from "@/common/element-ui/message"
 import IProjectBuilder from "../project-builder/service"
 import LocaleService from "@/app/common/locale"
 import LocalStorageItem from "@/common/local-storage-item"
+import AppConfig from "@/app/common/config"
 
 @Container()
 @Service()
@@ -16,7 +17,10 @@ export default class IProjectCard implements iProjectCard {
   @Inject() private editor!: IProjectEditor
   @Inject() private selector!: IProjectSelector
   @Inject() private builder!: IProjectBuilder
+  @Inject() private config!: AppConfig
   @Inject() locale!: LocaleService
+  @Inject() private destroyCallbacks: Array<() => void> = []
+
   private get $t() {
     return this.locale.t.project.card
   }
@@ -27,9 +31,7 @@ export default class IProjectCard implements iProjectCard {
   memoryUsage = ''
   status = false
   url = ''
-  terminal = new TerminalService({
-    fontSize: 12
-  })
+  terminal: TerminalService | null = null
   time = 0
   get name() {
     return this.data.name
@@ -37,19 +39,15 @@ export default class IProjectCard implements iProjectCard {
   get sort() {
     return this.data.sort
   }
-  private heightLocal
-  get height() {
-    return this.heightLocal.get()
-  }
-  set height(value) {
-    this.heightLocal.set(value)
-  }
+  height: number
+  private heightValue
   constructor(data: Project.data) {
     this.id = data.id
-    this.heightLocal = new LocalStorageItem({
+    this.heightValue = new LocalStorageItem({
       key: 'ProjectCardHeight' + '_' + this.id,
       default: 120
     })
+    this.height = this.heightValue.bind(this, 'height')
     this.data = { ...data }
     this.ws = AppWs.process.dev({
       namesapce: `/${this.id}`
@@ -57,14 +55,34 @@ export default class IProjectCard implements iProjectCard {
     this.init()
   }
 
+  private factoryTerminal() {
+    if (!this.terminal) {
+      const options = this.config.terminal
+      this.terminal = new TerminalService({
+        fontSize: options.fontSize,
+        fontFamily: options.fontFamily
+      })
+    }
+    return this.terminal
+  }
+
   @Already
   private init() {
+    this.destroyCallbacks.push(
+      this.config.watch('terminal', value => {
+        this.terminal?.setOption('fontSize', value.fontSize)
+        this.terminal?.setOption('fontFamily', value.fontFamily)
+        this.terminal?.reload()
+      })
+    )
     AppApi.project.process.dev.detail({
       id: this.id
     }).success(data => {
       if (data) {
         this.status = data.pty.status
-        this.terminal.write(data.pty.stdout)
+        if (this.status) {
+          this.factoryTerminal().write(data.pty.stdout)
+        }
         this.updateStats(data.pty.stats)
         this.updateUrl(data.url)
       }
@@ -73,7 +91,7 @@ export default class IProjectCard implements iProjectCard {
         this.updateStatus(data.value)
       })
       this.ws.on('stdout', data => {
-        this.terminal.write(data.value)
+        this.factoryTerminal().write(data.value)
       })
       this.ws.on('stats', data => {
         this.updateStats(data.value)
@@ -144,11 +162,13 @@ export default class IProjectCard implements iProjectCard {
     window.open('//' + this.url)
   }
   remove() {
-    this.heightLocal.clear()
+    this.heightValue.clear()
   }
   @Destroy
   destroy() {
-    this.heightLocal.destroy()
+    this.destroyCallbacks.forEach(fn => fn())
+    this.destroyCallbacks = []
+    this.heightValue.destroy()
     this.ws.destroy()
   }
 }

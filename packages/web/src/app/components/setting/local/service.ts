@@ -1,3 +1,4 @@
+import AppConfig from "@/app/common/config"
 import LocaleService from "@/app/common/locale"
 import ElMessage from "@/common/element-ui/message"
 import Status from "@/common/status"
@@ -7,12 +8,16 @@ import { iLocalSetting } from "."
 @Service()
 export default class ILocalSetting implements iLocalSetting {
   @Inject() locale!: LocaleService
+  @Inject() private config!: AppConfig
+
   private get $t() {
-    return this.locale.t.setting.server
+    return this.locale.t.setting.local
   }
   status = new Status
   data = {
-    lang: ''
+    lang: '',
+    fontSize: '',
+    fontFamily: '',
   }
   langs: {
     name: string
@@ -28,12 +33,19 @@ export default class ILocalSetting implements iLocalSetting {
   }
 
   private query() {
-    this.data.lang = this.locale.lang
+    this.data.lang = this.config.language
+    this.data.fontSize = this.config.terminal.fontSize.toString()
+    this.data.fontFamily = this.config.terminal.fontFamily
   }
   refresh() {
     this.query()
   }
   save() {
-    this.locale.lang = this.data.lang
+    this.config.language = this.data.lang
+    this.config.terminal = {
+      fontSize: parseInt(this.data.fontSize),
+      fontFamily: this.data.fontFamily
+    }
+    ElMessage.success(this.$t.saveSuccess)
   }
 }

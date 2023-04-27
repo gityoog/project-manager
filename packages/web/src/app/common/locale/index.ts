@@ -1,18 +1,16 @@
 import ElDialog from "@/components/el-dialog"
 import ElLocale from "@/common/element-ui/locale"
-import LocalStorageItem from "@/common/local-storage-item"
-import { Already, Destroy, Service } from "ioc-di"
+import { Already, Destroy, Inject, Service } from "ioc-di"
 import i18n from './i18n'
 import ITableList from "@/components/table-list/service"
+import AppConfig from "../config"
 
 type i18n = typeof i18n
 
 @Service()
 export default class LocaleService {
-  private value = new LocalStorageItem<string>({
-    default: () => navigator.language === 'zh-CN' ? 'zh-CN' : 'en',
-    key: 'app-locale'
-  })
+  @Inject() private config!: AppConfig
+  private destroyCallbacks: Array<() => void> = []
   langs = [{
     name: '简体中文',
     value: 'zh-CN'
@@ -21,20 +19,23 @@ export default class LocaleService {
     value: 'en'
   }]
   t!: i18n[keyof i18n]
+
   constructor() {
     this.init()
   }
   @Already
   private init() {
-    this.value.onChange(() => {
-      if (this.lang in i18n) {
-        this.t = i18n[this.lang as keyof i18n]
-      } else {
-        this.t = i18n['en']
-      }
-      ElDialog.i18n.setLang(this.lang)
-      ITableList.i18n.setLang(this.lang)
-    }, true)
+    this.destroyCallbacks.push(
+      this.config.watch('language', lang => {
+        if (lang in i18n) {
+          this.t = i18n[lang as keyof i18n]
+        } else {
+          this.t = i18n['en']
+        }
+        ElDialog.i18n.setLang(lang)
+        ITableList.i18n.setLang(lang)
+      }, true)
+    )
 
     ElLocale.i18n((key, options) => {
       const keys = key.split('.')
@@ -54,14 +55,9 @@ export default class LocaleService {
       return current
     })
   }
-  get lang() {
-    return this.value.get()
-  }
-  set lang(value) {
-    this.value.set(value)
-  }
   @Destroy
   destroy() {
-    this.value.destroy()
+    this.destroyCallbacks.forEach(fn => fn())
+    this.destroyCallbacks = []
   }
 }

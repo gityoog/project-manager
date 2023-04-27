@@ -6,10 +6,13 @@ import ElOption from '@/common/element-ui/option'
 import { FC } from '@/common/vue'
 import style from './style.module.scss'
 import LocaleService from '@/app/common/locale'
+import ElInput from '@/common/element-ui/input'
 
 export interface iLocalSetting {
   data: {
     lang: string
+    fontSize: string
+    fontFamily: string
   }
   langs: {
     name: string
@@ -32,6 +35,18 @@ const LocalSetting = FC<{ service: iLocalSetting }>({
           <ElSelect vModel={data.lang} style="width: 240px;">
             {langs.map(lang => <ElOption value={lang.value} label={lang.name}></ElOption>)}
           </ElSelect>
+        </ElFormItem>
+        <ElFormItem label={$t.pty}>
+          <div>
+            <ElInput vModel={data.fontFamily} style="width: 240px;">
+              <div style="width: 60px;text-align: center;" slot="prepend">{$t.fontFamily}</div>
+            </ElInput>
+          </div>
+          <div style="margin-top: 4px;">
+            <ElInput vModel={data.fontSize} style="width: 240px;">
+              <div style="width: 60px;text-align: center;" slot="prepend">{$t.fontSize}</div>
+            </ElInput>
+          </div>
         </ElFormItem>
         <ElFormItem>
           <ElButton onClick={() => service.refresh()}>{$t.reset}</ElButton>
