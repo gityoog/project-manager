@@ -17,9 +17,23 @@ export default class TerminalService implements iTerminal {
     this.term.loadAddon(this.fitAddon)
     this.resize = debounce(this.resize.bind(this), 20)
   }
+  setOption<K extends keyof ITerminalOptions>(key: K, value: ITerminalOptions[K]) {
+    this.term.options[key] = value
+  }
+  private el?: HTMLElement
   open(el: HTMLElement) {
+    this.el = el
     this.term.open(el)
     this.term.focus()
+  }
+  reload() {
+    // this.term.dispose()
+    // if (this.el) {
+    //   this.term.open(this.el)
+    // }
+  }
+  refresh() {
+    this.term.refresh(0, this.term.rows - 1)
   }
   resize() {
     if (this.term.element) {
@@ -41,5 +55,9 @@ export default class TerminalService implements iTerminal {
   }
   clear() {
     this.term.clear()
+  }
+  destroy() {
+    this.term.dispose()
+    this.el = undefined
   }
 } 
