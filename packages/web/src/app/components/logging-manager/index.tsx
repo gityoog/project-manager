@@ -25,7 +25,7 @@ const LoggingManager = FC<{ service: iLoggingManager }>({
           <ElTableColumn label={$t.target} prop="target" width="110" />
           <ElTableColumn label={$t.action} prop="action" width="70" />
           <ElTableColumn label={$t.user} prop="user" width="100" show-overflow-tooltip />
-          <ElTableColumn label={$t.ip} prop="ip" width="100" show-overflow-tooltip />
+          <ElTableColumn label={$t.ip} prop="ip" width="110" show-overflow-tooltip />
           <ElTableColumn label={$t.time} prop="time" width="140" />
           <ElTableColumn label={$t.description} prop="description" show-overflow-tooltip />
           {/* <ElTableColumn label='删除' width="140px" align="center" scopedSlots={{
