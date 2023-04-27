@@ -19,7 +19,7 @@ export default class IProjectCard implements iProjectCard {
   @Inject() private builder!: IProjectBuilder
   @Inject() private config!: AppConfig
   @Inject() locale!: LocaleService
-  @Inject() private destroyCallbacks: Array<() => void> = []
+  private destroyCallbacks: Array<() => void> = []
 
   private get $t() {
     return this.locale.t.project.card
