@@ -1,13 +1,11 @@
 import { Inject, Service } from "ioc-di"
 import { Configuration, LoaderContext } from "webpack"
 import iBaseConfigComponent from "../interface"
-import Path from 'path'
 import { EsbuildPlugin } from 'esbuild-loader'
 import WebProjectOptions from "@/web-project/options"
 import ProcessPlugin from "./process-plugin"
 import Logger from "./process-plugin/logger"
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
-import ProjectManagerWebpackPlugin from 'project-manager-webpack-plugin'
 
 @Service()
 export default class NormalConfig implements iBaseConfigComponent {
@@ -25,12 +23,6 @@ export default class NormalConfig implements iBaseConfigComponent {
         new ProcessPlugin({
           process: true,
           logger: this.logger
-        }),
-        new ProjectManagerWebpackPlugin({
-          devInfo: () => ({
-            host: '0.0.0.0',
-            port: this.options.realDevPort
-          })
         })
       ],
       resolve: {

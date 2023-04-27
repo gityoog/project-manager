@@ -4,13 +4,16 @@ import { webpack } from "webpack"
 import WebpackDevServer from "webpack-dev-server"
 import WebProjectConfig from "../config"
 import WebProjectOptions from "../options"
+import ProjectManagerIpc from 'project-manager-ipc'
 
 @Service()
 export default class WebProjectDeveloper {
   @Inject() private options!: WebProjectOptions
   @Inject() private config!: WebProjectConfig
+  @Inject() private ipc!: ProjectManagerIpc
 
   async run() {
+    this.ipc.connect()
     this.options.setDevMode()
     const port = await portfinder.getPortPromise({
       port: this.options.devPort
@@ -47,7 +50,7 @@ export default class WebProjectDeveloper {
       }
     }, compiler).startCallback(err => {
       if (!err) {
-
+        this.ipc.emitUrl('0.0.0.0', port)
       }
     })
   }
