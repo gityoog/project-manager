@@ -8,5 +8,6 @@ export default async function ProjectManagerServer(...args: ConstructorParameter
   const config = Options.default(...args)
   const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter)
   app.useWebSocketAdapter(new IoAdapter(app))
+  app.set('trust proxy', true)
   return await app.listen(config.port)
 }
