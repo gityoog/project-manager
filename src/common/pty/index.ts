@@ -91,6 +91,7 @@ class PtyService {
       return pid
     } catch (e) {
       this.options.onError ? this.options.onError(`ProcessError`, e instanceof Error ? e : new Error('unknown')) : console.error(e)
+      this.clear()
       return false
     }
   }
