@@ -57,6 +57,9 @@
     "nodemon": "^2.0.21",
     "project-manager-ipc": "^1.0.5",
     "rimraf": "^5.0.0",
-    "ts-swc-register": "^1.2.2"
+    "ts-loader": "^9.4.2",
+    "ts-swc-register": "^1.2.2",
+    "tsconfig-paths-webpack-plugin": "^4.0.1",
+    "webpack": "^5.81.0"
   }
 }

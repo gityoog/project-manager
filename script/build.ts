@@ -4,6 +4,8 @@ import { spawn } from 'child_process'
 import Ncc from '@vercel/ncc'
 import fs from 'fs'
 import ProjectManagerIpc from 'project-manager-ipc'
+import webpack from 'webpack'
+import TsconfigPathsWebpackContextPlugin from './tsconfig-paths-webpack-context-plugin'
 
 (async () => {
   const cwd = path.resolve(__dirname, '../')
@@ -36,6 +38,88 @@ async function buildWeb(cwd: string) {
 }
 
 async function buildServer(cwd: string) {
+  return new Promise((resolve) => {
+    webpack({
+      target: 'node',
+      mode: 'production',
+      output: {
+        path: path.resolve(cwd, './dist'),
+        publicPath: './',
+        filename: '[name]',
+        globalObject: 'global',
+        clean: false
+      },
+      entry: {
+        'index.js': path.resolve(cwd, './src/bin.ts')
+      },
+      resolve: {
+        extensions: [".ts", ".js", ".tsx", ".json"]
+      },
+      module: {
+        noParse: /node_modules[\\/]sql\.js[\\/]dist[\\/]sql-.*?\.js/,
+        rules: [
+          {
+            test: /\.wasm$/,
+            use: require.resolve('./wasm-loader')
+          },
+          {
+            test: /\.ts$/,
+            exclude: /node_modules/,
+            use: [
+              {
+                loader: 'ts-loader',
+                options: {
+                  transpileOnly: true
+                }
+              }
+            ]
+          }
+        ]
+      },
+      optimization: {
+        minimize: false
+      },
+      ignoreWarnings: [
+        /Module not found/,
+        /Critical dependency: require function is used/,
+        /Critical dependency: the request of a dependency/,
+      ],
+      plugins: [
+        new webpack.ProgressPlugin(
+          (percent, msg, module) => {
+            console.log((percent * 100).toFixed(0) + '% ' + msg + ' ' + (module || ''))
+          }
+        ),
+        new TsconfigPathsWebpackContextPlugin,
+        new webpack.IgnorePlugin({
+          checkResource(request, context) {
+            const lazyImports = [
+              '@nestjs/microservices',
+              '@nestjs/microservices/microservices-module',
+              'cache-manager',
+              'class-validator',
+              'class-transformer',
+              '@fastify/static'
+            ]
+            if (lazyImports.includes(request)) {
+              return true
+            }
+            return false
+          }
+        })
+      ]
+    }).run((err, stats) => {
+      if (err) throw err
+      if (stats?.hasErrors()) {
+        console.error(stats.toJson().errors)
+      }
+      if (stats?.hasWarnings()) {
+        console.warn(stats.toJson().warnings)
+      }
+      resolve(stats)
+    })
+  })
+
   return Ncc(path.resolve(cwd, './src/bin.ts'), {
     transpileOnly: true
   }).then(({ err, code, assets, symlinks }) => {
