@@ -16,8 +16,9 @@ export default class SQLExceptionFilter implements ExceptionFilter {
     } else {
       response.status(200).json({
         status: 0,
-        msg: exception.name
+        msg: exception.message
       })
+      console.error(exception)
     }
   }
 }

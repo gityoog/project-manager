@@ -33,6 +33,10 @@ export default class HttpExceptionFilter implements ExceptionFilter {
       })
     }
     else if (exception instanceof Error) {
+      if (response.destroyed) {
+        console.error(exception)
+        return
+      }
       response.status(
         500
       ).json({
