@@ -65,7 +65,9 @@ async function buildServer(cwd: string) {
       fs.symlinkSync(symlinks[name], symlinkPath)
     }
     if (process.platform === 'win32') {
-      fs.copyFileSync(path.resolve(cwd, 'node_modules/node-pty/build/Release/winpty-agent.exe'), path.resolve(dist, 'build/Release/winpty-agent.exe'))
+      if (fs.existsSync(path.resolve(cwd, 'node_modules/node-pty/build/Release/winpty-agent.exe'))) {
+        fs.copyFileSync(path.resolve(cwd, 'node_modules/node-pty/build/Release/winpty-agent.exe'), path.resolve(dist, 'build/Release/winpty-agent.exe'))
+      }
     }
   })
 }
