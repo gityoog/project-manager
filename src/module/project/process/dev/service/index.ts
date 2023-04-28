@@ -42,7 +42,7 @@ export default class ProjectProcessDevService {
 
   private init() {
     this.projectBus.onRemove(({ id }) => {
-      const task = this.data[id]
+      const task = this.get(id)
       if (task) {
         task.destroy()
         delete this.data[id]
@@ -50,7 +50,7 @@ export default class ProjectProcessDevService {
       }
     })
     this.projectBus.onUpdate(row => {
-      const task = this.data[row.id]
+      const task = this.get(row.id)
       if (task) {
         task.update(row)
       }
