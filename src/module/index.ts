@@ -11,12 +11,13 @@ import { ClsModule } from "nestjs-cls"
 import UserStore from "@/service/user-store"
 import session from "express-session"
 import { APP_SESSION } from "@/service/session"
-import store from 'better-sqlite3-session-store'
+import { TypeormStore } from "connect-typeorm"
 import { DataSource } from 'typeorm'
 import { Request, RequestHandler } from "express"
 import { Socket } from 'socket.io'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import ConfigModule from "./config"
+import { SessionEntity } from "./session/service/entity"
 
 @Global()
 @Module({
@@ -49,12 +50,17 @@ import ConfigModule from "./config"
     TypeOrmModule.forRootAsync({
       inject: [Options],
       useFactory: (options: Options) => ({
-        type: 'better-sqlite3',
+        type: 'sqljs',
+        driver: require('sql.js/dist/sql-wasm.js'),
+        location: options.db,
+        autoSave: true,
         autoLoadEntities: true,
-        database: options.db,
         synchronize: true
       })
     }),
+    TypeOrmModule.forFeature([
+      SessionEntity
+    ]),
     ProjectModule,
     LoggingModule,
     ConfigModule,
@@ -88,15 +94,13 @@ import ConfigModule from "./config"
       inject: [DataSource],
       useFactory: (db: DataSource) => session({
         secret: 'app',
-        resave: false,
+        resave: true,
         saveUninitialized: true,
-        store: new (store(session))({
-          client: db.driver.databaseConnection,
-          expired: {
-            clear: true,
-            intervalMs: 1000 * 60 * 60 * 24 // 1 day
-          }
-        })
+        store: new TypeormStore({
+          cleanupLimit: 2,
+          limitSubquery: true,
+          ttl: 86400
+        }).connect(db.getRepository(SessionEntity))
       })
     }
   ],
