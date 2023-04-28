@@ -51,7 +51,10 @@ import { SessionEntity } from "./session/service/entity"
       inject: [Options],
       useFactory: (options: Options) => ({
         type: 'sqljs',
-        driver: require('sql.js/dist/sql-wasm.js'),
+        driver: require('sql.js'),
+        sqlJsConfig: {
+          wasmBinary: options.isDev ? undefined : require('sql.js/dist/sql-wasm.wasm')
+        },
         location: options.db,
         autoSave: true,
         autoLoadEntities: true,
