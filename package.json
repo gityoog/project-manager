@@ -9,7 +9,10 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "packages/*"
+      "packages/*",
+      "dist/*",
+      "node_modules/*",
+      "script/*"
     ],
     "execMap": {
       "ts": "node -r ts-swc-register"
@@ -30,17 +33,17 @@
     "@nestjs/serve-static": "^3.0.1",
     "@nestjs/typeorm": "^9.0.1",
     "@nestjs/websockets": "^9.3.12",
-    "better-sqlite3": "^8.2.0",
-    "better-sqlite3-session-store": "^0.1.0",
     "boxen": "^7.0.2",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "connect-typeorm": "^2.0.0",
     "express-session": "^1.17.3",
     "lodash.debounce": "^4.0.8",
     "nestjs-cls": "^3.2.1",
-    "node-pty": "^0.10.1",
+    "node-sqlite3-wasm": "^0.5.2",
     "pidusage": "^3.0.2",
     "process-tree": "^1.0.3",
+    "sql.js": "^1.8.0",
     "yargs": "^17.7.1",
     "zip-local": "^0.3.5"
   },
