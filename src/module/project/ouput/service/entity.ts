@@ -12,8 +12,17 @@ export default class ProjectOutputEntity extends BaseEntity {
   @Column({ type: 'text' })
   project!: string
 
-  @Column({ type: 'blob' })
-  content!: Buffer
+  @Column({
+    type: 'blob',
+    nullable: true
+  })
+  content!: Buffer | null
+
+  @Column({
+    type: 'text',
+    nullable: true
+  })
+  path!: string | null
 
   @Column({ type: 'text' })
   size!: string

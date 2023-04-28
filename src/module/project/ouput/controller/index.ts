@@ -2,6 +2,7 @@ import { formatDate } from "@/common/utils/date"
 import { All, Body, Controller, Get, Query, Res } from "@nestjs/common"
 import { Response } from "express"
 import ProjectOutputService from "../service"
+import fs from 'fs'
 
 @Controller('/project/output')
 export default class ProjectOutputController {
@@ -27,7 +28,13 @@ export default class ProjectOutputController {
       return
     }
     response.attachment(file.name + formatDate(file.created_at, 'YYYYMMDDHHmmss') + '.zip')
-    response.send(file.content)
+    if (file.path && fs.existsSync(file.path)) {
+      response.send(fs.readFileSync(file.path))
+    } else if (file.content) {
+      response.send(file.content)
+    } else {
+      response.sendStatus(404)
+    }
   }
 
   @All('/clear')

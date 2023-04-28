@@ -1,3 +1,6 @@
+import path from 'path'
+import fs from 'fs'
+
 export default class Options {
   private static _instance: Options
   static default(...args: ConstructorParameters<typeof Options>) {
@@ -13,11 +16,13 @@ export default class Options {
   db
   web?: string
   isDev
-  constructor({ port, db, web, dev }: {
+  output: string
+  constructor({ port, db, web, dev, output }: {
     port: number
     db: string
     web?: string
     dev?: boolean
+    output?: string
   }) {
     if (Options._instance) {
       throw new Error("Options already initialized")
@@ -26,6 +31,10 @@ export default class Options {
     this.db = db
     this.web = web
     this.isDev = dev || false
+    this.output = output || path.resolve(process.cwd(), 'output')
+    if (!fs.existsSync(this.output)) {
+      fs.mkdirSync(this.output, { recursive: true })
+    }
   }
 }
 
