@@ -1,4 +1,3 @@
-import NodePtyService from "./node-pty"
 import ChildProcessService from './child_process'
 import PtyState from "./state"
 
@@ -25,12 +24,14 @@ class PtyService {
   static Types: {
     name: string
     value: PtyService.Type
+    disabled?: boolean
   }[] = [{
-    name: 'node-pty',
-    value: 'node-pty'
-  }, {
     name: 'child_process',
     value: 'child_process'
+  }, {
+    name: 'node-pty',
+    value: 'node-pty',
+    disabled: true
   }]
   private state = new PtyState({ onError: this.options.onError })
   private process?: iPtyProcess
@@ -51,12 +52,10 @@ class PtyService {
       return false
     }
     switch (type) {
-      case 'child_process':
-        this.process = new ChildProcessService()
-        break
       case 'node-pty':
+      case 'child_process':
       default:
-        this.process = new NodePtyService()
+        this.process = new ChildProcessService()
     }
     try {
       const args = shell.split(' ')
