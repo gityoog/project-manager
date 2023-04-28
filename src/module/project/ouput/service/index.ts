@@ -65,6 +65,13 @@ export default class ProjectOutputService {
     return row
   }
   async clear() {
+    const rows = await this.main.find()
+    rows.forEach(row => {
+      const filepath = row.path
+      if (filepath && fs.existsSync(filepath)) {
+        fs.unlinkSync(filepath)
+      }
+    })
     await this.main.clear()
     this.bus.clear()
   }
