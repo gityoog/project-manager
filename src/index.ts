@@ -6,7 +6,9 @@ import AppModule from "./module"
 
 export default async function ProjectManagerServer(...args: ConstructorParameters<typeof Options>) {
   const config = Options.default(...args)
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter)
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, new ExpressAdapter, {
+    logger: config.isDev ? undefined : ['error', 'warn', 'log']
+  })
   app.useWebSocketAdapter(new IoAdapter(app))
   app.set('trust proxy', true)
   return await app.listen(config.port)
