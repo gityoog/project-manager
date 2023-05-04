@@ -2,11 +2,11 @@ import JSZip from "jszip"
 import fs from "fs"
 import Path from "path"
 
-export async function zipFolder(path: string) {
+export async function zipFolder<T extends JSZip.OutputType>(path: string, options?: JSZip.JSZipGeneratorOptions<T>) {
   const zipper = new JSZip()
   const fullpath = Path.resolve(path)
   await zipFolderRec(fullpath, zipper)
-  return zipper.generateAsync({ type: "nodebuffer" })
+  return zipper.generateAsync(options)
 }
 
 async function zipFolderRec(path: string, zipper: JSZip) {

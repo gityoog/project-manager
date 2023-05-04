@@ -18,7 +18,7 @@ import { zipFolder } from '@/common/zip'
   console.log('Building web...')
   await buildWeb(cwd)
   const webzip = path.resolve(dist, 'web.zip')
-  fs.writeFileSync(webzip, await zipFolder(path.resolve(cwd, './packages/web/dist')))
+  fs.writeFileSync(webzip, await zipFolder(path.resolve(cwd, './packages/web/dist'), { type: 'nodebuffer' }))
   console.log('Building server...')
   await buildServer(cwd)
   fs.unlinkSync(webzip)

@@ -64,7 +64,10 @@ export default class BuildTaskService {
     ClsServiceManager.getClsService().enterWith(this.clsStore)
     this.status.setZip(true)
     this.pty.tip('ziping', outpath)
-    zipFolder(outpath).then(content => {
+    zipFolder(outpath, {
+      type: 'nodebuffer',
+      compression: 'DEFLATE'
+    }).then(content => {
       this.status.setSave(true)
       this.pty.tip('saving')
       this.output.save({
