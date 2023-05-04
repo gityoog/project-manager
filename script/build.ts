@@ -1,22 +1,27 @@
 import { rimrafSync } from 'rimraf'
 import path from 'path'
 import { spawn } from 'child_process'
-import Ncc from '@vercel/ncc'
 import fs from 'fs'
 import ProjectManagerIpc from 'project-manager-ipc'
 import webpack from 'webpack'
 import TsconfigPathsWebpackContextPlugin from './tsconfig-paths-webpack-context-plugin'
+import { zipFolder } from '@/common/zip'
 
 (async () => {
   const cwd = path.resolve(__dirname, '../')
   const ipc = new ProjectManagerIpc()
   ipc.connect()
   console.log('Clear ...')
-  rimrafSync(path.resolve(cwd, './dist'))
+  const dist = path.resolve(cwd, './dist')
+  rimrafSync(dist)
+  if (!fs.existsSync(dist)) fs.mkdirSync(dist)
   console.log('Building web...')
   await buildWeb(cwd)
+  const webzip = path.resolve(dist, 'web.zip')
+  fs.writeFileSync(webzip, await zipFolder(path.resolve(cwd, './packages/web/dist')))
   console.log('Building server...')
   await buildServer(cwd)
+  fs.unlinkSync(webzip)
   ipc.emitDist(path.resolve(cwd, './dist'))
   ipc.destroy()
 })()
@@ -58,6 +63,10 @@ async function buildServer(cwd: string) {
       module: {
         noParse: /node_modules[\\/]sql\.js[\\/]dist[\\/]sql-.*?\.js/,
         rules: [
+          {
+            test: /\.zip$/,
+            use: require.resolve('./buffer-loader')
+          },
           {
             test: /\.wasm$/,
             use: require.resolve('./wasm-loader')
@@ -110,48 +119,16 @@ async function buildServer(cwd: string) {
       ]
     }).run((err, stats) => {
       if (err) throw err
-      if (stats?.hasErrors()) {
-        console.error(stats.toJson().errors)
-      }
-      if (stats?.hasWarnings()) {
-        console.warn(stats.toJson().warnings)
+      if (stats) {
+        const data = stats.toJson()
+        if (data.errors && data.errors.length > 0) {
+          console.error(data.errors)
+        }
+        if (data.warnings && data.warnings.length > 0) {
+          console.warn(data.warnings)
+        }
       }
       resolve(stats)
     })
-  })
-
-  return Ncc(path.resolve(cwd, './src/bin.ts'), {
-    transpileOnly: true
-  }).then(({ err, code, assets, symlinks }) => {
-    if (err) {
-      throw err
-    }
-    const dist = path.resolve(cwd, './dist')
-    if (!fs.existsSync(dist)) {
-      fs.mkdirSync(dist)
-    }
-    fs.writeFileSync(path.resolve(dist, 'index.js'), code)
-    for (const name in assets) {
-      // exclude client-dist
-      if (/^client-dist/.test(name)) {
-        continue
-      }
-      const file = path.resolve(dist, name)
-      const content = assets[name]
-      const dir = path.dirname(file)
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true })
-      }
-      fs.writeFileSync(file, content.source, { mode: content.permissions })
-    }
-    for (const name in symlinks) {
-      const symlinkPath = path.resolve(dist, name)
-      fs.symlinkSync(symlinks[name], symlinkPath)
-    }
-    if (process.platform === 'win32') {
-      if (fs.existsSync(path.resolve(cwd, 'node_modules/node-pty/build/Release/winpty-agent.exe'))) {
-        fs.copyFileSync(path.resolve(cwd, 'node_modules/node-pty/build/Release/winpty-agent.exe'), path.resolve(dist, 'build/Release/winpty-agent.exe'))
-      }
-    }
   })
 }

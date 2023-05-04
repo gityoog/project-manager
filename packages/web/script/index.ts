@@ -4,7 +4,7 @@ const type = process.argv[2]
 const arg3 = parseInt(process.argv[3])
 const port = isNaN(arg3) ? 3737 : arg3
 const project = new WebProject({
-  outPath: path.resolve(__dirname, '../../../dist/web'),
+  outPath: path.resolve(__dirname, '../dist'),
   context: path.resolve(__dirname, '../src'),
   app: './index.ts',
   polyfill: './polyfill/index.ts',
