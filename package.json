@@ -2,6 +2,7 @@
   "name": "project-manager",
   "version": "1.0.0",
   "description": "",
+  "bin": "./dist/index.js",
   "scripts": {
     "dev": "nodemon ./src/dev.ts",
     "cli": "node -r ts-swc-register ./src/bin.ts",
