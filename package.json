@@ -38,14 +38,14 @@
     "class-validator": "^0.14.0",
     "connect-typeorm": "^2.0.0",
     "express-session": "^1.17.3",
+    "jszip": "^3.10.1",
     "lodash.debounce": "^4.0.8",
     "nestjs-cls": "^3.2.1",
     "node-sqlite3-wasm": "^0.5.2",
     "pidusage": "^3.0.2",
     "process-tree": "^1.0.3",
     "sql.js": "^1.8.0",
-    "yargs": "^17.7.1",
-    "zip-local": "^0.3.5"
+    "yargs": "^17.7.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.17",

@@ -1,6 +1,5 @@
 import ProjectEntity from "@/module/project/service/entity"
 import ProjectProcessBuildBus from "../../bus"
-import zipper from "zip-local"
 import ProjectOutputService from "@/module/project/ouput/service"
 import BuildTaskStatus from "./status"
 import { ClsServiceManager } from "nestjs-cls"
@@ -8,6 +7,7 @@ import LoggingService from "@/module/logging/service"
 import NodeIpcService from "../../../node-ipc"
 import PtyService from "@/common/pty"
 import { Logger } from "@nestjs/common"
+import { zipFolder } from "@/common/zip"
 
 export default class BuildTaskService {
   private project: ProjectEntity
@@ -64,17 +64,13 @@ export default class BuildTaskService {
     ClsServiceManager.getClsService().enterWith(this.clsStore)
     this.status.setZip(true)
     this.pty.tip('ziping', outpath)
-    zipper.zip(outpath, (err, zipped) => {
-      this.status.setZip(false)
-      if (err) {
-        return this.pty.tip('zipfail', err.message)
-      }
-      this.pty.tip('saving')
+    zipFolder(outpath).then(content => {
       this.status.setSave(true)
+      this.pty.tip('saving')
       this.output.save({
         project: this.project.id,
         name: this.project.name,
-        content: zipped.memory()
+        content
       }).then(() => {
         this.pty.tip('success')
       }).catch((e) => {
@@ -82,6 +78,10 @@ export default class BuildTaskService {
       }).finally(() => {
         this.status.setSave(false)
       })
+    }).catch(err => {
+      this.pty.tip('zipfail', err.message)
+    }).finally(() => {
+      this.status.setZip(false)
     })
   }
 

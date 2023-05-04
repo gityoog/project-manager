@@ -35,16 +35,6 @@ declare module 'process-tree' {
   }>[]) => void): void
 }
 
-declare module "zip-local" {
-  class Zipped {
-    memory(): Buffer
-  }
-  const zipper: {
-    zip(source: string, callback: (err: Error | null, zipped: Zipped) => void): void
-  }
-  export default zipper
-}
-
 declare module 'lodash.debounce' {
   export default function debounce(fn: Function, delay: number): Function
 }
