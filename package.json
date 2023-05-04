@@ -1,8 +1,10 @@
 {
   "name": "project-manager",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "project-manager",
-  "main": "./dist/index.js",
+  "bin": {
+    "pm-gui": "./dist/index.js"
+  },
   "scripts": {
     "dev": "nodemon ./src/dev.ts",
     "cli": "node -r ts-swc-register ./src/bin.ts",
@@ -55,6 +57,7 @@
     "@types/pidusage": "^2.0.2",
     "@types/yargs": "^17.0.24",
     "@vercel/ncc": "^0.36.1",
+    "esbuild-loader": "^3.0.1",
     "nodemon": "^2.0.21",
     "project-manager-ipc": "^1.0.5",
     "rimraf": "^5.0.0",

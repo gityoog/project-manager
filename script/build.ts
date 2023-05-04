@@ -6,6 +6,7 @@ import ProjectManagerIpc from 'project-manager-ipc'
 import webpack from 'webpack'
 import TsconfigPathsWebpackContextPlugin from './tsconfig-paths-webpack-context-plugin'
 import { zipFolder } from '@/common/zip'
+import { EsbuildPlugin } from 'esbuild-loader'
 
 (async () => {
   const cwd = path.resolve(__dirname, '../')
@@ -86,7 +87,13 @@ async function buildServer(cwd: string) {
         ]
       },
       optimization: {
-        minimize: false
+        minimize: true,
+        minimizer: [
+          new EsbuildPlugin({
+            target: 'es6',
+            keepNames: true,
+          }),
+        ]
       },
       ignoreWarnings: [
         /Module not found/,
@@ -94,6 +101,7 @@ async function buildServer(cwd: string) {
         /Critical dependency: the request of a dependency/,
       ],
       plugins: [
+        new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
         new webpack.ProgressPlugin(
           (percent, msg, module) => {
             console.log((percent * 100).toFixed(0) + '% ' + msg + ' ' + (module || ''))
