@@ -14,13 +14,13 @@ export default class Options {
   }
   port
   db
-  web?: string
+  web?: string | Buffer
   isDev
   output: string
   constructor({ port, db, web, dev, output }: {
     port: number
     db: string
-    web?: string
+    web?: string | Buffer
     dev?: boolean
     output?: string
   }) {
