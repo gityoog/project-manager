@@ -1,8 +1,8 @@
 {
   "name": "project-manager",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "project-manager",
-  "bin": "./dist/index.js",
+  "main": "./dist/index.js",
   "scripts": {
     "dev": "nodemon ./src/dev.ts",
     "cli": "node -r ts-swc-register ./src/bin.ts",
