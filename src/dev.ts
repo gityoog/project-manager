@@ -7,5 +7,5 @@ ProjectManagerServer({
   port: isNaN(port) ? 3737 : port,
   db: path.resolve(process.cwd(), './config/app.db'),
   dev: true,
-  web: path.resolve(__dirname, '../dist/web')
+  web: path.resolve(__dirname, '../packages/web/dist')
 })

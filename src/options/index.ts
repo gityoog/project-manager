@@ -31,7 +31,7 @@ export default class Options {
     this.db = db
     this.web = web
     this.isDev = dev || false
-    this.output = output || path.resolve(process.cwd(), 'output')
+    this.output = output || path.resolve(process.cwd(), 'config/output')
     if (!fs.existsSync(this.output)) {
       fs.mkdirSync(this.output, { recursive: true })
     }

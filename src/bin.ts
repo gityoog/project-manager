@@ -2,7 +2,6 @@ import ProjectManager from '.'
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
 import path from 'path'
-import fs from 'fs'
 
 yargs(hideBin(process.argv))
   .scriptName("project-manager")
@@ -11,11 +10,10 @@ yargs(hideBin(process.argv))
   .command({
     command: '*',
     handler(data) {
-      const web = path.resolve(__dirname, './web')
       ProjectManager({
         port: data.port,
         db: path.resolve(process.cwd(), data.db),
-        web: fs.existsSync(web) ? web : undefined
+        web: require('../dist/web.zip')
       })
     }
   })
