@@ -1,17 +1,9 @@
 # Project Manager
 
-### Build
+### Usage
 
 ```bash
-npm install
-npm run build
-```
-
-### Run
-
-```bash
-# after build
-node.js ./dist/index.js
+npx pm-gui # [--port=number] [--db=path/to/sqlite/db]
 ```
 
 ### Demo
