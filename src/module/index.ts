@@ -57,6 +57,9 @@ import ZipStaticModule from "./zip-static"
           wasmBinary: options.isDev ? undefined : require('sql.js/dist/sql-wasm.wasm')
         },
         location: options.db,
+        autoSaveCallback: (data: Uint8Array) => {
+          options.saveDB(data)
+        },
         autoSave: true,
         autoLoadEntities: true,
         synchronize: true
@@ -114,8 +117,11 @@ import ZipStaticModule from "./zip-static"
 export default class AppModule implements NestModule {
   constructor(
     @Inject(APP_SESSION) private session: RequestHandler,
-    private db: DataSource
+    private db: DataSource,
+    private options: Options,
+    logger: Logger
   ) {
+    this.options.setLogger(logger)
     this.db.query('VACUUM')
   }
   configure(consumer: MiddlewareConsumer) {

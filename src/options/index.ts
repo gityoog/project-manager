@@ -1,5 +1,6 @@
 import path from 'path'
 import fs from 'fs'
+import { Logger } from '@nestjs/common'
 
 export default class Options {
   private static _instance: Options
@@ -35,6 +36,36 @@ export default class Options {
     if (!fs.existsSync(this.output)) {
       fs.mkdirSync(this.output, { recursive: true })
     }
+  }
+  private logger?: Logger
+  setLogger(logger: Logger) {
+    this.logger = logger
+  }
+  private dbCache?: Uint8Array
+  saveDB(data: Uint8Array) {
+    this.dbCache = data
+    this.writeDB()
+  }
+  private writing = false
+  private writeDB() {
+    if (this.writing || !this.dbCache) {
+      return
+    }
+    this.writing = true
+    const data = this.dbCache
+    this.dbCache = undefined
+    fs.writeFile(this.db, data, (err) => {
+      if (err) {
+        this.logger?.log(`save db failed: ${err.message}`, 'SaveDBFile')
+        if (!this.dbCache) {
+          this.dbCache = data
+        }
+      }
+      setTimeout(() => {
+        this.writing = false
+        this.writeDB()
+      }, 500)
+    })
   }
 }
 
