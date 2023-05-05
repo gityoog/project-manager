@@ -61,6 +61,12 @@ async function buildServer(cwd: string) {
       resolve: {
         extensions: [".ts", ".js", ".tsx", ".json"]
       },
+      externals: ({ request }, callback) => {
+        if (request && /^node\:/.test(request)) {
+          return callback(undefined, 'commonjs2 ' + request.slice(5))
+        }
+        callback()
+      },
       module: {
         noParse: /node_modules[\\/]sql\.js[\\/]dist[\\/]sql-.*?\.js/,
         rules: [
@@ -92,6 +98,7 @@ async function buildServer(cwd: string) {
           new EsbuildPlugin({
             target: 'es6',
             keepNames: true,
+
           }),
         ]
       },
