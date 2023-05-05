@@ -13,7 +13,7 @@ export default class NodeIpcService {
     const rand = Math.random().toString(36).substring(2, 15)
     ipc.config.id = (options.isDev ? 'PROJECT_MANAGER_IPC_SERVER_DEV' : 'PROJECT_MANAGER_IPC_SERVER') + '_' + rand
     ipc.config.retry = 1500
-    ipc.config.logger = msg => logger.verbose(msg.replaceAll('\n', '\\n'), 'NodeIpcService')
+    ipc.config.logger = msg => logger.verbose(msg.replace(/\n/g, '\\n'), 'NodeIpcService')
     ipc.serve()
   }
   private inited = false
