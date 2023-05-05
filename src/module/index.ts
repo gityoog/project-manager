@@ -56,10 +56,8 @@ import ZipStaticModule from "./zip-static"
         sqlJsConfig: {
           wasmBinary: options.isDev ? undefined : require('sql.js/dist/sql-wasm.wasm')
         },
-        location: options.db,
-        autoSaveCallback: (data: Uint8Array) => {
-          options.saveDB(data)
-        },
+        database: options.getDB(),
+        autoSaveCallback: (data: Uint8Array) => options.saveDB(data),
         autoSave: true,
         autoLoadEntities: true,
         synchronize: true
@@ -83,7 +81,8 @@ import ZipStaticModule from "./zip-static"
     Logger,
     {
       provide: Options,
-      useFactory: () => Options.factory()
+      inject: [Logger],
+      useFactory: (logger: Logger) => Options.factory(logger)
     },
     {
       provide: APP_INTERCEPTOR,
@@ -117,11 +116,8 @@ import ZipStaticModule from "./zip-static"
 export default class AppModule implements NestModule {
   constructor(
     @Inject(APP_SESSION) private session: RequestHandler,
-    private db: DataSource,
-    private options: Options,
-    logger: Logger
+    private db: DataSource
   ) {
-    this.options.setLogger(logger)
     this.db.query('VACUUM')
   }
   configure(consumer: MiddlewareConsumer) {

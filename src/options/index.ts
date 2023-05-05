@@ -7,10 +7,11 @@ export default class Options {
   static default(...args: ConstructorParameters<typeof Options>) {
     return this._instance = new this(...args)
   }
-  static factory() {
+  static factory(logger: Logger) {
     if (!this._instance) {
       throw new Error("Options not initialized")
     }
+    this._instance.logger = logger
     return this._instance
   }
   port
@@ -36,12 +37,20 @@ export default class Options {
     if (!fs.existsSync(this.output)) {
       fs.mkdirSync(this.output, { recursive: true })
     }
+    const dbDir = path.dirname(this.db)
+    if (!fs.existsSync(dbDir)) {
+      fs.mkdirSync(dbDir, { recursive: true })
+    }
   }
-  private logger?: Logger
-  setLogger(logger: Logger) {
-    this.logger = logger
-  }
+  private logger!: Logger
   private dbCache?: Uint8Array
+  getDB(): Uint8Array {
+    if (fs.existsSync(this.db)) {
+      return Uint8Array.from(fs.readFileSync(this.db))
+    }
+    this.logger.warn(`db file not found: ${this.db}`, 'GetDBFile')
+    return new Uint8Array()
+  }
   saveDB(data: Uint8Array) {
     this.dbCache = data
     this.writeDB()
@@ -54,9 +63,9 @@ export default class Options {
     this.writing = true
     const data = this.dbCache
     this.dbCache = undefined
-    fs.writeFile(this.db, data, (err) => {
+    fs.writeFile(this.db, Buffer.from(data), (err) => {
       if (err) {
-        this.logger?.log(`save db failed: ${err.message}`, 'SaveDBFile')
+        this.logger.warn(`save db failed: ${err.message}`, 'SaveDBFile')
         if (!this.dbCache) {
           this.dbCache = data
         }
