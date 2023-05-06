@@ -1,16 +1,22 @@
 import { All, Body, Controller, Inject } from "@nestjs/common"
+import ProjectProcessDevService from "../process/dev/service"
 import ProjectService from "../service"
 import ProjectDto from "../service/dto"
 
 @Controller('/project')
 export default class ProjectController {
   constructor(
-    @Inject(ProjectService) private project: ProjectService
+    private project: ProjectService,
+    private dev: ProjectProcessDevService
   ) { }
 
   @All('/query')
-  query(@Body() data: { type?: string | null }) {
-    return this.project.query(data)
+  async query(@Body() data: { type?: string | null }) {
+    const projects = await this.project.query(data)
+    return projects.map(data => ({
+      data,
+      dev: this.dev.info(data.id)
+    }))
   }
 
 

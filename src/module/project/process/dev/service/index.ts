@@ -37,7 +37,7 @@ export default class ProjectProcessDevService {
     this.get(id)?.stop()
   }
   info(id: string) {
-    return this.get(id)?.info()
+    return this.get(id)?.info() || null
   }
 
   private init() {

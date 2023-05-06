@@ -11,6 +11,21 @@ import LocaleService from "@/app/common/locale"
 import LocalStorageItem from "@/common/local-storage-item"
 import AppConfig from "@/app/common/config"
 
+type devInfo = {
+  pty: {
+    status: boolean
+    stdout: string[]
+    stats: {
+      cpu: string
+      memory: string
+    } | null
+  }
+  url: {
+    host: string
+    port: string
+  } | null
+} | null
+
 @Container()
 @Service()
 export default class IProjectCard implements iProjectCard {
@@ -75,32 +90,21 @@ export default class IProjectCard implements iProjectCard {
         this.terminal?.reload()
       })
     )
-    AppApi.project.process.dev.detail({
-      id: this.id
-    }).success(data => {
-      if (data) {
-        this.status = data.pty.status
-        if (this.status) {
-          this.factoryTerminal().write(data.pty.stdout)
-        }
-        this.updateStats(data.pty.stats)
-        this.updateUrl(data.url)
-      }
-    }).final(() => {
-      this.ws.on('status', data => {
-        this.updateStatus(data.value)
-      })
-      this.ws.on('stdout', data => {
-        this.factoryTerminal().write(data.value)
-      })
-      this.ws.on('stats', data => {
-        this.updateStats(data.value)
-      })
-      this.ws.on('url', data => {
-        this.updateUrl(data.value)
-      })
+
+    this.ws.on('status', data => {
+      this.updateStatus(data.value)
+    })
+    this.ws.on('stdout', data => {
+      this.factoryTerminal().write(data.value)
+    })
+    this.ws.on('stats', data => {
+      this.updateStats(data.value)
+    })
+    this.ws.on('url', data => {
+      this.updateUrl(data.value)
     })
   }
+
   private updateStats(data: { cpu: string, memory: string } | null) {
     if (!data) {
       this.cpuUsage = ''
@@ -130,6 +134,16 @@ export default class IProjectCard implements iProjectCard {
   checked = false
   toggleCheck() {
     this.checked = !this.checked
+  }
+  setInfo(data: devInfo) {
+    if (data) {
+      this.status = data.pty.status
+      if (this.status) {
+        this.factoryTerminal().write(data.pty.stdout)
+      }
+      this.updateStats(data.pty.stats)
+      this.updateUrl(data.url)
+    }
   }
   update(data: Project.data) {
     this.data = { ...data }

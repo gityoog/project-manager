@@ -44,7 +44,11 @@ export default class IProjectList implements iProjectList {
       AppApi.project.manager.query({
         type: this.type,
       }).success(data => {
-        this.data = data.map(item => this.cache.factory(item))
+        this.data = data.map(item => {
+          const project = this.cache.factory(item.data)
+          project.setInfo(item.dev)
+          return project
+        })
       })
     )
   }
