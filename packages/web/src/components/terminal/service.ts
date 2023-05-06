@@ -16,7 +16,9 @@ export default class TerminalService implements iTerminal {
       ...options
     })
     this.term.loadAddon(this.fitAddon)
-    this.term.loadAddon(new CanvasAddon())
+    if (!isIE()) {
+      this.term.loadAddon(new CanvasAddon())
+    }
     this.resize = debounce(this.resize.bind(this), 20)
   }
   setOption<K extends keyof ITerminalOptions>(key: K, value: ITerminalOptions[K]) {
@@ -62,4 +64,12 @@ export default class TerminalService implements iTerminal {
     this.term.dispose()
     this.el = undefined
   }
-} 
+}
+
+function isIE(): boolean {
+  if (!!window.ActiveXObject || "ActiveXObject" in window) {
+    return true
+  } else {
+    return false
+  }
+}
