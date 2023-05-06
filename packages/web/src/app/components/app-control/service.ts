@@ -9,6 +9,8 @@ import ProjectCategoryService from "app/common/project-category"
 import IProjectListCache from "app/common/project-list-cache"
 import IProjectBuilder from "../project-builder/service"
 import LocaleService from "@/app/common/locale"
+import AppWs from "@/app/ws"
+import AppConfig from "@/app/common/config"
 
 type tab = {
   name: string
@@ -25,6 +27,16 @@ export default class IAppControl implements iAppControl {
   @Inject() private category!: ProjectCategoryService
   @Inject() private cache!: IProjectListCache
   @Inject() private locale!: LocaleService
+  @Inject() private config!: AppConfig
+
+  stats: {
+    cpu: string
+    memory: string
+  } | null = null
+
+  get showStats() {
+    return this.config.stats
+  }
 
   private tab = new TabSelect<tab>({
     data: [],
@@ -54,6 +66,8 @@ export default class IAppControl implements iAppControl {
   constructor() {
     this.init()
   }
+  private statsWs = AppWs.stats()
+
   @Already
   private init() {
     this.tab.onChange((value) => {
@@ -91,6 +105,18 @@ export default class IAppControl implements iAppControl {
           })
         })
     })
+    this.config.watch('stats', (value) => {
+      if (value) {
+        this.statsWs.on('stats', data => {
+          this.stats = {
+            cpu: data.cpu,
+            memory: data.memory
+          }
+        })
+      } else {
+        this.statsWs.clear()
+      }
+    }, true)
   }
   add() {
     this.editor.add({

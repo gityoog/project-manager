@@ -18,6 +18,7 @@ export default class ILocalSetting implements iLocalSetting {
     lang: '',
     fontSize: '',
     fontFamily: '',
+    stats: false
   }
   langs: {
     name: string
@@ -36,6 +37,7 @@ export default class ILocalSetting implements iLocalSetting {
     this.data.lang = this.config.language
     this.data.fontSize = this.config.terminal.fontSize.toString()
     this.data.fontFamily = this.config.terminal.fontFamily
+    this.data.stats = this.config.stats
   }
   refresh() {
     this.query()
@@ -46,6 +48,7 @@ export default class ILocalSetting implements iLocalSetting {
       fontSize: parseInt(this.data.fontSize),
       fontFamily: this.data.fontFamily
     }
+    this.config.stats = this.data.stats
     ElMessage.success(this.$t.saveSuccess)
   }
 }

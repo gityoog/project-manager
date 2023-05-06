@@ -6,6 +6,8 @@ import LogoSvg from 'app/images/logo.svg'
 import PlusSvg from 'app/images/plus.svg'
 import MinSvg from 'app/images/min.svg'
 import SettingSvg from 'app/images/setting.svg'
+import CPUIcon from 'app/images/CPU.svg'
+import MemoryIcon from 'app/images/memory.svg'
 import IAppControl from './service'
 import ProjectList, { iProjectList } from '../project-list'
 import ProjectEditor, { iProjectEditor } from '../project-editor'
@@ -26,6 +28,11 @@ export interface iAppControl {
   setting: iAppSetting
   selector: iProjectSelector
   builder: iProjectBuilder
+  stats: {
+    cpu: string
+    memory: string
+  } | null
+  showStats: boolean
   add(): void
   remove(): void
   openSetting(): void
@@ -37,7 +44,7 @@ export default class AppControl extends Vue {
   @Inject() private locale!: LocaleService
 
   protected render() {
-    const { tabs, list, editor, setting, selector, builder } = this.service
+    const { tabs, list, editor, setting, selector, builder, showStats, stats } = this.service
     const $t = this.locale.t
     return <div class={style.app}>
       <AppSetting service={setting} />
@@ -46,7 +53,14 @@ export default class AppControl extends Vue {
       <div class={style.header}>
         <div class={style.logo}>
           <LogoSvg size="32px" fill='#fff'></LogoSvg>
-          <div class={style.text}>{$t.title}</div></div>
+          <div class={style.right}>
+            <div class={style.text}>{$t.title}</div>
+            {showStats && stats && <div class={style.stats}>
+              <CPUIcon /><span class={style.value}>{stats.cpu}</span>
+              <MemoryIcon /><span class={style.value}>{stats.memory}</span>
+            </div>}
+          </div>
+        </div>
         <div class={style.nav}>
           {tabs.map((item, index) => <div v-show={item.visible} onClick={() => this.service.active(index)} class={[style.item, this.service.isActived(index) && style.actived]}>
             {item.name}

@@ -7,12 +7,14 @@ import { FC } from '@/common/vue'
 import style from './style.module.scss'
 import LocaleService from '@/app/common/locale'
 import ElInput from '@/common/element-ui/input'
+import ElSwitch from '@/common/element-ui/switch'
 
 export interface iLocalSetting {
   data: {
     lang: string
     fontSize: string
     fontFamily: string
+    stats: boolean
   }
   langs: {
     name: string
@@ -47,6 +49,9 @@ const LocalSetting = FC<{ service: iLocalSetting }>({
               <div style="width: 60px;text-align: center;" slot="prepend">{$t.fontSize}</div>
             </ElInput>
           </div>
+        </ElFormItem>
+        <ElFormItem label={$t.stats.title}>
+          <ElSwitch vModel={data.stats}></ElSwitch>
         </ElFormItem>
         <ElFormItem>
           <ElButton onClick={() => service.refresh()}>{$t.reset}</ElButton>

@@ -79,6 +79,10 @@ export default {
       pty: 'Pty',
       fontSize: 'Font Size',
       fontFamily: 'Font Family',
+      stats: {
+        title: 'Stats',
+        tip: 'Whether to display CPU/memory usage information on the homepage'
+      },
       reset: 'Reset',
       save: 'Save',
       saveSuccess: 'Save Success',

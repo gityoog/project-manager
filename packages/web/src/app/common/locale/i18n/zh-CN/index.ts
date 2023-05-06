@@ -79,6 +79,10 @@ export default {
       pty: '终端',
       fontSize: '字体大小',
       fontFamily: '字体',
+      stats: {
+        title: '统计',
+        tip: '是否在首页显示CPU/内存的使用信息',
+      },
       reset: '重置',
       save: '保存',
       saveSuccess: '保存成功',

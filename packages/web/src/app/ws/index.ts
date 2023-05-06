@@ -65,6 +65,15 @@ const AppWs = {
     }, {}, `/${string}`>({
       namesapce: '/project/process/build'
     })
-  }
+  },
+
+  stats: Websocket.main<{
+    stats: [data: {
+      cpu: string
+      memory: string
+    }]
+  }>({
+    namesapce: '/stats'
+  })
 }
 export default AppWs

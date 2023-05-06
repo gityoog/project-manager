@@ -14,6 +14,10 @@ export default class AppConfig {
         fontFamily: 'Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
         fontSize: 12
       }
+    }),
+    stats: new LocalStorageItem({
+      key: 'AppConfig_Stats',
+      default: false
     })
   })
 
@@ -23,10 +27,12 @@ export default class AppConfig {
     readonly fontFamily: string
     readonly fontSize: number
   }
+  stats: boolean
   watch
   constructor() {
     this.language = this.items.bind(this, 'language')
     this.terminal = this.items.bind(this, 'terminal')
+    this.stats = this.items.bind(this, 'stats')
     this.watch = this.items.watch
   }
 
