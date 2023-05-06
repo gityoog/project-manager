@@ -62,3 +62,8 @@ const webpackConfig = {
 
 - merge project devInfo request
 - show cpu/memory on homepage
+
+#### [1.0.5] 2023-05-06
+
+- category orderby sort asc
+- xterm use canvas renderer
