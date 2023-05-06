@@ -26,7 +26,7 @@ export default class IProjectList implements iProjectList {
       this.bus.onListUpdate({
         type: this.type,
         add: row => {
-          this.data.push(this.cache.factory(row))
+          this.data.unshift(this.cache.factory(row))
         },
         remove: row => {
           const index = this.data.findIndex(item => item.id === row.id)
