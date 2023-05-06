@@ -11,7 +11,7 @@ export default class ZipStaticModule {
     [url: string]: Promise<{
       type: string
       content: Buffer | string
-    }> | undefined
+    }> | null
   } = {}
   private zipper = new JSZip
   constructor(
@@ -20,27 +20,30 @@ export default class ZipStaticModule {
   ) {
     if (this.options.web instanceof Buffer) {
       const app = this.adapterHost.httpAdapter.getInstance<Express>()
-      this.zipper.loadAsync(this.options.web)
-      app.use((req, res, next) => {
-        // @ts-ignore
-        const path: string = req._parsedUrl.pathname
-        const result = this.query(path)
-        if (result) {
-          result.then(({ type, content }) => {
-            res.setHeader('Content-Type', type)
-            res.status(200).send(content)
-          })
-        } else {
-          next()
-        }
+      this.zipper.loadAsync(this.options.web).then(() => {
+        app.use((req, res, next) => {
+          if (req.method !== 'GET' && req.method !== 'HEAD') {
+            next()
+          } else {
+            // @ts-ignore
+            const path: string = req._parsedUrl.pathname
+            const result = this.query(path)
+            if (result) {
+              result.then(({ type, content }) => {
+                res.setHeader('Content-Type', type)
+                res.status(200).send(content)
+              })
+            } else {
+              next()
+            }
+          }
+        })
       })
     }
   }
 
-  private query(url: string): Promise<{ type: string, content: Buffer | string }> | void {
-    if (this.cache[url]) {
-      return this.cache[url]
-    } else {
+  private query(url: string): Promise<{ type: string, content: Buffer | string }> | null {
+    if (this.cache[url] === undefined) {
       const paths = [url, url.endsWith('/') ? url + 'index.html' : url + '/index.html'].map(p => p.replace(/^\//, ''))
       const file = this.zipper.file(paths[0]) || this.zipper.file(paths[1])
       if (file) {
@@ -53,8 +56,10 @@ export default class ZipStaticModule {
           }
         })
         this.cache[url] = result
-        return result
+      } else {
+        this.cache[url] = null
       }
     }
+    return this.cache[url]
   }
 }
