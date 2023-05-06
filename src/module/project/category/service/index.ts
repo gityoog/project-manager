@@ -21,7 +21,7 @@ export default class ProjectCategoryService {
         WHEN sort IS NULL THEN 0
         WHEN sort = '' THEN 0
         ELSE sort
-      END`, 'DESC')
+      END`, 'ASC')
       .getMany()
     return { data, other }
   }
