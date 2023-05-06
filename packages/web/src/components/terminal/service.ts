@@ -1,9 +1,10 @@
 import { Terminal, ITerminalOptions } from 'xterm'
 import { iTerminal } from "."
 import { FitAddon } from 'xterm-addon-fit'
+import { CanvasAddon } from 'xterm-addon-canvas'
+
 import 'xterm/css/xterm.css'
 import debounce from 'lodash.debounce'
-
 export default class TerminalService implements iTerminal {
   term: Terminal
   fitAddon = new FitAddon
@@ -15,6 +16,7 @@ export default class TerminalService implements iTerminal {
       ...options
     })
     this.term.loadAddon(this.fitAddon)
+    this.term.loadAddon(new CanvasAddon())
     this.resize = debounce(this.resize.bind(this), 20)
   }
   setOption<K extends keyof ITerminalOptions>(key: K, value: ITerminalOptions[K]) {
