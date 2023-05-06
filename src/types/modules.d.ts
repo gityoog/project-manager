@@ -38,3 +38,11 @@ declare module 'process-tree' {
 declare module 'lodash.debounce' {
   export default function debounce(fn: Function, delay: number): Function
 }
+
+declare namespace Express {
+  interface Request {
+    _parsedUrl: {
+      pathname: string
+    }
+  }
+}

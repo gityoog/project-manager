@@ -25,8 +25,7 @@ export default class ZipStaticModule {
           if (req.method !== 'GET' && req.method !== 'HEAD') {
             next()
           } else {
-            // @ts-ignore
-            const path: string = req._parsedUrl.pathname
+            const path = req._parsedUrl.pathname
             const result = this.query(path)
             if (result) {
               result.then(({ type, content }) => {

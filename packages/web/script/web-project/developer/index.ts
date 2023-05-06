@@ -42,7 +42,6 @@ export default class WebProjectDeveloper {
           pathRewrite: () => "",
           router: function (req) {
             return decodeURIComponent(
-              // @ts-ignore
               req._parsedUrl.query
             )
           }
@@ -53,5 +52,15 @@ export default class WebProjectDeveloper {
         this.ipc.emitUrl('0.0.0.0', port)
       }
     })
+  }
+}
+
+declare global {
+  namespace Express {
+    interface Request {
+      _parsedUrl: {
+        query: string
+      }
+    }
   }
 }
