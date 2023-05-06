@@ -19,6 +19,7 @@ import { ServeStaticModule } from '@nestjs/serve-static'
 import ConfigModule from "./config"
 import { SessionEntity } from "./session/service/entity"
 import ZipStaticModule from "./zip-static"
+import StatsModule from "./stats"
 
 @Global()
 @Module({
@@ -70,6 +71,7 @@ import ZipStaticModule from "./zip-static"
     LoggingModule,
     ConfigModule,
     ZipStaticModule,
+    StatsModule,
     ServeStaticModule.forRootAsync({
       inject: [Options],
       useFactory: (options: Options) => typeof options.web === 'string' ? [{
