@@ -37,7 +37,7 @@ const ProjectEditor = FC<{ service: iProjectEditor }>({
     return <ElDialog title={$t.title} service={dialog}>
       <ElForm labelPosition="right" labelWidth="100px">
         <ElFormItem label={$t.name}>
-          <ElInput vModel={data.name}></ElInput>
+          <ElInput placeholder={$t.name} vModel={data.name}></ElInput>
         </ElFormItem>
         <ElFormItem label={$t.category}>
           <ElSelect style="width: 100%;" vModel={data.type} >
@@ -45,19 +45,19 @@ const ProjectEditor = FC<{ service: iProjectEditor }>({
           </ElSelect>
         </ElFormItem>
         <ElFormItem label={$t.context}>
-          <ElInput vModel={data.context}></ElInput>
+          <ElInput placeholder='/path/to/context' vModel={data.context}></ElInput>
         </ElFormItem>
         <ElFormItem label={$t.dev}>
-          <ElInput vModel={data.dev}></ElInput>
+          <ElInput placeholder='npm run dev' vModel={data.dev}></ElInput>
         </ElFormItem>
         <ElFormItem label={$t.build}>
-          <ElInput vModel={data.build}></ElInput>
+          <ElInput placeholder='npm run build' vModel={data.build}></ElInput>
         </ElFormItem>
         <ElFormItem label={$t.deploy}>
-          <ElInput vModel={data.deploy}></ElInput>
+          <ElInput placeholder='todo' disabled vModel={data.deploy}></ElInput>
         </ElFormItem>
         <ElFormItem label={$t.sort}>
-          <ElInput type="number" vModel={data.sort}></ElInput>
+          <ElInput placeholder='0' type="number" vModel={data.sort}></ElInput>
         </ElFormItem>
       </ElForm>
     </ElDialog>
