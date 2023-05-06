@@ -31,6 +31,8 @@ export default class TerminalService implements iTerminal {
     this.term.focus()
   }
   reload() {
+    this.resize()
+    this.refresh()
     // this.term.dispose()
     // if (this.el) {
     //   this.term.open(this.el)
