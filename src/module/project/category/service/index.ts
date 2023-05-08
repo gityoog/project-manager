@@ -5,6 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { Repository, DataSource, IsNull } from "typeorm"
 import ProjectEntity from "../../service/entity"
 import ProjectCategoryBus from "../bus"
+import { SortSql } from "@/common/typeorm"
 
 @Injectable()
 export default class ProjectCategoryService {
@@ -17,11 +18,7 @@ export default class ProjectCategoryService {
   async query() {
     const other = await this.project.exist({ where: { type: IsNull() } })
     const data = await this.main.createQueryBuilder()
-      .orderBy(`CASE 
-        WHEN sort IS NULL THEN 0
-        WHEN sort = '' THEN 0
-        ELSE sort
-      END`, 'ASC')
+      .orderBy(SortSql(), 'ASC')
       .getMany()
     return { data, other }
   }
