@@ -29,3 +29,9 @@ export function NonNullableColumn<T>(options?: ColumnOptions): PropertyDecorator
     }].concat(options?.transformer || [])
   })
 }
+
+export const SortSql = (column = 'sort') => `CASE 
+WHEN ${column} IS NULL THEN 0
+WHEN ${column} = '' THEN 0
+ELSE ${column}
+END`
