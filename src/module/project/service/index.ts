@@ -6,6 +6,7 @@ import { Repository, IsNull, DataSource, In } from "typeorm"
 import ProjectCategoryEntity from "../category/service/entity"
 import ProjectBus from "../bus"
 import ProjectCategoryBus from "../category/bus"
+import { SortSql } from "@/common/typeorm"
 
 @Injectable()
 export default class ProjectService {
@@ -34,14 +35,12 @@ export default class ProjectService {
     })
   }
   query(data: { type?: string | null }) {
-    return this.main.find({
-      where: {
+    return this.main.createQueryBuilder()
+      .where({
         type: data.type === null ? IsNull() : data.type
-      },
-      order: {
-        sort: 'ASC'
-      }
-    })
+      })
+      .orderBy(SortSql(), 'ASC')
+      .getMany()
   }
   detail(id: string) {
     return this.main.findOne({
