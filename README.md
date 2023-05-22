@@ -84,3 +84,7 @@ const webpackConfig = {
 
 - change project sort
 - add project created_at
+
+### [1.0.7] 2023-05-22
+
+- When the project is stopped, click on the status label to display the terminal.
