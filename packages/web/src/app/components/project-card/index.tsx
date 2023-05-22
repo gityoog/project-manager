@@ -23,19 +23,21 @@ export interface iProjectCard {
   url: string | null
   locale: LocaleService
   height: number
+  showTerminal: boolean
   open(): void
   stop(): void
   run(): void
   edit(): void
   build(): void
   toggleCheck(): void
+  toggleTerminal(): void
 }
 
 const ProjectCard = FC<{ service: iProjectCard }>({
   functional: true,
   render(h, context) {
     const service = context.props.service
-    const { status, url, cpuUsage, memoryUsage, terminal, locale } = service
+    const { status, url, cpuUsage, memoryUsage, terminal, locale, showTerminal } = service
     const $t = locale.t.project.card
     return <div key={service.id} class={style.card}>
       <div v-show={service.showCheck} onClick={() => service.toggleCheck()} class={style.check}>{service.checked ? <CheckSvg /> : <UnCheckSvg />}</div>
@@ -46,7 +48,7 @@ const ProjectCard = FC<{ service: iProjectCard }>({
         <div class={style.title}>
           <div class={style.left}>
             <div onClick={() => service.edit()} class={style.name}>{service.name}</div>
-            <div class={[style.status, status ? style.enabled : undefined]}>{status ? $t.running : $t.exited}</div>
+            <div onClick={() => service.toggleTerminal()} class={[style.status, status ? style.enabled : undefined]}>{status ? $t.running : $t.exited}</div>
           </div>
           <div class={style.buildBt} onClick={() => service.build()} ><DBIcon size="24px" fill="#fff" ></DBIcon>{$t.build}</div>
         </div>
@@ -63,7 +65,7 @@ const ProjectCard = FC<{ service: iProjectCard }>({
           }}>{url}</div>}
         </div>}
       </div>
-      {status ?
+      {status || showTerminal ?
         <DragHeight class={style.terminal} min={120} vModel={service.height}>
           {terminal && <TerminalComponent service={terminal}></TerminalComponent>}
         </DragHeight>

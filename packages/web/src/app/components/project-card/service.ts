@@ -45,6 +45,7 @@ export default class IProjectCard implements iProjectCard {
   cpuUsage = ''
   memoryUsage = ''
   status = false
+  showTerminal = false
   url = ''
   terminal: TerminalService | null = null
   time = 0
@@ -125,9 +126,16 @@ export default class IProjectCard implements iProjectCard {
     if (this.status !== value) {
       this.status = value
       this.time = Date.now()
+      if (this.status) {
+        this.showTerminal = false
+      }
     }
   }
-
+  toggleTerminal() {
+    if (!this.status) {
+      this.showTerminal = !this.showTerminal
+    }
+  }
   get showCheck() {
     return this.selector.visible
   }
