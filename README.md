@@ -1,6 +1,6 @@
 # Project Manager
 
-### Usage
+## Usage
 
 ```bash
 npx pm-gui # [--port=4000] [--db=path/to/sqlite/db]
@@ -8,7 +8,19 @@ npx pm-gui # [--port=4000] [--db=path/to/sqlite/db]
 
 open browser and visit `http://localhost:4000`
 
-### IPC
+## Args
+
+### port
+
+- listen port
+- default: `4000`
+
+### db
+
+- app local storage
+- default: `cwd/config/app.db`
+
+## IPC
 
 add [project-manager-ipc](https://www.npmjs.com/package/project-manager-ipc) to project for
 emit dev info and build dist to pm-gui
@@ -48,22 +60,27 @@ const webpackConfig = {
 };
 ```
 
-### Demo
+## Demo
 
 ![image](./docs/main.png)
 
-### changelog
+## changelog
 
-#### [1.0.3] 2023-05-05
+### [1.0.3] 2023-05-05
 
 - update db file save method
 
-#### [1.0.4] 2023-05-06
+### [1.0.4] 2023-05-06
 
 - merge project devInfo request
 - show cpu/memory on homepage
 
-#### [1.0.5] 2023-05-06
+### [1.0.5] 2023-05-06
 
 - category orderby sort asc
 - xterm use canvas renderer
+
+### [1.0.6] 2023-05-08
+
+- change project sort
+- add project created_at
