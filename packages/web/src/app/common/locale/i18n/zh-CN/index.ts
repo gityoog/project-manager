@@ -28,7 +28,8 @@ export default {
       running: '运行中',
       exited: '已停止',
       build: '打包',
-      runFail: '启动失败'
+      runFail: '启动失败',
+      terminal: '显示/关闭终端显示'
     },
     edit: {
       title: '项目信息',

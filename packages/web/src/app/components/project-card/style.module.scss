@@ -88,12 +88,18 @@
           margin-top: 6px;
           color: #6e6e6e;
           font-weight: bold;
-          cursor: pointer;
 
           &.enabled {
-            cursor: default;
             color: #8cb9ff;
             font-weight: bold;
+          }
+
+          &.disabled {
+            cursor: pointer;
+
+            &:hover {
+              text-decoration: underline;
+            }
           }
         }
       }

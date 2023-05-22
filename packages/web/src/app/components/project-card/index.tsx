@@ -48,7 +48,7 @@ const ProjectCard = FC<{ service: iProjectCard }>({
         <div class={style.title}>
           <div class={style.left}>
             <div onClick={() => service.edit()} class={style.name}>{service.name}</div>
-            <div onClick={() => service.toggleTerminal()} class={[style.status, status ? style.enabled : undefined]}>{status ? $t.running : $t.exited}</div>
+            <div title={status ? undefined : $t.terminal} onClick={() => service.toggleTerminal()} class={[style.status, status ? style.enabled : style.disabled]}>{status ? $t.running : $t.exited}</div>
           </div>
           <div class={style.buildBt} onClick={() => service.build()} ><DBIcon size="24px" fill="#fff" ></DBIcon>{$t.build}</div>
         </div>

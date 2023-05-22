@@ -28,7 +28,8 @@ export default {
       running: 'Running',
       exited: 'Exited',
       build: 'Build',
-      runFail: 'Run Failed'
+      runFail: 'Run Failed',
+      terminal: 'Show/Hide Terminal Display'
     },
     edit: {
       title: 'Project Info',
