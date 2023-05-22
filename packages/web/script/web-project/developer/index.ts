@@ -54,13 +54,3 @@ export default class WebProjectDeveloper {
     })
   }
 }
-
-declare global {
-  namespace Express {
-    interface Request {
-      _parsedUrl: {
-        query: string
-      }
-    }
-  }
-}
