@@ -52,8 +52,11 @@ class PtyState {
     this.stdout.push(data)
     this.stdoutCallback?.(data)
   }
-  writeMessage(name: string, detail?: string) {
+  writeMessage(name: string, detail?: string, newLine?: boolean) {
     this.writeStdout(boxen(detail || name, { title: detail ? name : undefined, padding: { left: 1, right: 1 } }), { LF: true })
+    if (newLine) {
+      this.writeStdout('\n')
+    }
   }
 
   onStdoutPush(callback: (data: string) => void) {
