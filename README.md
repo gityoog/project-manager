@@ -88,3 +88,7 @@ const webpackConfig = {
 ### [1.0.7] 2023-05-22
 
 - When the project is stopped, click on the status label to display the terminal.
+
+### [1.0.8] 2023-05-23
+
+- add build/dev proc `env` and `encoding`
