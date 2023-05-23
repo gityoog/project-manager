@@ -41,12 +41,13 @@ class PtyService {
     onError?: (name: string, err: Error) => void
   }) { }
 
-  run({ shell, command, cwd, env, type }: {
+  run({ shell, command, cwd, env, type, encoding }: {
     shell: string
     command: string | string[]
     cwd: string
     env?: Record<string, string>
     type?: PtyService.Type
+    encoding?: string
   }) {
     if (this.process) {
       return false
@@ -55,7 +56,7 @@ class PtyService {
       case 'node-pty':
       case 'child_process':
       default:
-        this.process = new ChildProcessService()
+        this.process = new ChildProcessService({ encoding })
     }
     try {
       const args = shell.split(' ')
@@ -82,7 +83,7 @@ class PtyService {
           }
         }
       })
-      this.state.writeMessage('start')
+      this.state.writeMessage('start', undefined, true)
       this.state.setStatus(true)
       if (this.options.stats !== false) {
         this.state.activeStats(pid)
