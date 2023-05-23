@@ -47,6 +47,7 @@ export default class ElDialog extends Vue {
     title?: string
     maxHeight?: string
     fullHeight?: boolean
+    appendToBody?: boolean
   }
   @Prop() service!: iElDialog
   @Prop() top?: string
@@ -55,6 +56,7 @@ export default class ElDialog extends Vue {
   @Prop() title?: string
   @Prop() maxHeight?: string
   @Prop(Boolean) fullHeight!: boolean
+  @Prop() appendToBody?: boolean
 
   @Watch('service.visible')
   onVisibleChange(visible: boolean) {
@@ -83,7 +85,7 @@ export default class ElDialog extends Vue {
         customClass={this.customClass}
         top={this.top ?? this.service.top}
         width={this.width ?? this.service.width}
-        appendToBody={this.service.appendToBody}
+        appendToBody={this.appendToBody ?? this.service.appendToBody}
         title={this.title ?? this.service.title}
         closeOnClickModal={this.service.closeOnClickModal}
         center={this.service.center}
