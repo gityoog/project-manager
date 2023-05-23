@@ -25,10 +25,10 @@ export default class IProcessEditor implements iProcessEditor {
   open({ encoding, env }: {
     encoding?: string
     env?: Record<string, string>
-  } = {}, callback: (data?: {
+  }, callback: (data: {
     encoding?: string
     env?: Record<string, string>
-  }) => void) {
+  } | null) => void) {
     this.data = { encoding: encoding || '' }
     this.env.setData(
       env ? Object.keys(env).map(key => ({
@@ -48,7 +48,8 @@ export default class IProcessEditor implements iProcessEditor {
       if (env.length > 0) {
         result.env = env.reduce((t, c) => (t[c.key] = c.value, t), {} as Record<string, string>)
       }
-      callback(Object.keys(result).length > 0 ? result : undefined)
+      callback(Object.keys(result).length > 0 ? result : null)
+      this.dialog.close()
     })
   }
 

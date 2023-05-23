@@ -9,9 +9,9 @@ namespace Project {
     type: string
     context: string
     build: string
-    build_proc?: proc
+    build_proc: proc | null
     dev: string
-    dev_proc?: proc
+    dev_proc: proc | null
     deploy: string
     sort: string
   }

@@ -13,8 +13,8 @@ type data = {
   dev: string
   deploy: string
   sort: string
-  build_proc?: proc
-  dev_proc?: proc
+  build_proc: proc | null
+  dev_proc: proc | null
 }
 
 type devInfo = {

@@ -15,7 +15,9 @@ const defData: Project.data = {
   dev: '',
   type: '',
   sort: '',
-  deploy: ''
+  deploy: '',
+  dev_proc: null,
+  build_proc: null,
 }
 
 @Service()
@@ -50,12 +52,12 @@ export default class IProjectEditor implements iProjectEditor {
     this.open({ ...defData, ...data }, callback)
   }
   openDevProc() {
-    this.process.open(this.data.dev_proc, data => {
+    this.process.open(this.data.dev_proc || {}, data => {
       this.data.dev_proc = data
     })
   }
   openBuildProc() {
-    this.process.open(this.data.build_proc, data => {
+    this.process.open(this.data.build_proc || {}, data => {
       this.data.build_proc = data
     })
   }
