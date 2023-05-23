@@ -23,6 +23,18 @@ export default class ProjectEntity extends BaseEntity {
   @Column('text')
   dev!: string
 
+  @Column('simple-json', { nullable: true })
+  build_proc!: {
+    encoding?: string
+    env?: Record<string, string>
+  } | null
+
+  @Column('simple-json', { nullable: true })
+  dev_proc!: {
+    encoding?: string
+    env?: Record<string, string>
+  } | null
+
   @Column({
     type: 'text',
     nullable: true

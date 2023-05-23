@@ -6,4 +6,12 @@ export default class ProjectDto {
   readonly build!: string
   readonly dev!: string
   readonly deploy!: string
+  readonly build_proc?: {
+    encoding?: string
+    env?: Record<string, string>
+  }
+  readonly dev_proc?: {
+    encoding?: string
+    env?: Record<string, string>
+  }
 }
