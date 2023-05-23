@@ -107,7 +107,9 @@ export default class BuildTaskService {
       shell,
       command: this.project.build,
       cwd: this.project.context,
-      type
+      type,
+      env: this.project.build_proc?.env,
+      encoding: this.project.build_proc?.encoding
     })
     this.logging.save({
       target: 'BuildProcess',

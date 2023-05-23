@@ -88,7 +88,9 @@ export default class DevTaskService {
       shell,
       command: this.project.dev,
       cwd: this.project.context,
-      type
+      type,
+      env: this.project.dev_proc?.env,
+      encoding: this.project.dev_proc?.encoding,
     })
     this.logging.save({
       target: 'DevProcess',
