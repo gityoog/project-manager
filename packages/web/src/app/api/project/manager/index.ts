@@ -1,5 +1,9 @@
 import Request from "@/common/request"
 
+type proc = {
+  encoding?: string
+  env?: Record<string, string>
+}
 type data = {
   id: string
   name: string
@@ -9,7 +13,10 @@ type data = {
   dev: string
   deploy: string
   sort: string
+  build_proc?: proc
+  dev_proc?: proc
 }
+
 type devInfo = {
   pty: {
     status: boolean

@@ -1,11 +1,17 @@
 namespace Project {
+  type proc = {
+    encoding?: string
+    env?: Record<string, string>
+  }
   type data = {
     id: string
     name: string
     type: string
     context: string
     build: string
+    build_proc?: proc
     dev: string
+    dev_proc?: proc
     deploy: string
     sort: string
   }

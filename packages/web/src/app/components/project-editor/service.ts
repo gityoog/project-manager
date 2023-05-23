@@ -5,19 +5,9 @@ import IElDialog from "components/el-dialog/service"
 import { Inject, Service } from "ioc-di"
 import { iProjectEditor } from "."
 import LocaleService from "@/app/common/locale"
+import IProcessEditor from "../process-editor/service"
 
-type data = {
-  id: string
-  name: string
-  context: string
-  build: string
-  dev: string
-  type: string
-  sort: string
-  deploy: string
-}
-
-const defData = {
+const defData: Project.data = {
   id: '',
   name: '',
   context: '',
@@ -32,13 +22,14 @@ const defData = {
 export default class IProjectEditor implements iProjectEditor {
   @Inject() private category!: ProjectCategoryService
   @Inject() locale!: LocaleService
+  @Inject() private process!: IProcessEditor
 
   dialog = new IElDialog()
-  data = { ...defData }
+  data: Project.data = { ...defData }
   get types() {
     return this.category.data
   }
-  open(data: data, callback?: (data: data) => void) {
+  open(data: Project.data, callback?: (data: Project.data) => void) {
     this.category.getData()
     this.data = { ...data }
     this.dialog.open(() => {
@@ -55,7 +46,17 @@ export default class IProjectEditor implements iProjectEditor {
       )
     })
   }
-  add(data: Partial<data>, callback: () => void) {
+  add(data: Partial<Project.data>, callback: () => void) {
     this.open({ ...defData, ...data }, callback)
+  }
+  openDevProc() {
+    this.process.open(this.data.dev_proc, data => {
+      this.data.dev_proc = data
+    })
+  }
+  openBuildProc() {
+    this.process.open(this.data.build_proc, data => {
+      this.data.build_proc = data
+    })
   }
 }

@@ -1,6 +1,7 @@
 import ElLocaleEn from "@/common/element-ui/locale/en"
 
 export default {
+  lang: 'en',
   title: 'Project Manager',
   el: ElLocaleEn,
   tabs: {
@@ -39,7 +40,12 @@ export default {
       dev: 'Dev',
       build: 'Build',
       deploy: 'Deploy',
-      sort: 'Sort'
+      sort: 'Sort',
+      process: {
+        title: 'Process Config',
+        encoding: 'Encoding',
+        env: 'Env',
+      }
     }
   },
   category: {

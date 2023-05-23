@@ -6,6 +6,8 @@ import ElInput from '@/common/element-ui/input'
 import ElSelect from '@/common/element-ui/select'
 import ElOption from '@/common/element-ui/option'
 import LocaleService from '@/app/common/locale'
+import ElButton from '@/common/element-ui/button'
+import style from './style.module.scss'
 
 export interface iProjectEditor {
   dialog: iElDialog
@@ -23,6 +25,8 @@ export interface iProjectEditor {
     deploy: string
   }
   locale: LocaleService
+  openDevProc(): void
+  openBuildProc(): void
 }
 const typeProp = {
   prop: 'id',
@@ -48,10 +52,14 @@ const ProjectEditor = FC<{ service: iProjectEditor }>({
           <ElInput placeholder='/path/to/context' vModel={data.context}></ElInput>
         </ElFormItem>
         <ElFormItem label={$t.dev}>
-          <ElInput placeholder='npm run dev' vModel={data.dev}></ElInput>
+          <ElInput class={style.bt} placeholder='npm run dev' vModel={data.dev}>
+            <ElButton onClick={() => service.openDevProc()} slot="append" icon="el-icon-s-tools"></ElButton>
+          </ElInput>
         </ElFormItem>
         <ElFormItem label={$t.build}>
-          <ElInput placeholder='npm run build' vModel={data.build}></ElInput>
+          <ElInput class={style.bt} placeholder='npm run build' vModel={data.build}>
+            <ElButton onClick={() => service.openBuildProc()} slot="append" icon="el-icon-s-tools"></ElButton>
+          </ElInput>
         </ElFormItem>
         <ElFormItem label={$t.deploy}>
           <ElInput placeholder='todo' disabled vModel={data.deploy}></ElInput>

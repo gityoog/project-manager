@@ -11,6 +11,7 @@ import IProjectBuilder from "../project-builder/service"
 import LocaleService from "@/app/common/locale"
 import AppWs from "@/app/ws"
 import AppConfig from "@/app/common/config"
+import IProcessEditor from "../process-editor/service"
 
 type tab = {
   name: string
@@ -24,11 +25,11 @@ export default class IAppControl implements iAppControl {
   @Inject() setting!: IAppSetting
   @Inject() selector!: IProjectSelector
   @Inject() builder!: IProjectBuilder
+  @Inject() process!: IProcessEditor
   @Inject() private category!: ProjectCategoryService
   @Inject() private cache!: IProjectListCache
   @Inject() private locale!: LocaleService
   @Inject() private config!: AppConfig
-
   stats: {
     cpu: string
     memory: string

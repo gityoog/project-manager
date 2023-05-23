@@ -1,6 +1,7 @@
 import ElLocaleZhCN from "@/common/element-ui/locale/zh-CN"
 
 export default {
+  lang: 'zh-CN',
   title: '项目管理可视化',
   el: ElLocaleZhCN,
   tabs: {
@@ -39,7 +40,12 @@ export default {
       dev: '调试命令',
       build: '打包命令',
       deploy: '部署地址',
-      sort: '项目排序'
+      sort: '项目排序',
+      process: {
+        title: '进程配置',
+        encoding: '字符编码',
+        env: '环境变量',
+      }
     }
   },
   category: {
