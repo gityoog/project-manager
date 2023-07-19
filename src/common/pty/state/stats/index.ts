@@ -54,8 +54,8 @@ export default class PtyUsageStats {
       pidusage(pids, (err, stats) => {
         if (err) return callback({ err, name: `QueryProcessUsage: ${pids.join(',')}` })
         const data = Object.values(stats).reduce((total, cur) => ({
-          cpu: total.cpu + cur.cpu,
-          memory: total.memory + cur.memory,
+          cpu: total.cpu + (cur?.cpu || 0),
+          memory: total.memory + (cur?.memory || 0),
         }), { cpu: 0, memory: 0 })
         callback(null, {
           cpu: (data.cpu / this.cores).toFixed(2) + '%',
