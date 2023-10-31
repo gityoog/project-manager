@@ -1,6 +1,5 @@
+import ProcUsage from '@/common/proc-usage'
 import os from 'os'
-import pidusage from 'pidusage'
-import ProcessTree from 'process-tree'
 
 type stats = {
   cpu: string
@@ -14,6 +13,7 @@ export default class PtyUsageStats {
   private index = 0
   private running = false
   private data: stats | null = null
+  private proc = ProcUsage.factory()
   constructor(private options: { onError?: (name: string, err: Error) => void } = {}) { }
   getData() {
     return this.data
@@ -41,31 +41,27 @@ export default class PtyUsageStats {
     })
   }
   private query(pid: number, callback: (err: null | ({ name: string, err: Error }), stats?: stats) => void) {
-    ProcessTree(pid, (err, children) => {
-      if (err) return callback({ err, name: `QueryProcessTree: ${pid}` })
-      const pids: number[] = [pid]
-      while (children.length) {
-        const child = children.shift()
-        if (child) {
-          children = children.concat(child.children)
-          pids.push(child.pid)
-        }
+    this.proc.get(pid, (usage) => {
+      const data: ProcUsage.Proc[] = []
+      function add(proc: ProcUsage.Proc) {
+        data.push(proc)
+        proc.children.forEach(item => add(item))
       }
-      pidusage(pids, (err, stats) => {
-        if (err) return callback({ err, name: `QueryProcessUsage: ${pids.join(',')}` })
-        const data = Object.values(stats).reduce((total, cur) => ({
-          cpu: total.cpu + cur.cpu,
-          memory: total.memory + cur.memory,
-        }), { cpu: 0, memory: 0 })
-        callback(null, {
-          cpu: (data.cpu / this.cores).toFixed(2) + '%',
-          memory: (data.memory / 1024 / 1024).toFixed(2) + 'MB'
-        })
+      if (usage) {
+        add(usage)
+      }
+      const stats = data.reduce((total, cur) => ({
+        cpu: total.cpu + (cur.cpu || 0),
+        memory: total.memory + (cur.mem || 0),
+      }), { cpu: 0, memory: 0 })
+
+      callback(null, {
+        cpu: (stats.cpu / this.cores).toFixed(2) + '%',
+        memory: (stats.memory / 1024 / 1024).toFixed(2) + 'MB'
       })
     })
   }
   stop() {
-    pidusage.clear()
     this.running = false
     this.setData(null)
     if (this.timeout) {
@@ -74,6 +70,7 @@ export default class PtyUsageStats {
     }
   }
   destroy() {
+    this.proc.destroy()
     this.stop()
     this.callback = undefined
   }

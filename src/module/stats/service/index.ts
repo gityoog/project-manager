@@ -1,5 +1,5 @@
 import { Injectable, Logger } from "@nestjs/common"
-import pidusage from 'pidusage'
+import ProcUsage from '@/common/proc-usage'
 import os from 'os'
 
 type stats = {
@@ -9,6 +9,7 @@ type stats = {
 
 @Injectable()
 export default class StatsService {
+  private proc = ProcUsage.factory()
   private cores = os.cpus().length
   constructor(
     private logger: Logger
@@ -43,13 +44,13 @@ export default class StatsService {
       clearTimeout(this.timeout)
       this.timeout = undefined
     }
-    pidusage(process.pid, (err, stats) => {
-      if (err) return this.logger.log("QueryPidusage Error", 'StatsService')
+    this.proc.get(process.pid, (usage) => {
+      if (!usage) return this.logger.log("QueryPidusage Error", 'StatsService')
       if (index !== this.index) return
       if (!this.status) return
       this.callback?.({
-        cpu: (stats.cpu / this.cores).toFixed(2) + '%',
-        memory: (stats.memory / 1024 / 1024).toFixed(2) + 'MB'
+        cpu: (usage.cpu / this.cores).toFixed(2) + '%',
+        memory: (usage.mem / 1024 / 1024).toFixed(2) + 'MB'
       })
       this.timeout = setTimeout(() => this.query(), 1000)
     })

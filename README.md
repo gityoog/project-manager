@@ -66,29 +66,26 @@ const webpackConfig = {
 
 ## changelog
 
-### [1.0.3] 2023-05-05
+### [1.1.0] 2023-10-31
+- change usage to process
 
-- update db file save method
+### [1.0.8] 2023-05-23
+- add build/dev proc `env` and `encoding`
 
-### [1.0.4] 2023-05-06
-
-- merge project devInfo request
-- show cpu/memory on homepage
-
-### [1.0.5] 2023-05-06
-
-- category orderby sort asc
-- xterm use canvas renderer
+### [1.0.7] 2023-05-22
+- When the project is stopped, click on the status label to display the terminal.
 
 ### [1.0.6] 2023-05-08
-
 - change project sort
 - add project created_at
 
-### [1.0.7] 2023-05-22
+### [1.0.5] 2023-05-06
+- category orderby sort asc
+- xterm use canvas renderer
 
-- When the project is stopped, click on the status label to display the terminal.
+### [1.0.4] 2023-05-06
+- merge project devInfo request
+- show cpu/memory on homepage
 
-### [1.0.8] 2023-05-23
-
-- add build/dev proc `env` and `encoding`
+### [1.0.3] 2023-05-05
+- update db file save method
