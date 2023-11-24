@@ -50,6 +50,9 @@ export default class TerminalService implements iTerminal {
       }
     }
   }
+  focus() {
+    this.term.focus()
+  }
   write(data: string[]): void
   write(data: string | Uint8Array, callback?: () => void): void
   write(data: string | Uint8Array | string[], callback?: () => void) {
@@ -58,6 +61,9 @@ export default class TerminalService implements iTerminal {
     } else {
       this.term.write(data, callback)
     }
+  }
+  onData(callback: (data: string, arg2: any) => void) {
+    this.term.onData(callback)
   }
   clear() {
     this.term.clear()
