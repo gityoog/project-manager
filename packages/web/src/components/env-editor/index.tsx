@@ -13,7 +13,9 @@ export interface iEnvEditor {
 
 const EnvEditor = FC<{
   service: iEnvEditor
-  lang?: string
+  lang: {
+    add: string
+  }
 }>({
   functional: true,
   render(h, context) {
@@ -28,7 +30,7 @@ const EnvEditor = FC<{
           <td class={style.remove} onClick={() => service.remove(index)}><CloseSvg /></td>
         </tr>)}
       </table>
-      <div class={style.add} onClick={() => service.add()}>{lang === 'zh-CN' ? '添加参数' : 'Add Env'}</div>
+      <div class={style.add} onClick={() => service.add()}>{lang.add}</div>
     </div>
   }
 })
