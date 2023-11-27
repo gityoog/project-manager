@@ -7,6 +7,7 @@ import webpack from 'webpack'
 import TsconfigPathsWebpackContextPlugin from './tsconfig-paths-webpack-context-plugin'
 import { zipFolder } from '@/common/zip'
 import { EsbuildPlugin } from 'esbuild-loader'
+import logUpdate from 'log-update'
 
 (async () => {
   const cwd = path.resolve(__dirname, '../')
@@ -109,7 +110,7 @@ async function buildServer(cwd: string) {
         new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
         new webpack.ProgressPlugin(
           (percent, msg, module) => {
-            console.log((percent * 100).toFixed(0) + '% ' + msg + ' ' + (module || ''))
+            logUpdate((percent * 100).toFixed(0) + '% ' + msg + ' ' + (module || ''))
           }
         ),
         new TsconfigPathsWebpackContextPlugin,
@@ -138,7 +139,9 @@ async function buildServer(cwd: string) {
           console.error(data.errors)
         }
         if (data.warnings && data.warnings.length > 0) {
-          console.warn(data.warnings)
+          console.warn('Build success with:\n', data.warnings)
+        } else {
+          console.log('Build success')
         }
       }
       resolve(stats)
