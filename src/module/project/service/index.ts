@@ -66,10 +66,10 @@ export default class ProjectService {
           }
         })
         await runner.dropTable(table)
-        this.logger.log('migrations finished', ProjectService)
+        this.logger.log('migrations finished', 'ProjectService')
       }
     } catch (e) {
-      this.logger.error('migrations failed: ' + getErrorMessage(e), ProjectService)
+      this.logger.error('migrations failed: ' + getErrorMessage(e), 'ProjectService')
     }
   }
   query(data: { type?: string | null }) {
