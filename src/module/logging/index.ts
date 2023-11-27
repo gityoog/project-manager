@@ -1,8 +1,9 @@
-import { Global, Logger, Module } from "@nestjs/common"
+import { Global, Module } from "@nestjs/common"
 import LoggingController from "./controller"
 import LoggingService from "./service"
 import LoggingEntity from "./service/entity"
 import { TypeOrmModule } from '@nestjs/typeorm'
+import LoggingContext from "@/common/logging"
 
 @Global()
 @Module({
@@ -10,13 +11,15 @@ import { TypeOrmModule } from '@nestjs/typeorm'
     LoggingController
   ],
   providers: [
-    LoggingService
+    LoggingService,
+    LoggingContext
   ],
   imports: [
     TypeOrmModule.forFeature([LoggingEntity]),
   ],
   exports: [
-    LoggingService
+    LoggingService,
+    LoggingContext
   ]
 })
 export default class LoggingModule {

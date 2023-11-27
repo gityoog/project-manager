@@ -1,10 +1,11 @@
-import { All, Body, Controller, Inject, Session } from "@nestjs/common"
+import { All, Body, Controller } from "@nestjs/common"
 import LoggingService from "../service"
+import Logging from "@/common/logging/decorator"
 
 @Controller('/logging')
 export default class LoggingController {
   constructor(
-    @Inject(LoggingService) private service: LoggingService
+    private service: LoggingService
   ) { }
 
   @All('/query')
@@ -17,6 +18,7 @@ export default class LoggingController {
   }
 
   @All('/clear')
+  @Logging()
   clear() {
     return this.service.clear()
   }

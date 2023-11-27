@@ -12,6 +12,9 @@ export default class LoggingEntity extends BaseEntity {
   @Column('text')
   target!: string
 
+  @Column('text', { default: '1' })
+  status!: string
+
   @Column('text')
   ip!: string
 
