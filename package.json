@@ -1,6 +1,6 @@
 {
   "name": "project-manager",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "project-manager",
   "bin": {
     "pm-gui": "./dist/index.js"
@@ -8,7 +8,8 @@
   "scripts": {
     "dev": "nodemon ./src/dev.ts",
     "cli": "node -r ts-swc-register ./src/bin.ts",
-    "build": "node -r ts-swc-register ./script/build.ts"
+    "build": "node -r ts-swc-register ./script/build.ts",
+    "check": "tsc -p ./tsconfig.json --noEmit"
   },
   "nodemonConfig": {
     "ignore": [
@@ -46,8 +47,6 @@
     "lodash.debounce": "^4.0.8",
     "nestjs-cls": "^3.2.1",
     "node-sqlite3-wasm": "^0.5.2",
-    "pidusage": "^3.0.2",
-    "process-tree": "^1.0.3",
     "sql.js": "^1.8.0",
     "yargs": "^17.7.1"
   },
@@ -63,8 +62,9 @@
     "project-manager-ipc": "^1.0.5",
     "rimraf": "^5.0.0",
     "ts-loader": "^9.4.2",
-    "ts-swc-register": "^1.2.2",
+    "ts-swc-register": "^1.2.3",
     "tsconfig-paths-webpack-plugin": "^4.0.1",
+    "typescript": "^5.3.2",
     "webpack": "^5.81.0"
   }
 }
