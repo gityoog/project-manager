@@ -19,6 +19,9 @@ export default class Options {
   web?: string | Buffer
   isDev
   output: string
+  get bak() {
+    return this.db + '.bak'
+  }
   constructor({ port, db, web, dev, output }: {
     port: number
     db: string
@@ -45,8 +48,16 @@ export default class Options {
   private logger!: Logger
   private dbCache?: Uint8Array
   getDB(): Uint8Array {
-    if (fs.existsSync(this.db)) {
-      return Uint8Array.from(fs.readFileSync(this.db))
+    const bak = fs.existsSync(this.bak) ? Uint8Array.from(fs.readFileSync(this.bak)) : undefined
+    const db = fs.existsSync(this.db) ? Uint8Array.from(fs.readFileSync(this.db)) : undefined
+    if (db) {
+      if (db.length === 0 && bak) {
+        return bak
+      }
+      return db
+    }
+    if (bak) {
+      return bak
     }
     this.logger.warn(`db file not found: ${this.db}`, 'GetDBFile')
     return new Uint8Array()
@@ -63,7 +74,7 @@ export default class Options {
     this.writing = true
     const data = this.dbCache
     this.dbCache = undefined
-    fs.writeFile(this.db, Buffer.from(data), (err) => {
+    this.writeFile(Buffer.from(data), (err) => {
       if (err) {
         this.logger.warn(`save db failed: ${err.message}`, 'SaveDBFile')
         if (!this.dbCache) {
@@ -74,6 +85,16 @@ export default class Options {
         this.writing = false
         this.writeDB()
       }, 500)
+    })
+  }
+  private writeFile(data: Buffer, callback: (err: Error | null) => void) {
+    fs.writeFile(this.bak, data, (err) => {
+      if (err) {
+        return callback(err)
+      }
+      fs.writeFile(this.db, data, err => {
+        callback(err)
+      })
     })
   }
 }
