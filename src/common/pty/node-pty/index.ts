@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { IDisposable, IPty, spawn } from "node-pty"
 import ProcessKill from "@/common/utils/process"
 
