@@ -31,21 +31,13 @@ export default class ConfigData {
     [key in keyof data]?: string
   } = {}
   constructor(
-    @InjectRepository(ConfigEntity) private main: Repository<ConfigEntity>,
-    private logging: LoggingService
-  ) {
-
-  }
+    @InjectRepository(ConfigEntity) private main: Repository<ConfigEntity>
+  ) { }
   async set(key: keyof data, value: string) {
     if (await this.get(key) !== value) {
       const item = this.data[key]
       await this.save(item.name, value)
       this.cache[key] = value
-      this.logging.save({
-        target: 'Config',
-        action: 'Set',
-        description: `${item.name}: ${value}`
-      })
     }
   }
   async get<K extends keyof data>(key: K) {

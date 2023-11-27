@@ -1,5 +1,6 @@
 import { Controller, All, Body } from "@nestjs/common"
 import ConfigService from "../service"
+import Logging from "@/common/logging/decorator"
 
 @Controller('/config')
 export default class ConfigController {
@@ -21,6 +22,7 @@ export default class ConfigController {
   }
 
   @All('/save')
+  @Logging({ description: ([data]) => `shell: ${data.shell}, pty: ${data.pty}` })
   async saveShell(@Body() data: {
     shell: string
     pty: string
