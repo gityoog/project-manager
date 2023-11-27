@@ -179,6 +179,7 @@ export default class ProjectProcessTaskService {
     this.unbind()
     this.pty = null!
     this.data = null!
+    this.project = null!
     this.config = null!
     this.ipc = null!
     this.pid = null!
