@@ -11,6 +11,7 @@
     "target": "ES2015",
     "baseUrl": ".",
     "resolveJsonModule": true,
+    "skipLibCheck": true,
     "paths": {
       "@/*": [
         "./src/*"
