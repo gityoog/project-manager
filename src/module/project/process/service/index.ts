@@ -58,12 +58,19 @@ export default class ProjectProcessService {
     if (!this.data[projectId]) {
       this.data[projectId] = {}
     }
-    const project = await this.project.detail(projectId)
-    if (!project) return null
-    const process = await this.project.process(projectId, id)
-    if (!process) return null
-    if (!this.data[projectId][process.id]) {
-      if (!create) return null
+    let process = null
+    if (!id) {
+      process = await this.project.process(projectId, id)
+      if (!process) return null
+      id = process.id
+    }
+    if (!this.data[projectId][id] && create) {
+      const project = await this.project.detail(projectId)
+      if (!project) return null
+      if (!process) {
+        process = await this.project.process(projectId, id)
+      }
+      if (!process) return null
       this.data[projectId][process.id] = new ProjectProcessTaskService({
         project,
         data: process,
@@ -74,7 +81,7 @@ export default class ProjectProcessService {
         bus: this.bus
       })
     }
-    return this.data[projectId][process.id]
+    return this.data[projectId][id] || null
   }
 
   async run(project: string, id?: string) {
