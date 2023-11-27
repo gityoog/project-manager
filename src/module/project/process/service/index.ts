@@ -3,7 +3,7 @@ import ProjectProcessTaskService from "./task"
 import ProjectBus from "../../bus"
 import ProjectService from "../../service"
 import NodeIpcService from "../node-ipc"
-import ConfigService from "@/module/config/service"
+import ConfigService from "../../../config/service"
 import ProjectOutputService from "../../ouput/service"
 import ProjectProcessBus from "../bus"
 

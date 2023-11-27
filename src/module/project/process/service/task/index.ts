@@ -1,12 +1,12 @@
 import PtyService from "@/common/pty"
 import NodeIpcService from "../../node-ipc"
 import { Logger } from "@nestjs/common"
-import ConfigService from "@/module/config/service"
+import ConfigService from "../../../../config/service"
 import TaskStatus from "./status"
 import { ClsServiceManager } from "nestjs-cls"
 import { zipFolder } from "@/common/zip"
-import ProjectOutputService from "@/module/project/ouput/service"
 import ProjectProcessBus from "../../bus"
+import ProjectOutputService from "../../../ouput/service"
 
 type data = {
   id: string

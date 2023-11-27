@@ -1,5 +1,5 @@
 import EntitySubscriber from "@/common/entity-subscriber"
-import ProjectCategoryEntity from "@/module/project/category/service/entity"
+import ProjectCategoryEntity from "../service/entity"
 import { Injectable } from "@nestjs/common"
 
 @Injectable()
