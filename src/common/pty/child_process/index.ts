@@ -70,4 +70,9 @@ export default class ChildProcessService {
       }
     }
   }
+  write(data: string) {
+    if (this.process) {
+      this.process.stdin.write(data)
+    }
+  }
 }

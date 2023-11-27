@@ -14,6 +14,7 @@ interface iPtyProcess {
     }
   }): number
   stop(): void
+  write(data: string): void
 }
 
 namespace PtyService {
@@ -128,6 +129,10 @@ class PtyService {
 
   tip(name: string, detail?: string) {
     this.state.writeMessage(name, detail)
+  }
+
+  write(data: string) {
+    this.process?.write(data)
   }
 
   destroy() {
