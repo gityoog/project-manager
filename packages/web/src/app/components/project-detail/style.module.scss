@@ -1,0 +1,59 @@
+.detail {
+  :global {
+    .el-dialog__body {
+      padding-top: 4px;
+    }
+  }
+
+  .title {
+    line-height: 24px;
+    font-size: 16px;
+    color: #ffffff;
+    display: flex;
+
+    >.stats {
+      display: flex;
+      align-items: center;
+
+      margin-left: 20px;
+      font-size: 12px;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      >.value {
+        display: block;
+        width: 56px;
+        margin-left: 4px;
+      }
+    }
+  }
+
+  .container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tabs {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    >:global(.el-tabs__header) {
+      margin-bottom: 0;
+    }
+
+    >:global(.el-tabs__content) {
+      flex: 1;
+      overflow: hidden;
+
+      >:global(.el-tab-pane) {
+        height: 100%;
+        overflow: hidden;
+      }
+    }
+  }
+}

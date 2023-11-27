@@ -1,0 +1,68 @@
+.formitem {
+  margin-bottom: 8px;
+
+  &:hover {
+    .name {
+      >input {
+        border-bottom: 1px solid #dcdfe6;
+      }
+    }
+  }
+
+  .remove {
+    padding: 10px;
+    margin-right: -10px;
+    //非is-disabled
+
+  }
+
+  .name {
+    padding-left: 10px;
+    height: 38px;
+
+    >input {
+      border: none;
+      text-align: right;
+      width: 100%;
+      box-sizing: border-box;
+      outline: none;
+      color: #606266;
+      font-size: 14px;
+      padding: 0;
+      border-bottom: 1px solid transparent;
+      line-height: 30px;
+
+      &:focus {
+        border-bottom: 1px solid #dcdfe6;
+      }
+    }
+  }
+
+}
+
+
+
+.shell {
+  >:global(.el-input__inner) {
+    border-left-color: transparent;
+    // margin-left: -1px;
+    // margin-right: -1px;
+
+    &:focus {
+      border-color: rgb(64, 158, 255);
+    }
+  }
+
+  :global {
+    .el-input-group__prepend {
+      border: none;
+      width: calc(50% - 29px);
+      padding: 0;
+
+      .el-input__inner {
+        border-top-left-radius: 4px;
+        border-bottom-left-radius: 4px;
+      }
+    }
+  }
+}

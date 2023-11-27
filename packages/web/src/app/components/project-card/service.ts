@@ -6,10 +6,10 @@ import IProjectSelector from "../project-selector/service"
 import AppWs from "app/ws"
 import AppApi from "app/api"
 import ElMessage from "@/common/element-ui/message"
-import IProjectBuilder from "../project-builder/service"
 import LocaleService from "@/app/common/locale"
 import LocalStorageItem from "@/common/local-storage-item"
 import AppConfig from "@/app/common/config"
+import IProjectDetail from "../project-detail/service"
 
 type devInfo = {
   pty: {
@@ -31,7 +31,7 @@ type devInfo = {
 export default class IProjectCard implements iProjectCard {
   @Inject() private editor!: IProjectEditor
   @Inject() private selector!: IProjectSelector
-  @Inject() private builder!: IProjectBuilder
+  @Inject() private detail!: IProjectDetail
   @Inject() private config!: AppConfig
   @Inject() locale!: LocaleService
   private destroyCallbacks: Array<() => void> = []
@@ -39,7 +39,7 @@ export default class IProjectCard implements iProjectCard {
   private get $t() {
     return this.locale.t.project.card
   }
-  private ws
+  private ws?: ReturnType<typeof AppWs.process>
   private data: Project.data
   id: string
   cpuUsage = ''
@@ -57,6 +57,7 @@ export default class IProjectCard implements iProjectCard {
   }
   height: number
   private heightValue
+  private processId: string | null = null
   constructor(data: Project.data) {
     this.id = data.id
     this.heightValue = new LocalStorageItem({
@@ -65,9 +66,7 @@ export default class IProjectCard implements iProjectCard {
     })
     this.height = this.heightValue.bind(this, 'height')
     this.data = { ...data }
-    this.ws = AppWs.process.dev({
-      namesapce: `/${this.id}`
-    })
+    this.setProcessId(data.process?.[0].id || null)
     this.init()
   }
 
@@ -77,6 +76,9 @@ export default class IProjectCard implements iProjectCard {
       this.terminal = new TerminalService({
         fontSize: options.fontSize,
         fontFamily: options.fontFamily
+      })
+      this.terminal.onData((data) => {
+        this.ws?.emit('stdin', data)
       })
     }
     return this.terminal
@@ -91,21 +93,32 @@ export default class IProjectCard implements iProjectCard {
         this.terminal?.reload()
       })
     )
-
-    this.ws.on('status', data => {
-      this.updateStatus(data.value)
-    })
-    this.ws.on('stdout', data => {
-      this.factoryTerminal().write(data.value)
-    })
-    this.ws.on('stats', data => {
-      this.updateStats(data.value)
-    })
-    this.ws.on('url', data => {
-      this.updateUrl(data.value)
-    })
   }
-
+  private setProcessId(id: string | null) {
+    if (this.processId !== id) {
+      this.processId = id
+      if (this.ws) {
+        this.ws.destroy()
+      }
+      if (this.processId) {
+        this.ws = AppWs.process({
+          namesapce: `/${this.processId}`
+        })
+        this.ws.on('status', data => {
+          this.updateStatus(data.value)
+        })
+        this.ws.on('stdout', data => {
+          this.factoryTerminal().write(data.value)
+        })
+        this.ws.on('stats', data => {
+          this.updateStats(data.value)
+        })
+        this.ws.on('url', data => {
+          this.updateUrl(data.value)
+        })
+      }
+    }
+  }
   private updateStats(data: { cpu: string, memory: string } | null) {
     if (!data) {
       this.cpuUsage = ''
@@ -126,9 +139,9 @@ export default class IProjectCard implements iProjectCard {
     if (this.status !== value) {
       this.status = value
       this.time = Date.now()
-      if (this.status) {
-        this.showTerminal = false
-      }
+    }
+    if (this.status) {
+      this.showTerminal = true
     }
   }
   toggleTerminal() {
@@ -155,18 +168,19 @@ export default class IProjectCard implements iProjectCard {
   }
   update(data: Project.data) {
     this.data = { ...data }
+    this.setProcessId(data.process?.[0].id || null)
   }
   stop() {
-    AppApi.project.process.dev.stop({
-      id: this.id
+    AppApi.project.process.stop({
+      project: this.data.id
     }).success(() => {
       this.updateStatus(false)
     })
   }
   run() {
-    AppApi.project.process.dev.start({
-      id: this.id
-    }).validate(data => data !== false)
+    AppApi.project.process.start({
+      project: this.id
+    }).validate(data => !!data)
       .fail(err => {
         ElMessage.warning(this.$t.runFail)
       })
@@ -177,8 +191,8 @@ export default class IProjectCard implements iProjectCard {
   edit() {
     this.editor.open(this.data)
   }
-  build() {
-    this.builder.open(this.id)
+  more() {
+    this.detail.open(this.id)
   }
   open() {
     window.open('//' + this.url)
@@ -191,6 +205,7 @@ export default class IProjectCard implements iProjectCard {
     this.destroyCallbacks.forEach(fn => fn())
     this.destroyCallbacks = []
     this.heightValue.destroy()
-    this.ws.destroy()
+    this.ws?.destroy()
+    this.ws = null!
   }
 }

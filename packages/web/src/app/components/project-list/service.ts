@@ -46,7 +46,7 @@ export default class IProjectList implements iProjectList {
       }).success(data => {
         this.data = data.map(item => {
           const project = this.cache.factory(item.data)
-          project.setInfo(item.dev)
+          project.setInfo(item.process)
           return project
         })
       })

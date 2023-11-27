@@ -13,9 +13,9 @@ import ProjectList, { iProjectList } from '../project-list'
 import ProjectEditor, { iProjectEditor } from '../project-editor'
 import AppSetting, { iAppSetting } from '../setting'
 import ProjectSelector, { iProjectSelector } from '../project-selector'
-import ProjectBuilder, { iProjectBuilder } from '../project-builder'
+import ProjectDetail, { iProjectDetail } from '../project-detail'
 import LocaleService from '@/app/common/locale'
-import ProcessEditor, { iProcessEditor } from '../process-editor'
+import ProcessSettings, { iProcessSettings } from '../process-settings'
 
 export interface iAppControl {
   tabs: {
@@ -28,8 +28,8 @@ export interface iAppControl {
   editor: iProjectEditor
   setting: iAppSetting
   selector: iProjectSelector
-  builder: iProjectBuilder
-  process: iProcessEditor
+  detail: iProjectDetail
+  process: iProcessSettings
   stats: {
     cpu: string
     memory: string
@@ -46,13 +46,13 @@ export default class AppControl extends Vue {
   @Inject() private locale!: LocaleService
 
   protected render() {
-    const { tabs, list, editor, setting, selector, builder, showStats, stats, process } = this.service
+    const { tabs, list, editor, setting, selector, detail, showStats, stats, process } = this.service
     const $t = this.locale.t
     return <div class={style.app}>
       <AppSetting service={setting} />
       <ProjectEditor service={editor} />
-      <ProjectBuilder service={builder} />
-      <ProcessEditor service={process} />
+      <ProjectDetail service={detail} />
+      <ProcessSettings service={process} />
       <div class={style.header}>
         <div class={style.logo}>
           <LogoSvg size="32px" fill='#fff'></LogoSvg>

@@ -8,27 +8,11 @@ export default {
     other: 'Other'
   },
   project: {
-    build: {
-      title: 'Build',
-      run: 'Build',
-      stop: 'Stop',
-      download: 'Download',
-      remove: 'Remove',
-      tip: {
-        stopFail: 'Stop Failed',
-        runFail: 'Run Failed'
-      },
-      list: {
-        name: 'Name',
-        time: 'Time',
-        size: 'Size',
-        action: 'Act.'
-      }
-    },
     card: {
       running: 'Running',
       exited: 'Exited',
       build: 'Build',
+      more: 'More',
       runFail: 'Run Failed',
       terminal: 'Show/Hide Terminal Display'
     },
@@ -36,15 +20,36 @@ export default {
       title: 'Project Info',
       name: 'Name',
       category: 'Category',
+      sort: 'Sort'
+    },
+    process: {
+      default: 'Default Shell',
+      add: 'Add',
+      namePrefix: 'Shell',
       context: 'Context',
-      dev: 'Dev',
-      build: 'Build',
-      deploy: 'Deploy',
-      sort: 'Sort',
-      process: {
-        title: 'Process Config',
+      setting: {
+        title: 'Process Setting',
         encoding: 'Encoding',
-        env: 'Env',
+        env: {
+          title: 'Env',
+          add: 'Add Env',
+        }
+      }
+    },
+    detail: {
+      title: 'Project Detail',
+      other: 'Other',
+      process: {
+        start: 'Start',
+        stop: 'Stop',
+      },
+      output: {
+        filename: 'Filename',
+        size: 'Size',
+        time: 'Time',
+        action: 'Act.',
+        remove: 'Remove',
+        download: 'Download'
       }
     }
   },

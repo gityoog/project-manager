@@ -28,7 +28,7 @@ export interface iProjectCard {
   stop(): void
   run(): void
   edit(): void
-  build(): void
+  more(): void
   toggleCheck(): void
   toggleTerminal(): void
 }
@@ -50,7 +50,7 @@ const ProjectCard = FC<{ service: iProjectCard }>({
             <div onClick={() => service.edit()} class={style.name}>{service.name}</div>
             <div title={status ? undefined : $t.terminal} onClick={() => service.toggleTerminal()} class={[style.status, status ? style.enabled : style.disabled]}>{status ? $t.running : $t.exited}</div>
           </div>
-          <div class={style.buildBt} onClick={() => service.build()} ><DBIcon size="24px" fill="#fff" ></DBIcon>{$t.build}</div>
+          <div class={style.buildBt} onClick={() => service.more()} ><DBIcon size="24px" fill="#fff" ></DBIcon>{$t.more}</div>
         </div>
         {status && <div class={style.info}>
           <div class={style.stat}>

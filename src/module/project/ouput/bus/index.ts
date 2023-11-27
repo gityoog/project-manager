@@ -1,27 +1,8 @@
-import EntityEmitter from "@/common/entity-emitter"
-import LoggingService from "@/module/logging/service"
-import { Injectable } from "@nestjs/common"
+import EntitySubscriber from "@/common/entity-subscriber"
+import { Inject, Injectable } from "@nestjs/common"
 import ProjectOutputEntity from "../service/entity"
 
 @Injectable()
-export default class ProjectOutputBus extends EntityEmitter<ProjectOutputEntity> {
-  constructor(
-    private logging: LoggingService
-  ) {
-    super()
-    this.on((action, row) => {
-      this.logging.save({
-        action,
-        target: 'Output',
-        description: `${row.name}`,
-      })
-    })
-  }
-  clear() {
-    this.logging.save({
-      action: 'Clear',
-      target: 'Output',
-      description: 'Clear all outputs',
-    })
-  }
+export default class ProjectOutputBus extends EntitySubscriber<ProjectOutputEntity> {
+  protected Entity = ProjectOutputEntity
 }

@@ -8,27 +8,11 @@ export default {
     other: '其他'
   },
   project: {
-    build: {
-      title: '打包',
-      run: '打包',
-      stop: '停止',
-      download: '下载',
-      remove: '删除',
-      tip: {
-        stopFail: '停止失败',
-        runFail: '启动失败'
-      },
-      list: {
-        name: '名称',
-        time: '时间',
-        size: '大小',
-        action: '操作'
-      }
-    },
     card: {
       running: '运行中',
       exited: '已停止',
       build: '打包',
+      more: '更多',
       runFail: '启动失败',
       terminal: '显示/关闭终端显示'
     },
@@ -36,15 +20,36 @@ export default {
       title: '项目信息',
       name: '项目名称',
       category: '项目类型',
-      context: '项目地址',
-      dev: '调试命令',
-      build: '打包命令',
-      deploy: '部署地址',
-      sort: '项目排序',
+      sort: '项目排序'
+    },
+    process: {
+      default: '默认命令',
+      namePrefix: '命令',
+      add: '添加命令',
+      context: '命令地址',
+      setting: {
+        title: '命令设置',
+        encoding: '编码',
+        env: {
+          title: '环境变量',
+          add: '添加环境变量',
+        }
+      }
+    },
+    detail: {
+      title: '项目信息',
+      other: '其他',
       process: {
-        title: '进程配置',
-        encoding: '字符编码',
-        env: '环境变量',
+        start: '启动',
+        stop: '停止',
+      },
+      output: {
+        filename: '文件名',
+        size: '大小',
+        time: '时间',
+        action: '操作',
+        download: '下载',
+        remove: '删除'
       }
     }
   },

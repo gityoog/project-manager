@@ -1,0 +1,55 @@
+.component {
+  height: 100%;
+
+  >.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding-top: 14px;
+    padding-bottom: 20px;
+    box-sizing: border-box;
+
+    >.terminal {
+      // height: 120px;
+      padding-left: 20px;
+      padding-right: 10px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      box-sizing: border-box;
+      background: #000;
+      border-radius: 5px;
+      margin-bottom: 8px;
+    }
+
+    >.bar {
+      display: flex;
+      align-items: top;
+      justify-content: space-between;
+
+      >.stats {
+        display: flex;
+        align-items: center;
+
+        font-size: 12px;
+
+        svg {
+          width: 20px;
+          height: 20px;
+        }
+
+        >.value {
+          display: block;
+          width: 66px;
+          margin-left: 4px;
+        }
+      }
+
+      margin-bottom: 8px;
+    }
+
+    >.files {
+      flex: 1;
+      overflow: hidden;
+    }
+  }
+}

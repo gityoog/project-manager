@@ -1,23 +1,24 @@
 import Request from "@/common/request"
 
-type proc = {
+type process = {
+  id: string
+  name: string
+  context: string
+  command: string
   encoding?: string
   env?: Record<string, string>
+  deploy?: Record<string, any>
 }
+
 type data = {
   id: string
   name: string
   type: string
-  context: string
-  build: string
-  dev: string
-  deploy: string
   sort: string
-  build_proc: proc | null
-  dev_proc: proc | null
+  process: process[] | null
 }
 
-type devInfo = {
+type processInfo = {
   pty: {
     status: boolean
     stdout: string[]
@@ -26,6 +27,7 @@ type devInfo = {
       memory: string
     } | null
   }
+  status: boolean
   url: {
     host: string
     port: string
@@ -37,7 +39,7 @@ export default {
     type?: string | null
   }, {
     data: data
-    dev: devInfo | null
+    process: processInfo | null
   }[]>({
     url: "/project/query",
   }),
@@ -48,5 +50,11 @@ export default {
     ids: string[]
   }, boolean>({
     url: "/project/remove",
+  }),
+  detail: Request.main<{ id: string }, {
+    process: process
+    info: processInfo
+  }[]>({
+    url: "/project/detail",
   })
 }

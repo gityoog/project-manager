@@ -8,6 +8,7 @@ type data = {
   user: string
   description: string
   time: string
+  status?: '1' | '0'
 }
 
 export default {

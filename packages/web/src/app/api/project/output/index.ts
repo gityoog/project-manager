@@ -7,7 +7,10 @@ type data = {
 }
 
 export default {
-  query: Request.main<{ project: string }, data[]>({
+  query: Request.main<{
+    project: string
+    process?: string
+  }, data[]>({
     url: "/project/output/query",
   }),
   remove: Request.main<{ id: string }, void>({

@@ -4,5 +4,8 @@ import process from "./process"
 import output from "./output"
 
 export default {
-  manager, category, process, output
+  manager,
+  category,
+  process,
+  output
 }

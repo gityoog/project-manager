@@ -1,7 +1,16 @@
-import build from "./build"
-import dev from "./dev"
+import Request from "@/common/request"
 
 export default {
-  dev: dev,
-  build: build
+  start: Request.main<{
+    project: string
+    id?: string
+  }, number | null>({
+    url: '/project/process/start'
+  }),
+  stop: Request.main<{
+    project: string
+    id?: string
+  }, boolean>({
+    url: '/project/process/stop'
+  })
 }

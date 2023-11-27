@@ -1,7 +1,7 @@
 import { CreateDateColumnWithFormat } from '@/common/typeorm'
 import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, ManyToOne, JoinColumn } from 'typeorm'
 
-@Entity()
+@Entity({ name: 'project_entity_v2' })
 export default class ProjectEntity extends BaseEntity {
   @PrimaryGeneratedColumn('uuid')
   id!: string
@@ -14,38 +14,24 @@ export default class ProjectEntity extends BaseEntity {
   })
   type!: string | null
 
-  @Column('text')
-  context!: string
-
-  @Column('text')
-  build!: string
-
-  @Column('text')
-  dev!: string
-
-  @Column('simple-json', { nullable: true })
-  build_proc!: {
-    encoding?: string
-    env?: Record<string, string>
-  } | null
-
-  @Column('simple-json', { nullable: true })
-  dev_proc!: {
-    encoding?: string
-    env?: Record<string, string>
-  } | null
-
-  @Column({
-    type: 'text',
-    nullable: true
-  })
-  deploy!: string
-
   @Column({
     type: 'int',
     nullable: true
   })
   sort!: string
+
+  @Column('simple-json', {
+    nullable: true
+  })
+  process!: {
+    id: string
+    name: string
+    context: string
+    command: string
+    encoding?: string
+    env?: Record<string, string>
+    deploy?: Record<string, any>
+  }[] | null
 
   @CreateDateColumnWithFormat()
   created_at!: Date

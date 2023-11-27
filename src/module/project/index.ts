@@ -7,8 +7,9 @@ import ProjectBus from "./bus"
 import ProjectCategory from "./category"
 import { mergeModuleMetadata } from "@/common/module"
 import ProjectProcess from "./process"
-import { Module } from "@nestjs/common"
+import { Module, OnModuleInit } from "@nestjs/common"
 import ProjectOutput from "./ouput"
+import ProjectEntityV1 from "./service/v1/entity"
 
 const ProjectMeta = {
   controllers: [
@@ -21,7 +22,7 @@ const ProjectMeta = {
   ],
   imports: [
     TypeOrmModule.forFeature([
-      ProjectEntity
+      ProjectEntity, ProjectEntityV1
     ])
   ]
 }

@@ -1,4 +1,4 @@
-export default class BuildTaskStatus {
+export default class TaskStatus {
   private pty = false
   private zip = false
   private save = false

@@ -16,57 +16,35 @@ const AppWs = {
   }, {}>({
     namesapce: '/project/category'
   }),
-  process: {
-    dev: Websocket.main<{
-      status: [data: {
-        id: string
-        value: boolean
-      }]
-      stdout: [data: {
-        id: string
-        value: string
-      }]
-      stats: [data: {
-        id: string
-        value: {
-          cpu: string
-          memory: string
-        } | null
-      }]
-      url: [data: {
-        id: string
-        value: {
-          host: string
-          port: string
-        } | null
-      }]
-    }, {}, `/${string}`>({
-      namesapce: '/project/process/dev'
-    }),
-    build: Websocket.main<{
-      status: [data: {
-        id: string
-        value: boolean
-      }]
-      stdout: [data: {
-        id: string
-        value: string
-      }]
-      new: [data: {
-        id: string
-      }]
-      stats: [data: {
-        id: string
-        value: {
-          cpu: string
-          memory: string
-        } | null
-      }]
-    }, {}, `/${string}`>({
-      namesapce: '/project/process/build'
-    })
-  },
-
+  process: Websocket.main<{
+    status: [data: {
+      id: string
+      value: boolean
+    }]
+    stdout: [data: {
+      id: string
+      value: string
+    }]
+    stats: [data: {
+      id: string
+      value: {
+        cpu: string
+        memory: string
+      } | null
+    }]
+    url: [data: {
+      id: string
+      value: {
+        host: string
+        port: string
+      } | null
+    }]
+    file: []
+  }, {
+    stdin: [string]
+  }, `/${string}`>({
+    namesapce: '/project/process'
+  }),
   stats: Websocket.main<{
     stats: [data: {
       cpu: string

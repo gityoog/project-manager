@@ -2,16 +2,14 @@ export default class ProjectDto {
   readonly id!: string
   readonly name!: string
   readonly type!: string
-  readonly context!: string
-  readonly build!: string
-  readonly dev!: string
-  readonly deploy!: string
-  readonly build_proc?: {
+  readonly sort!: string
+  readonly process?: {
+    id: string
+    name: string
+    context: string
+    command: string
     encoding?: string
     env?: Record<string, string>
-  }
-  readonly dev_proc?: {
-    encoding?: string
-    env?: Record<string, string>
-  }
+    deploy?: Record<string, any>
+  }[]
 }

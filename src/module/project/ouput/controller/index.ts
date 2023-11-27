@@ -3,6 +3,7 @@ import { All, Body, Controller, Get, Query, Res } from "@nestjs/common"
 import { Response } from "express"
 import ProjectOutputService from "../service"
 import fs from 'fs'
+import Logging from "@/common/logging/decorator"
 
 @Controller('/project/output')
 export default class ProjectOutputController {
@@ -11,11 +12,12 @@ export default class ProjectOutputController {
   ) { }
 
   @All('/query')
-  query(@Body() { project }: { project: string }) {
-    return this.service.query(project)
+  query(@Body() { project, process }: { project: string, process?: string }) {
+    return this.service.query(project, process)
   }
 
   @All('/remove')
+  @Logging({ description: ([data]) => data.id })
   remove(@Body() { id }: { id: string }) {
     return this.service.remove(id)
   }
@@ -38,6 +40,7 @@ export default class ProjectOutputController {
   }
 
   @All('/clear')
+  @Logging()
   clear() {
     return this.service.clear()
   }

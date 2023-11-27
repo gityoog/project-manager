@@ -12,6 +12,9 @@ export default class ProjectOutputEntity extends BaseEntity {
   @Column({ type: 'text' })
   project!: string
 
+  @Column({ type: 'text', nullable: true })
+  process!: string | null
+
   @Column({
     type: 'blob',
     nullable: true

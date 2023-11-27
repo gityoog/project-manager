@@ -1,38 +1,76 @@
-import { Injectable } from "@nestjs/common"
+import { Injectable, Logger } from "@nestjs/common"
 import ProjectDto from "./dto"
 import ProjectEntity from "./entity"
 import { InjectRepository } from "@nestjs/typeorm"
-import { Repository, IsNull, DataSource, In } from "typeorm"
+import { Repository, IsNull, In, DataSource } from "typeorm"
 import ProjectCategoryEntity from "../category/service/entity"
-import ProjectBus from "../bus"
 import ProjectCategoryBus from "../category/bus"
 import { SortSql } from "@/common/typeorm"
+import { randomUUID } from 'crypto'
+import ProjectEntityV1 from "./v1/entity"
+import { getErrorMessage } from "@/common/utils"
 
 @Injectable()
 export default class ProjectService {
   constructor(
     @InjectRepository(ProjectEntity) private main: Repository<ProjectEntity>,
     @InjectRepository(ProjectCategoryEntity) private category: Repository<ProjectCategoryEntity>,
+    @InjectRepository(ProjectEntityV1) private old: Repository<ProjectEntityV1>,
+    private categoryBus: ProjectCategoryBus,
     private dataSource: DataSource,
-    private bus: ProjectBus,
-    private categoryBus: ProjectCategoryBus
+    private logger: Logger
   ) {
-    this.categoryBus.beforeRemove(async (row, manager, onFinish) => {
-      const origins = await this.main.find({ where: { type: row.id } })
-      const projects: {
-        row: ProjectEntity,
-        origin: ProjectEntity
-      }[] = []
-      for (const origin of origins) {
-        const row = await manager.save(this.main.merge(this.main.create(origin), { type: null }))
-        projects.push({ row, origin })
+    this.categoryBus.beforeRemove(async ({ manager, databaseEntity }) => {
+      for (const row of await this.main.find({ where: { type: databaseEntity.id } })) {
+        row.type = null
+        await manager.save(row)
       }
-      onFinish(() => {
-        projects.forEach(({ row, origin }) => {
-          this.bus.update(row, origin)
-        })
-      })
     })
+  }
+  async onModuleInit() {
+    try {
+      const table = this.old.metadata.tableName
+      const runner = this.dataSource.createQueryRunner()
+      if (await runner.hasTable(table)) {
+        await this.main.manager.transaction(async manager => {
+          const rows = await this.old.find()
+          for (const row of rows) {
+            const process = [{
+              id: randomUUID(),
+              name: '',
+              context: row.context,
+              command: row.dev,
+              encoding: row.dev_proc?.encoding,
+              env: row.dev_proc?.env
+            }]
+            if (row.build) {
+              process.push({
+                id: randomUUID(),
+                name: 'Build',
+                context: row.context,
+                command: row.build,
+                encoding: row.build_proc?.encoding,
+                env: row.build_proc?.env
+              })
+            }
+            await manager.save(
+              this.main.create({
+                id: row.id,
+                name: row.name,
+                type: row.type,
+                sort: row.sort,
+                created_at: row.created_at,
+                process
+              })
+            )
+          }
+        })
+        await runner.dropTable(table)
+        this.logger.log('migrations finished', ProjectService)
+      }
+    } catch (e) {
+      this.logger.error('migrations failed: ' + getErrorMessage(e), ProjectService)
+    }
   }
   query(data: { type?: string | null }) {
     return this.main.createQueryBuilder()
@@ -47,35 +85,31 @@ export default class ProjectService {
       where: { id }
     })
   }
+  async process(id: string, process?: string) {
+    const data = await this.main.findOne({
+      where: { id },
+      select: ['process']
+    })
+    if (process) {
+      return data?.process?.find(row => row.id === process)
+    } else {
+      return data?.process?.[0]
+    }
+  }
   async save(dto: ProjectDto) {
-    const data = {
+    return await this.main.save({
       ...dto,
       id: dto.id === '' ? undefined : dto.id,
-      type: dto.type && await this.category.exist({ where: { id: dto.type } }) ? dto.type : null
-    }
-    if (data.id) {
-      const origin = await this.main.findOneOrFail({ where: { id: data.id } })
-      const row = await this.main.save(data)
-      this.bus.update(row, origin)
-      return row
-    } else {
-      const row = await this.main.save(data)
-      this.bus.add(row)
-      return row
-    }
+      type: dto.type && await this.category.exist({ where: { id: dto.type } }) ? dto.type : null,
+      process: dto.process?.map(row => ({
+        ...row,
+        id: row.id ? row.id : randomUUID()
+      }))
+    })
   }
   async remove(data: { id: string } | { ids: string[] }) {
     const rows = await this.main.findBy({ id: In('id' in data ? [data.id] : data.ids) })
-    const origins = rows.map(row => this.main.create(row))
-    const handler = this.bus.handle()
-    await this.dataSource.transaction(async manager => {
-      for (const row of rows) {
-        await this.bus.startRemove(row, manager, handler)
-        await manager.remove(row)
-      }
-    })
-    await handler.finish()
-    this.bus.remove(origins)
+    await this.main.remove(rows)
     return true
   }
 }

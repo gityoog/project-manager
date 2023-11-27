@@ -1,56 +1,80 @@
-import LocaleService from "@/app/common/locale"
-import IElDialog from "@/components/el-dialog/service"
-import IEnvEditor from "@/components/env-editor/service"
 import { Inject, Service } from "ioc-di"
 import { iProcessEditor } from "."
-import encodings from "./encodings"
+import IProcessSettings from "../process-settings/service"
+import LocaleService from "@/app/common/locale"
+
+type data = {
+  id: string
+  name: string
+  context: string
+  command: string
+  env?: Record<string, string>
+  encoding?: string
+}
+
+const def = () => ({
+  id: '',
+  name: '',
+  context: '',
+  command: '',
+  encoding: '',
+  env: undefined
+} as data)
 
 @Service()
 export default class IProcessEditor implements iProcessEditor {
   @Inject() locale!: LocaleService
-  dialog = new IElDialog
-  env = new IEnvEditor
-  data = {
-    encoding: ''
-  }
-  encodings: {
-    name: string
-    value: string
-  }[] = []
-
-  queryEncoding(query: string, callback: (list: { value: string }[]) => void) {
-    callback(encodings.filter(item => item.toLowerCase().indexOf(query.toLowerCase()) > -1).map(i => ({ value: i })))
-  }
-
-  open({ encoding, env }: {
-    encoding?: string
-    env?: Record<string, string>
-  }, callback: (data: {
-    encoding?: string
-    env?: Record<string, string>
-  } | null) => void) {
-    this.data = { encoding: encoding || '' }
-    this.env.setData(
-      env ? Object.keys(env).map(key => ({
-        key,
-        value: env[key]
-      }))
-        : [])
-    this.dialog.open(() => {
-      const env = this.env.getData()
-      const result: {
-        encoding?: string
-        env?: Record<string, string>
-      } = {}
-      if (this.data.encoding) {
-        result.encoding = this.data.encoding
-      }
-      if (env.length > 0) {
-        result.env = env.reduce((t, c) => (t[c.key] = c.value, t), {} as Record<string, string>)
-      }
-      callback(Object.keys(result).length > 0 ? result : null)
-      this.dialog.close()
+  @Inject() private settings!: IProcessSettings
+  data: data[] = [def()]
+  add() {
+    this.data.push({
+      id: '',
+      name: this.locale.t.project.process.namePrefix + (this.data.length),
+      context: this.data[0].context,
+      command: '',
+      encoding: '',
+      env: undefined
     })
   }
-
+  remove(index: number) {
+    if (index !== 0) {
+      this.data.splice(index, 1)
+    }
+  }
+  setting(index: number) {
+    this.settings.open({
+      encoding: this.data[index].encoding,
+      env: this.data[index].env
+    }, data => {
+      this.data[index].encoding = data?.encoding || ''
+      this.data[index].env = data?.env
+    })
+  }
+  hasBadge(index: number) {
+    return !!(this.data[index].encoding || this.data[index].env)
+  }
+  setData(data: data[]) {
+    this.data = data.map((item, index) => ({
+      default: index === 0,
+      id: item.id,
+      name: item.name,
+      context: item.context,
+      command: item.command,
+      encoding: item.encoding || '',
+      env: item.env ? { ...item.env } : undefined
+    }))
+    if (this.data.length === 0) {
+      this.data = [def()]
+    }
+  }
+  getData(): data[] {
+    return this.data.map(item => ({
+      id: item.id,
+      name: item.name,
+      context: item.context,
+      command: item.command,
+      encoding: item.encoding || undefined,
+      env: item.env ? { ...item.env } : undefined
+    }))
+  }
 }

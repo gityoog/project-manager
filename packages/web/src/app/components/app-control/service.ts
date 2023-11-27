@@ -7,11 +7,11 @@ import IAppSetting from "../setting/service"
 import IProjectSelector from "../project-selector/service"
 import ProjectCategoryService from "app/common/project-category"
 import IProjectListCache from "app/common/project-list-cache"
-import IProjectBuilder from "../project-builder/service"
 import LocaleService from "@/app/common/locale"
 import AppWs from "@/app/ws"
 import AppConfig from "@/app/common/config"
-import IProcessEditor from "../process-editor/service"
+import IProcessSettings from "../process-settings/service"
+import IProjectDetail from "../project-detail/service"
 
 type tab = {
   name: string
@@ -24,8 +24,8 @@ export default class IAppControl implements iAppControl {
   @Inject() editor!: IProjectEditor
   @Inject() setting!: IAppSetting
   @Inject() selector!: IProjectSelector
-  @Inject() builder!: IProjectBuilder
-  @Inject() process!: IProcessEditor
+  @Inject() detail!: IProjectDetail
+  @Inject() process!: IProcessSettings
   @Inject() private category!: ProjectCategoryService
   @Inject() private cache!: IProjectListCache
   @Inject() private locale!: LocaleService

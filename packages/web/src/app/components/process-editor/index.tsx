@@ -1,39 +1,49 @@
-import LocaleService from '@/app/common/locale'
-import ElAutocomplete from '@/common/element-ui/autocomplete'
-import ElForm from '@/common/element-ui/form'
+import ElButton from '@/common/element-ui/button'
 import ElFormItem from '@/common/element-ui/form/item'
+import ElInput from '@/common/element-ui/input'
 import { FC } from '@/common/vue'
-import ElDialog, { iElDialog } from '@/components/el-dialog'
-import EnvEditor, { iEnvEditor } from '@/components/env-editor'
+import style from './style.module.scss'
+import LocaleService from '@/app/common/locale'
+import ElBadge from '@/common/element-ui/badge'
 
 export interface iProcessEditor {
-  dialog: iElDialog
   data: {
-    encoding: string
-  }
-  env: iEnvEditor
+    name: string
+    context: string
+    command: string
+  }[]
   locale: LocaleService
-  queryEncoding: (query: string, callback: (list: { value: string }[]) => void) => void
+  add(): void
+  remove(index: number): void
+  setting(index: number): void
+  hasBadge(index: number): boolean
 }
 
 const ProcessEditor = FC<{ service: iProcessEditor }>({
   functional: true,
   render(h, context) {
     const service = context.props.service
-    const { dialog, data, locale, env } = service
-    const $t = locale.t.project.edit.process
-    return <ElDialog appendToBody title={$t.title} service={dialog}>
-      <ElForm size='small' labelWidth='100px' labelPosition='right'>
-        <ElFormItem label={$t.encoding}>
-          <ElAutocomplete placeholder='utf8' vModel={data.encoding} style="width: 240px;" fetch-suggestions={(query, callback) => {
-            service.queryEncoding(query, callback)
-          }}></ElAutocomplete>
-        </ElFormItem>
-        <ElFormItem label={$t.env}>
-          <EnvEditor lang={locale.t.lang} service={env} />
-        </ElFormItem>
-      </ElForm>
-    </ElDialog>
+    const { data, locale } = service
+    const $t = locale.t.project.process
+    return <>
+      {data.map((item, index) => <ElFormItem class={style.formitem}>
+        {index === 0 ? <div slot="label">{$t.default}</div> : <div slot="label" class={style.name} ><input placeholder='name' vModel={item.name}></input></div>}
+        <div style="display: flex;">
+          <ElInput class={style.shell} placeholder='shell command' vModel={item.command}>
+            <ElInput placeholder='path/to/context' slot="prepend" vModel={item.context}></ElInput>
+            <ElBadge hidden={!service.hasBadge(index)} isDot slot="append" >
+              <ElButton onClick={() => { service.setting(index) }} icon="el-icon-s-tools"></ElButton>
+            </ElBadge>
+          </ElInput>
+          <ElButton disabled={index === 0} class={style.remove} type='text' onClick={() => {
+            service.remove(index)
+          }} icon="el-icon-delete"></ElButton>
+        </div>
+      </ElFormItem>)}
+      <ElFormItem style="margin-top: -8px;">
+        <ElButton onClick={() => service.add()} icon='el-icon-plus' type='text'>{$t.add}</ElButton>
+      </ElFormItem>
+    </>
   }
 })
 export default ProcessEditor
