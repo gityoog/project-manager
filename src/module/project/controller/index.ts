@@ -23,7 +23,7 @@ export default class ProjectController {
   }
 
   @All('/save')
-  @Logging({ description: ([data]) => data.name })
+  @Logging({ description: ([data], result) => result.id + ':' + data.name })
   save(@Body() data: ProjectDto) {
     return this.project.save(data)
   }
