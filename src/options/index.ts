@@ -80,6 +80,8 @@ export default class Options {
         if (!this.dbCache) {
           this.dbCache = data
         }
+      } else {
+        this.logger.debug(`save db success`, 'SaveDBFile')
       }
       setTimeout(() => {
         this.writing = false
