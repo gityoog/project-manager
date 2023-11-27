@@ -3,7 +3,6 @@ import { InjectRepository } from "@nestjs/typeorm"
 import { Repository } from 'typeorm'
 import os from 'os'
 import ConfigEntity from "../entity"
-import LoggingService from "@/module/logging/service"
 import PtyService from "@/common/pty"
 
 type Item<T = string> = {
