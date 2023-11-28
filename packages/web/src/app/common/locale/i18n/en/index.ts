@@ -107,7 +107,7 @@ export default {
       clearLog: 'Log',
       shell: 'Shell',
       pty: 'Pty',
-      keepProcess: 'Keep Process',
+      keepProcess: 'KeepProcess',
       reset: 'Reset',
       save: 'Save',
       saveSuccess: 'Save Success',
