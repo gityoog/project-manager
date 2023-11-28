@@ -107,6 +107,7 @@ export default {
       clearLog: '清空日志',
       shell: '命令',
       pty: '终端',
+      keepProcess: '保持进程',
       reset: '重置',
       save: '保存',
       saveSuccess: '保存成功',
@@ -127,6 +128,7 @@ export default {
   tip: {
     save: '保存',
     cancel: '取消',
-    saveSuccess: '保存成功'
+    saveSuccess: '保存成功',
+    enabled: '启用',
   }
 }

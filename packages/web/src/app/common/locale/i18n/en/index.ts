@@ -107,6 +107,7 @@ export default {
       clearLog: 'Log',
       shell: 'Shell',
       pty: 'Pty',
+      keepProcess: 'Keep Process',
       reset: 'Reset',
       save: 'Save',
       saveSuccess: 'Save Success',
@@ -127,6 +128,7 @@ export default {
   tip: {
     save: 'Save',
     cancel: 'Cancel',
-    saveSuccess: 'Save Success'
+    saveSuccess: 'Save Success',
+    enabled: 'Enabled',
   }
 }

@@ -8,11 +8,13 @@ import { FC } from '@/common/vue'
 import ElLoading, { iElLoading } from '@/components/el-loading'
 import style from './style.module.scss'
 import LocaleService from '@/app/common/locale'
+import ElCheckBox from '@/common/element-ui/checkbox'
 
 export interface iServerSetting {
   data: {
     shell: string
     pty: string
+    keepProcess: boolean
   }
   ptys: {
     name: string
@@ -46,6 +48,9 @@ const ServerSetting = FC<{ service: iServerSetting }>({
           <ElSelect vModel={data.pty} style="width: 240px;">
             {ptys.map(pty => <ElOption value={pty.value} label={pty.name}></ElOption>)}
           </ElSelect>
+        </ElFormItem>
+        <ElFormItem label={$t.keepProcess}>
+          <ElCheckBox vModel={data.keepProcess}>{locale.t.tip.enabled}</ElCheckBox>
         </ElFormItem>
         <ElFormItem>
           <ElButton onClick={() => service.refresh()}>{$t.reset}</ElButton>

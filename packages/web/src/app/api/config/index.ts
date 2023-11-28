@@ -4,15 +4,18 @@ export default {
   setting: Request.main<void, {
     shell: string
     pty: string
+    keepProcess: boolean
   }>({
     url: '/config/setting'
   }),
   save: Request.main<{
     shell: string
     pty: string
+    keepProcess: boolean
   }, {
     shell: string
     pty: string
+    keepProcess: boolean
   }>({
     url: '/config/save'
   }),

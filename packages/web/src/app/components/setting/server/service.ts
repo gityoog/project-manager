@@ -15,7 +15,8 @@ export default class IServerSetting implements iServerSetting {
   status = new Status
   data = {
     shell: '',
-    pty: ''
+    pty: '',
+    keepProcess: false
   }
   ptys: {
     name: string
@@ -37,6 +38,7 @@ export default class IServerSetting implements iServerSetting {
       AppApi.config.setting().success(data => {
         this.data.shell = data.shell
         this.data.pty = data.pty
+        this.data.keepProcess = data.keepProcess
       })
     )
   }
@@ -51,7 +53,8 @@ export default class IServerSetting implements iServerSetting {
     this.saveStatus.use(
       AppApi.config.save({
         shell: this.data.shell,
-        pty: this.data.pty
+        pty: this.data.pty,
+        keepProcess: this.data.keepProcess
       }).success(() => {
         ElMessage.success(this.$t.saveSuccess)
       })
