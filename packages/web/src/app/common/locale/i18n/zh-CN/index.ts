@@ -34,7 +34,10 @@ export default {
           title: '环境变量',
           add: '添加环境变量',
         },
-        autostart: '自动启动',
+        autostart: {
+          title: '自动启动',
+          label: '跟随程序启动'
+        },
       }
     },
     detail: {
@@ -107,7 +110,10 @@ export default {
       clearLog: '清空日志',
       shell: '命令',
       pty: '终端',
-      keepProcess: '保持进程',
+      process: {
+        title: '进程',
+        keep: '重启保持状态',
+      },
       reset: '重置',
       save: '保存',
       saveSuccess: '保存成功',

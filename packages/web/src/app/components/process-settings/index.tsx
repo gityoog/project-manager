@@ -26,8 +26,8 @@ const ProcessSettings = FC<{ service: iProcessSettings }>({
     const $t = locale.t.project.process.setting
     return <ElDialog appendToBody title={$t.title} service={dialog}>
       <ElForm size='small' labelWidth='100px' labelPosition='right'>
-        <ElFormItem label={$t.autostart}>
-          <ElCheckbox vModel={data.autostart}>{locale.t.tip.enabled}</ElCheckbox>
+        <ElFormItem label={$t.autostart.title}>
+          <ElCheckbox vModel={data.autostart}>{$t.autostart.label}</ElCheckbox>
         </ElFormItem>
         <ElFormItem label={$t.encoding}>
           <ElAutocomplete placeholder='utf8' vModel={data.encoding} style="width: 240px;" fetch-suggestions={(query, callback) => {

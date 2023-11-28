@@ -34,7 +34,10 @@ export default {
           title: 'Env',
           add: 'Add Env',
         },
-        autostart: 'Autostart',
+        autostart: {
+          title: 'Autostart',
+          label: 'Autostart with program',
+        },
       }
     },
     detail: {
@@ -107,7 +110,10 @@ export default {
       clearLog: 'Log',
       shell: 'Shell',
       pty: 'Pty',
-      keepProcess: 'KeepProcess',
+      process: {
+        title: 'Process',
+        keep: 'Keep Status on Restart',
+      },
       reset: 'Reset',
       save: 'Save',
       saveSuccess: 'Save Success',

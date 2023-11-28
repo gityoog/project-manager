@@ -49,8 +49,8 @@ const ServerSetting = FC<{ service: iServerSetting }>({
             {ptys.map(pty => <ElOption value={pty.value} label={pty.name}></ElOption>)}
           </ElSelect>
         </ElFormItem>
-        <ElFormItem label={$t.keepProcess}>
-          <ElCheckBox vModel={data.keepProcess}>{locale.t.tip.enabled}</ElCheckBox>
+        <ElFormItem label={$t.process.title}>
+          <ElCheckBox vModel={data.keepProcess}>{$t.process.keep}</ElCheckBox>
         </ElFormItem>
         <ElFormItem>
           <ElButton onClick={() => service.refresh()}>{$t.reset}</ElButton>
