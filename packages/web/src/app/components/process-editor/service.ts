@@ -52,7 +52,7 @@ export default class IProcessEditor implements iProcessEditor {
     })
   }
   hasBadge(index: number) {
-    return !!(this.data[index].encoding || this.data[index].env)
+    return !!(this.data[index].encoding || this.data[index].env || this.data[index].autostart)
   }
   setData(data: data[]) {
     this.data = data.map((item, index) => ({
