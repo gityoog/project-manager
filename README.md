@@ -65,11 +65,15 @@ const webpackConfig = {
 ![image](./docs/main.png)
 
 ## changelog
+### [1.2.3] 2023-11-28
+- add process resume
+
 ### [1.2.0] 2023-11-27
 - next project process
 
 ### [1.1.0] 2023-10-31
 - change usage to process
+- add db backup file
 
 ### [1.0.8] 2023-05-23
 - add build/dev proc `env` and `encoding`
