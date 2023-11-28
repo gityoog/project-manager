@@ -3,3 +3,4 @@ src/
 script/
 packages/
 tsconfig.json
+.github/
