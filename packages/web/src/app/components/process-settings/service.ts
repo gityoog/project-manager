@@ -44,12 +44,16 @@ export default class IProcessSettings implements iProcessSettings {
       const result: {
         encoding?: string
         env?: Record<string, string>
+        autostart?: boolean
       } = {}
       if (this.data.encoding) {
         result.encoding = this.data.encoding
       }
       if (env.length > 0) {
         result.env = env.reduce((t, c) => (t[c.key] = c.value, t), {} as Record<string, string>)
+      }
+      if (this.data.autostart) {
+        result.autostart = this.data.autostart
       }
       callback(Object.keys(result).length > 0 ? result : null)
       this.dialog.close()
