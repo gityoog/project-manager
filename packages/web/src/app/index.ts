@@ -1,4 +1,3 @@
-import 'app/style/index.scss'
 import 'element-ui/lib/theme-chalk/base.css'
 import Vue from 'vue'
 import { Already, Inject, Root, Service } from 'ioc-di'
@@ -8,6 +7,7 @@ import Request from '@/common/request'
 import ElNotification from '@/common/element-ui/notification'
 import Websocket from '@/common/websocket'
 import LocaleService from './common/locale'
+import 'app/style/index.scss'
 
 @Root()
 @Service()
