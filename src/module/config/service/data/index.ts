@@ -9,9 +9,11 @@ type Item<T = string> = {
   name: string
   default: () => T
 }
+
 type data = {
   shell: Item
   pty: Item<PtyService.Type>
+  keepProcess: Item<'1' | '0'>
 }
 
 @Injectable()
@@ -24,6 +26,10 @@ export default class ConfigData {
     pty: {
       name: 'pty',
       default: () => PtyService.Types[0].value
+    },
+    keepProcess: {
+      name: 'keepProcess',
+      default: () => '1'
     }
   }
   private cache: {

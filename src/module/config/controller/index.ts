@@ -12,7 +12,8 @@ export default class ConfigController {
   async setting() {
     return {
       shell: await this.service.getShell(),
-      pty: await this.service.getPty()
+      pty: await this.service.getPty(),
+      keepProcess: await this.service.getKeepProcess()
     }
   }
 
@@ -22,16 +23,19 @@ export default class ConfigController {
   }
 
   @All('/save')
-  @Logging({ description: ([data]) => `shell: ${data.shell}, pty: ${data.pty}` })
+  @Logging({ description: ([data]) => `shell: ${data.shell}, pty: ${data.pty}, keepProcess: ${data.keepProcess}` })
   async saveShell(@Body() data: {
     shell: string
     pty: string
+    keepProcess: boolean
   }) {
     await this.service.setShell(data.shell)
     await this.service.setPty(data.pty)
+    await this.service.setKeepProcess(data.keepProcess)
     return {
       shell: await this.service.getShell(),
-      pty: await this.service.getPty()
+      pty: await this.service.getPty(),
+      keepProcess: await this.service.getKeepProcess()
     }
   }
 }

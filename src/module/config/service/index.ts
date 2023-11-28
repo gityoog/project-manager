@@ -19,8 +19,13 @@ export default class ConfigService {
   async getShell() {
     return this.data.get('shell')
   }
-
   async setShell(value: string) {
     return this.data.set('shell', value)
+  }
+  async getKeepProcess() {
+    return await this.data.get('keepProcess') === '1'
+  }
+  async setKeepProcess(value: boolean) {
+    return this.data.set('keepProcess', value ? '1' : '0')
   }
 }
