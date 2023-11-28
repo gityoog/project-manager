@@ -112,4 +112,20 @@ export default class ProjectService {
     await this.main.remove(rows)
     return true
   }
+  async getAllProcess() {
+    const rows = await this.main.find({
+      select: ['id', 'process', 'name']
+    })
+    const process = []
+    for (const row of rows) {
+      for (const p of row.process || []) {
+        process.push({
+          id: row.id,
+          name: row.name,
+          process: p
+        })
+      }
+    }
+    return process
+  }
 }
