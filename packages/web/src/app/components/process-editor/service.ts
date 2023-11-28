@@ -10,15 +10,14 @@ type data = {
   command: string
   env?: Record<string, string>
   encoding?: string
+  autostart?: boolean
 }
 
 const def = () => ({
   id: '',
   name: '',
   context: '',
-  command: '',
-  encoding: '',
-  env: undefined
+  command: ''
 } as data)
 
 @Service()
@@ -44,10 +43,12 @@ export default class IProcessEditor implements iProcessEditor {
   setting(index: number) {
     this.settings.open({
       encoding: this.data[index].encoding,
-      env: this.data[index].env
+      env: this.data[index].env,
+      autostart: this.data[index].autostart
     }, data => {
       this.data[index].encoding = data?.encoding || ''
       this.data[index].env = data?.env
+      this.data[index].autostart = data?.autostart
     })
   }
   hasBadge(index: number) {
@@ -61,7 +62,8 @@ export default class IProcessEditor implements iProcessEditor {
       context: item.context,
       command: item.command,
       encoding: item.encoding || '',
-      env: item.env ? { ...item.env } : undefined
+      env: item.env ? { ...item.env } : undefined,
+      autostart: item.autostart
     }))
     if (this.data.length === 0) {
       this.data = [def()]
@@ -74,7 +76,8 @@ export default class IProcessEditor implements iProcessEditor {
       context: item.context,
       command: item.command,
       encoding: item.encoding || undefined,
-      env: item.env ? { ...item.env } : undefined
+      env: item.env ? { ...item.env } : undefined,
+      autostart: item.autostart
     }))
   }
 }

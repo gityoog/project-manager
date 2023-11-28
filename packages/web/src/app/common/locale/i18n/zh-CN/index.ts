@@ -33,7 +33,8 @@ export default {
         env: {
           title: '环境变量',
           add: '添加环境变量',
-        }
+        },
+        autostart: '自动启动',
       }
     },
     detail: {

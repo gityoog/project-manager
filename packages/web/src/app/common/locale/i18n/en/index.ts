@@ -33,7 +33,8 @@ export default {
         env: {
           title: 'Env',
           add: 'Add Env',
-        }
+        },
+        autostart: 'Autostart',
       }
     },
     detail: {

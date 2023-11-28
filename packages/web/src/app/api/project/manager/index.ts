@@ -8,6 +8,7 @@ type process = {
   encoding?: string
   env?: Record<string, string>
   deploy?: Record<string, any>
+  autostart?: boolean
 }
 
 type data = {

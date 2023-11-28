@@ -11,7 +11,8 @@ export default class IProcessSettings implements iProcessSettings {
   dialog = new IElDialog
   env = new IEnvEditor
   data = {
-    encoding: ''
+    encoding: '',
+    autostart: false
   }
   encodings: {
     name: string
@@ -22,14 +23,16 @@ export default class IProcessSettings implements iProcessSettings {
     callback(encodings.filter(item => item.toLowerCase().indexOf(query.toLowerCase()) > -1).map(i => ({ value: i })))
   }
 
-  open({ encoding, env }: {
+  open({ encoding, env, autostart }: {
     encoding?: string
     env?: Record<string, string>
+    autostart?: boolean
   }, callback: (data: {
     encoding?: string
     env?: Record<string, string>
+    autostart?: boolean
   } | null) => void) {
-    this.data = { encoding: encoding || '' }
+    this.data = { encoding: encoding || '', autostart: autostart ?? false }
     this.env.setData(
       env ? Object.keys(env).map(key => ({
         key,

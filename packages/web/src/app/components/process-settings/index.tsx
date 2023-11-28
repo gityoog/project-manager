@@ -5,11 +5,13 @@ import ElFormItem from '@/common/element-ui/form/item'
 import { FC } from '@/common/vue'
 import ElDialog, { iElDialog } from '@/components/el-dialog'
 import EnvEditor, { iEnvEditor } from '@/components/env-editor'
+import ElCheckbox from '@/common/element-ui/checkbox'
 
 export interface iProcessSettings {
   dialog: iElDialog
   data: {
     encoding: string
+    autostart: boolean
   }
   env: iEnvEditor
   locale: LocaleService
@@ -29,8 +31,11 @@ const ProcessSettings = FC<{ service: iProcessSettings }>({
             service.queryEncoding(query, callback)
           }}></ElAutocomplete>
         </ElFormItem>
-        <ElFormItem label={$t.env.title}>
+        <ElFormItem style="margin-bottom: 0px;" label={$t.env.title}>
           <EnvEditor lang={$t.env} service={env} />
+        </ElFormItem>
+        <ElFormItem label={$t.autostart}>
+          <ElCheckbox vModel={data.autostart}>启用</ElCheckbox>
         </ElFormItem>
       </ElForm>
     </ElDialog>

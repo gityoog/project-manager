@@ -31,6 +31,7 @@ export default class ProjectEntity extends BaseEntity {
     encoding?: string
     env?: Record<string, string>
     deploy?: Record<string, any>
+    autostart?: boolean
   }[] | null
 
   @CreateDateColumnWithFormat()
