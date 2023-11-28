@@ -32,7 +32,7 @@ const LocalSetting = FC<{ service: iLocalSetting }>({
     const { data, langs, locale } = service
     const $t = locale.t.setting.local
     return <div class={style.form}>
-      <ElForm size='mini' labelWidth='60px' labelPosition='left'>
+      <ElForm size='mini' labelWidth='100px' labelPosition='left'>
         <ElFormItem label={$t.language}>
           <ElSelect vModel={data.lang} style="width: 240px;">
             {langs.map(lang => <ElOption value={lang.value} label={lang.name}></ElOption>)}
