@@ -4,3 +4,4 @@ const ENV: {
   mainApi: string
   socketApi: string
 }
+type Json = any
