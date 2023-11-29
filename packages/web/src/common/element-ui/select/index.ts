@@ -2,6 +2,7 @@ import ElSelect from 'element-ui/lib/select.js'
 import 'element-ui/lib/theme-chalk/select.css'
 
 export default ElSelect as Tsx.ClassComponent<{
+  value?: string
   size?: string
   disabled?: boolean
   clearable?: boolean
