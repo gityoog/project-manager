@@ -6,5 +6,6 @@ namespace JSX {
   }
   interface IntrinsicClassAttributes<T> extends VueComponentAttributes {
     onClick?: (event: MouseEvent) => void
+    onInput?: (value: any) => void
   }
 }
