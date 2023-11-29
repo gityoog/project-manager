@@ -38,6 +38,17 @@ export default {
           title: 'Autostart',
           label: 'Autostart with program',
         },
+        deploy: {
+          title: 'Deploy Config',
+          type: 'Type',
+          post: {
+            url: 'Url',
+            key: 'Key',
+            type: 'Type',
+            formdata: 'Formdata',
+            binary: 'Binary',
+          }
+        }
       }
     },
     detail: {

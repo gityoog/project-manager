@@ -38,6 +38,17 @@ export default {
           title: '自动启动',
           label: '跟随程序启动'
         },
+        deploy: {
+          title: '部署配置',
+          type: '类型',
+          post: {
+            url: '地址',
+            key: '字段',
+            type: '类型',
+            formdata: '表单',
+            binary: '文件',
+          }
+        }
       }
     },
     detail: {

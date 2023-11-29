@@ -11,6 +11,7 @@ type data = {
   env?: Record<string, string>
   encoding?: string
   autostart?: boolean
+  deploy?: Record<string, any>
 }
 
 const def = () => ({
@@ -30,9 +31,7 @@ export default class IProcessEditor implements iProcessEditor {
       id: '',
       name: this.locale.t.project.process.namePrefix + (this.data.length),
       context: this.data[0].context,
-      command: '',
-      encoding: '',
-      env: undefined
+      command: ''
     })
   }
   remove(index: number) {
@@ -41,17 +40,15 @@ export default class IProcessEditor implements iProcessEditor {
     }
   }
   setting(index: number) {
-    this.settings.open({
-      encoding: this.data[index].encoding,
-      env: this.data[index].env,
-      autostart: this.data[index].autostart
-    }, data => {
-      this.data[index].encoding = data?.encoding || ''
-      this.data[index].env = data?.env
-      this.data[index].autostart = data?.autostart
+    this.settings.open(this.data[index], data => {
+      this.data[index] = {
+        ...this.data[index],
+        ...data
+      }
     })
   }
   hasBadge(index: number) {
+    return false
     return !!(this.data[index].encoding || this.data[index].env || this.data[index].autostart)
   }
   setData(data: data[]) {
@@ -63,7 +60,8 @@ export default class IProcessEditor implements iProcessEditor {
       command: item.command,
       encoding: item.encoding || '',
       env: item.env ? { ...item.env } : undefined,
-      autostart: item.autostart
+      autostart: item.autostart,
+      deploy: item.deploy
     }))
     if (this.data.length === 0) {
       this.data = [def()]
@@ -77,7 +75,8 @@ export default class IProcessEditor implements iProcessEditor {
       command: item.command,
       encoding: item.encoding || undefined,
       env: item.env ? { ...item.env } : undefined,
-      autostart: item.autostart
+      autostart: item.autostart,
+      deploy: item.deploy
     }))
   }
 }

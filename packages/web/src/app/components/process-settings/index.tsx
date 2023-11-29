@@ -6,6 +6,7 @@ import { FC } from '@/common/vue'
 import ElDialog, { iElDialog } from '@/components/el-dialog'
 import EnvEditor, { iEnvEditor } from '@/components/env-editor'
 import ElCheckbox from '@/common/element-ui/checkbox'
+import OutputDeploySettings, { iOutputDeploySettings } from './deploy'
 
 export interface iProcessSettings {
   dialog: iElDialog
@@ -15,6 +16,7 @@ export interface iProcessSettings {
   }
   env: iEnvEditor
   locale: LocaleService
+  deploy: iOutputDeploySettings
   queryEncoding: (query: string, callback: (list: { value: string }[]) => void) => void
 }
 
@@ -22,7 +24,7 @@ const ProcessSettings = FC<{ service: iProcessSettings }>({
   functional: true,
   render(h, context) {
     const service = context.props.service
-    const { dialog, data, locale, env } = service
+    const { dialog, data, locale, env, deploy } = service
     const $t = locale.t.project.process.setting
     return <ElDialog appendToBody title={$t.title} service={dialog}>
       <ElForm size='small' labelWidth='100px' labelPosition='right'>
@@ -37,6 +39,7 @@ const ProcessSettings = FC<{ service: iProcessSettings }>({
         <ElFormItem style="margin-bottom: 0px;" label={$t.env.title}>
           <EnvEditor lang={$t.env} service={env} />
         </ElFormItem>
+        <OutputDeploySettings service={deploy} />
       </ElForm>
     </ElDialog>
   }
