@@ -35,3 +35,5 @@ declare namespace Express {
     }
   }
 }
+
+type Json = any

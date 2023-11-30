@@ -23,16 +23,7 @@ export default class ProjectEntity extends BaseEntity {
   @Column('simple-json', {
     nullable: true
   })
-  process!: {
-    id: string
-    name: string
-    context: string
-    command: string
-    encoding?: string
-    env?: Record<string, string>
-    deploy?: Record<string, any>
-    autostart?: boolean
-  }[] | null
+  process!: App.Project.Process.Config[] | null
 
   @CreateDateColumnWithFormat()
   created_at!: Date
