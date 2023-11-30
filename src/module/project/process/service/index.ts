@@ -19,38 +19,18 @@ export default class ProjectProcessService {
     private output: ProjectOutputService,
     private bus: ProjectProcessBus,
   ) {
-    this.projectBus.onRemove((project) => {
-      if (this.data[project.id]) {
-        Object.values(this.data[project.id]).forEach(item => item.destroy())
-        delete this.data[project.id]
+    this.projectBus.onProcessRemove((process, id) => {
+      this.logger.debug(`Process Removed: ${id} ${process.id}`, 'ProjectProcessService')
+      if (this.data[id] && this.data[id][process.id]) {
+        this.data[id][process.id].destroy()
+        delete this.data[id][process.id]
       }
     })
-    this.projectBus.onUpdate((project, origin) => {
-      if (origin) {
-        const needRemove: Record<string, boolean> = {}
-        origin.process?.forEach(process => {
-          needRemove[process.id] = true
-        })
-        project.process?.forEach(process => {
-          needRemove[process.id] = false
-        })
-        Object.entries(needRemove).forEach(([id, remove]) => {
-          if (remove) {
-            if (this.data[project.id] && this.data[project.id][id]) {
-              this.data[project.id][id].destroy()
-              delete this.data[project.id][id]
-            }
-          }
-        })
+    this.projectBus.onProcessUpdate((process, id) => {
+      this.logger.debug(`Process Updated: ${id} ${process.id}`, 'ProjectProcessService')
+      if (this.data[id] && this.data[id][process.id]) {
+        this.data[id][process.id].setData(process)
       }
-      if (this.data[project.id]) {
-        Object.values(this.data[project.id]).forEach(item => item.setProject(project))
-      }
-      project.process?.forEach(process => {
-        if (this.data[project.id] && this.data[project.id][process.id]) {
-          this.data[project.id][process.id].setData(process)
-        }
-      })
     })
   }
 
