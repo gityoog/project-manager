@@ -8,8 +8,14 @@ namespace App {
         command: string
         encoding?: string
         env?: Record<string, string>
-        deploy?: Record<string, any>
+        deploy?: Deploy.Config
         autostart?: boolean
+      }
+      namespace Deploy {
+        type Config = {
+          type: string
+          data: Json
+        }
       }
     }
   }
