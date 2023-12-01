@@ -20,14 +20,12 @@ export default class ProjectProcessService {
     private bus: ProjectProcessBus,
   ) {
     this.projectBus.onProcessRemove((process, id) => {
-      this.logger.debug(`Process Removed: ${id} ${process.id}`, 'ProjectProcessService')
       if (this.data[id] && this.data[id][process.id]) {
         this.data[id][process.id].destroy()
         delete this.data[id][process.id]
       }
     })
     this.projectBus.onProcessUpdate((process, id) => {
-      this.logger.debug(`Process Updated: ${id} ${process.id}`, 'ProjectProcessService')
       if (this.data[id] && this.data[id][process.id]) {
         this.data[id][process.id].setData(process)
       }
