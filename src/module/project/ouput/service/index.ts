@@ -57,7 +57,16 @@ export default class ProjectOutputService {
 
   async read(id: string) {
     const data = await this.main.findOneBy({ id })
-    return data
+    if (!data) return null
+    let content
+    if (data.path && fs.existsSync(data.path)) {
+      content = fs.readFileSync(data.path)
+    } else if (data.content) {
+      content = data.content
+    } else {
+      content = null
+    }
+    return { data, content }
   }
 
   async save({ project, name, content, process }: {

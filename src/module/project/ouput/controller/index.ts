@@ -24,18 +24,17 @@ export default class ProjectOutputController {
 
   @Get('/download')
   async download(@Query() { id }: { id: string }, @Res() response: Response) {
-    const file = await this.service.read(id)
-    if (!file) {
+    const result = await this.service.read(id)
+    if (!result) {
       response.sendStatus(404)
-      return
-    }
-    response.attachment(file.name + formatDate(file.created_at, 'YYYYMMDDHHmmss') + '.zip')
-    if (file.path && fs.existsSync(file.path)) {
-      response.send(fs.readFileSync(file.path))
-    } else if (file.content) {
-      response.send(file.content)
     } else {
-      response.sendStatus(404)
+      const { data: { name, created_at }, content } = result
+      if (content) {
+        response.attachment(name + formatDate(created_at, 'YYYYMMDDHHmmss') + '.zip')
+        response.send(content)
+      } else {
+        response.sendStatus(404)
+      }
     }
   }
 
