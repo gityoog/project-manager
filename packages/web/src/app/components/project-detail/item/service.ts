@@ -33,6 +33,7 @@ export default class IProjectDetailItem implements iProjectDetailItem {
     memory: string
   } | null = null
   toggleLoading = false
+  hasDeploy
   table = new ITableList({
     api: () => AppApi.project.output.query({
       project: this.project,
@@ -47,11 +48,12 @@ export default class IProjectDetailItem implements iProjectDetailItem {
   private heightValue
   private id
   private stdout
-  constructor(private project: string, options?: {
+  constructor(private project: string, options: {
     process: Project.process,
     info: info
+    main?: true
   }) {
-    if (options?.process) {
+    if (options.main !== true) {
       this.id = options.process.id
       this.name = options.process.name
       this.heightValue = new LocalStorageItem<number | null>({
@@ -74,6 +76,7 @@ export default class IProjectDetailItem implements iProjectDetailItem {
       this.height = null
       this.terminal = null
     }
+    this.hasDeploy = !!options.process.deploy
     this.init()
   }
   private destroyCallbacks: Array<() => void> = []
@@ -114,6 +117,9 @@ export default class IProjectDetailItem implements iProjectDetailItem {
       })
       this.ws.on('file', () => {
         this.table.refresh()
+      })
+      this.ws.on('deploy', data => {
+
       })
     }
     this.table.refresh()

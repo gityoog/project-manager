@@ -55,6 +55,7 @@ export default {
   detail: Request.main<{ id: string }, {
     process: process
     info: processInfo
+    main?: true
   }[]>({
     url: "/project/detail",
   })

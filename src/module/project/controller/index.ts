@@ -37,13 +37,23 @@ export default class ProjectController {
   @All('/detail')
   async detail(@Body() data: { id: string }) {
     const detail = await this.project.detail(data.id)
-    return Promise.all(
-      detail?.process?.filter((_, index) => index !== 0).map(async item => {
-        return {
+    const process = detail?.process
+    let result = []
+    if (process?.length) {
+      const main = process[0]
+      const more = process.slice(1)
+      for (const item of more) {
+        result.push({
           process: item,
           info: await this.process.info(data.id, item.id),
-        }
-      }) || []
-    )
+        })
+      }
+      result.push({
+        process: main,
+        info: null,
+        main: true
+      })
+    }
+    return result
   }
 }
