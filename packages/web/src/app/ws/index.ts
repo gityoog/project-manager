@@ -17,6 +17,17 @@ const AppWs = {
     namesapce: '/project/category'
   }),
   process: Websocket.main<{
+    deploy: [data: {
+      process: string
+      output: string
+    } & {
+      type: 'start'
+    } | {
+      type: 'success'
+    } | {
+      type: 'fail'
+      msg: string
+    }]
     status: [data: {
       id: string
       value: boolean
