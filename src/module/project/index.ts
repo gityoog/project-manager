@@ -10,6 +10,7 @@ import ProjectProcess from "./process"
 import { Module, OnModuleInit } from "@nestjs/common"
 import ProjectOutput from "./ouput"
 import ProjectEntityV1 from "./service/v1/entity"
+import ProjectDeploy from "./deploy"
 
 const ProjectMeta = {
   controllers: [
@@ -27,7 +28,7 @@ const ProjectMeta = {
   ]
 }
 
-@Module(mergeModuleMetadata(ProjectMeta, ProjectCategory, ProjectProcess, ProjectOutput))
+@Module(mergeModuleMetadata(ProjectMeta, ProjectCategory, ProjectProcess, ProjectOutput, ProjectDeploy))
 export default class ProjectModule {
 
 }

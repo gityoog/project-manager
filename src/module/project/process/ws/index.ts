@@ -2,6 +2,7 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect,
 import { Server, Socket } from 'socket.io'
 import { Inject, Logger } from "@nestjs/common"
 import ProjectProcessBus from "../bus"
+import ProjectDeployBus from "../../deploy/bus"
 
 const nsRegx = /^\/project\/process\/([a-f0-9\-]+?)$/
 
@@ -11,6 +12,8 @@ const nsRegx = /^\/project\/process\/([a-f0-9\-]+?)$/
 export default class ProjectProcessWsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   @Inject() private logger!: Logger
   @Inject() private bus!: ProjectProcessBus
+  @Inject() private deploy!: ProjectDeployBus
+
   private dict: Record<string, string> = {}
 
   handleConnection(socket: Socket) {
@@ -33,6 +36,9 @@ export default class ProjectProcessWsGateway implements OnGatewayInit, OnGateway
   afterInit(server: Server) {
     this.bus.on((data) => {
       server.to(data.id).emit(data.action, data)
+    })
+    this.deploy.on(data => {
+      server.to(data.process).emit('deploy', data)
     })
   }
 
