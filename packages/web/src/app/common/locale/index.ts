@@ -4,6 +4,7 @@ import { Already, Destroy, Inject, Service } from "ioc-di"
 import i18n from './i18n'
 import ITableList from "@/components/table-list/service"
 import AppConfig from "../config"
+import merge from 'lodash/merge'
 
 type i18n = typeof i18n
 
@@ -21,7 +22,7 @@ export default class LocaleService {
     name: '日本語',
     value: 'ja'
   }]
-  t!: i18n[keyof i18n]
+  t!: i18n['en']
 
   constructor() {
     this.init()
@@ -30,11 +31,7 @@ export default class LocaleService {
   private init() {
     this.destroyCallbacks.push(
       this.config.watch('language', lang => {
-        if (lang in i18n) {
-          this.t = i18n[lang as keyof i18n]
-        } else {
-          this.t = i18n['en']
-        }
+        this.t = this.getI18n(lang)
         ElDialog.i18n.setLang(lang)
         ITableList.i18n.setLang(lang)
       }, true)
@@ -62,5 +59,12 @@ export default class LocaleService {
   destroy() {
     this.destroyCallbacks.forEach(fn => fn())
     this.destroyCallbacks = []
+  }
+
+  private getI18n(lang: string): i18n['en'] {
+    if (lang in i18n) {
+      return merge({}, i18n.en, i18n[lang as keyof i18n])
+    }
+    return i18n.en
   }
 }
