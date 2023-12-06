@@ -76,14 +76,12 @@ export default class ProjectDeployService {
 
   async info({
     project,
-    process,
-    output
+    process
   }: {
     project: string
     process: string
-    output: string
   }) {
     const task = await this.factory({ project, process })
-    return task?.info(output) || null
+    return task?.info() || null
   }
 }

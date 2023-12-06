@@ -98,8 +98,8 @@ export default class ProjectDeployTask {
   isBusy() {
     return this.status.isBusy()
   }
-  info(id: string) {
-    return this.status.info(id)
+  info() {
+    return this.status.info()
   }
   destroy() {
     this.deploy?.service.destroy()

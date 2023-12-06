@@ -31,14 +31,12 @@ export default class ProjectDeployTaskStatus {
     return this.status === Status.running
   }
 
-  info(output: string) {
-    if (this.output === output) {
-      return {
-        status: this.status,
-        msg: this.msg
-      }
+  info() {
+    return {
+      status: this.status,
+      msg: this.msg,
+      actived: this.output
     }
-    return null
   }
   private callbacks: {
     start: (() => void)[]
