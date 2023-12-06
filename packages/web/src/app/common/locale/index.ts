@@ -17,6 +17,9 @@ export default class LocaleService {
   }, {
     name: 'English',
     value: 'en'
+  }, {
+    name: '日本語',
+    value: 'ja'
   }]
   t!: i18n[keyof i18n]
 
