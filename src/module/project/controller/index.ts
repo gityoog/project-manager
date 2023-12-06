@@ -3,23 +3,27 @@ import { All, Body, Controller, Inject, UseFilters } from "@nestjs/common"
 import ProjectService from "../service"
 import ProjectDto from "../service/dto"
 import ProjectProcessService from "../process/service"
+import ProjectDeployService from "../deploy/service"
 
 @Controller('/project')
 export default class ProjectController {
   constructor(
     private project: ProjectService,
-    private process: ProjectProcessService
+    private process: ProjectProcessService,
+    private deploy: ProjectDeployService
   ) { }
 
   @All('/query')
   async query(@Body() data: { type?: string | null }) {
     const projects = await this.project.query(data)
-    return await Promise.all(
-      projects.map(async data => ({
+    const result = []
+    for (const data of projects) {
+      result.push({
         data,
         process: await this.process.info(data.id)
-      }))
-    )
+      })
+    }
+    return result
   }
 
   @All('/save')
@@ -40,19 +44,19 @@ export default class ProjectController {
     const process = detail?.process
     let result = []
     if (process?.length) {
-      const main = process[0]
-      const more = process.slice(1)
-      for (const item of more) {
+      for (let index = 0; index < process.length; index++) {
+        const item = process[index]
+        const main = index === 0
         result.push({
           process: item,
-          info: await this.process.info(data.id, item.id),
+          info: main ? null : await this.process.info(item.id),
+          deploy: await this.deploy.info({
+            project: data.id,
+            process: item.id
+          }),
+          main
         })
       }
-      result.push({
-        process: main,
-        info: null,
-        main: true
-      })
     }
     return result
   }
