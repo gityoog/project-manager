@@ -2,18 +2,27 @@ import { formatDate } from "@/common/utils/date"
 import { All, Body, Controller, Get, Query, Res } from "@nestjs/common"
 import { Response } from "express"
 import ProjectOutputService from "../service"
-import fs from 'fs'
 import Logging from "@/common/logging/decorator"
+import ProjectDeployService from "../../deploy/service"
 
 @Controller('/project/output')
 export default class ProjectOutputController {
   constructor(
-    private service: ProjectOutputService
+    private service: ProjectOutputService,
+    private deploy: ProjectDeployService
   ) { }
 
   @All('/query')
-  query(@Body() { project, process }: { project: string, process?: string }) {
-    return this.service.query(project, process)
+  async query(@Body() { project, process }: { project: string, process?: string }) {
+    const result = await this.service.query(project, process)
+    return Promise.all(result.map(async (item) => ({
+      ...item,
+      deploy: item.process ? await this.deploy.info({
+        project,
+        process: item.process,
+        output: item.id
+      }) : null
+    })))
   }
 
   @All('/remove')
