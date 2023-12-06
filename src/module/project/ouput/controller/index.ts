@@ -3,26 +3,16 @@ import { All, Body, Controller, Get, Query, Res } from "@nestjs/common"
 import { Response } from "express"
 import ProjectOutputService from "../service"
 import Logging from "@/common/logging/decorator"
-import ProjectDeployService from "../../deploy/service"
 
 @Controller('/project/output')
 export default class ProjectOutputController {
   constructor(
-    private service: ProjectOutputService,
-    private deploy: ProjectDeployService
+    private service: ProjectOutputService
   ) { }
 
   @All('/query')
   async query(@Body() { project, process }: { project: string, process?: string }) {
-    const result = await this.service.query(project, process)
-    return Promise.all(result.map(async (item) => ({
-      ...item,
-      deploy: item.process ? await this.deploy.info({
-        project,
-        process: item.process,
-        output: item.id
-      }) : null
-    })))
+    return this.service.query(project, process)
   }
 
   @All('/remove')
