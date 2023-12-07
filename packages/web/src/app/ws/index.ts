@@ -19,13 +19,8 @@ const AppWs = {
   process: Websocket.main<{
     deploy: [data: {
       process: string
-      output: string
-    } & {
-      type: 'start'
-    } | {
-      type: 'success'
-    } | {
-      type: 'fail'
+      type: 'running' | 'success' | 'failed'
+      actived: string
       msg: string
     }]
     status: [data: {
