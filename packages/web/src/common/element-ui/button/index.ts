@@ -12,4 +12,5 @@ export default ElButton as Tsx.ClassComponent<{
   autofocus?: boolean
   round?: boolean
   circle?: boolean
+  title?: string
 }>
