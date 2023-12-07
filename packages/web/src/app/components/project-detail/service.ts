@@ -50,7 +50,8 @@ export default class IProjectDetail implements iProjectDetail {
       })
         .abort(() => this.id !== id)
         .success(data => {
-          this.data = data.map(({ process, info, main }) => Concat(this, new IProjectDetailItem(id, { process, info, main }))) || []
+          const result = data.filter(({ main }) => !main).concat(data.filter(({ main }) => main))
+          this.data = result.map(({ process, info, main, deploy }) => Concat(this, new IProjectDetailItem(id, { process, info, main, deploy })))
           this.actived = '0'
         })
     )

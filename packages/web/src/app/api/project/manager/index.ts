@@ -55,6 +55,11 @@ export default {
   detail: Request.main<{ id: string }, {
     process: process
     info: processInfo
+    deploy: {
+      status: 'running' | 'success' | 'failed'
+      msg: string
+      actived: string
+    } | null
     main?: true
   }[]>({
     url: "/project/detail",

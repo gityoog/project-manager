@@ -34,4 +34,11 @@ namespace Project {
     cpu: string
     memory: string
   } | null
+  namespace Deploy {
+    type status = {
+      status: 'running' | 'success' | 'failed'
+      msg: string
+      actived: string
+    } | null
+  }
 }
