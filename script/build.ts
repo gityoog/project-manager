@@ -43,7 +43,7 @@ async function buildWeb(cwd: string) {
 }
 
 async function buildServer(cwd: string) {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     webpack({
       target: 'node',
       mode: 'production',
@@ -69,6 +69,36 @@ async function buildServer(cwd: string) {
       module: {
         noParse: /node_modules[\\/]sql\.js[\\/]dist[\\/]sql-.*?\.js/,
         rules: [
+          {
+            test: /\.((c|m)?js)$/,
+            include: path => /node_modules[\\/](axios)[\\/]/.test(path),
+            enforce: 'post',
+            use: (data: {
+              resource: string
+              realResource: string
+              resourceQuery: string
+              issuer: string
+              compiler: string
+            }) => [
+                {
+                  loader: 'swc-loader',
+                  options: {
+                    sync: true,
+                    jsc: {
+                      parser: {
+                        syntax: "ecmascript",
+                        dynamicImport: true
+                      },
+                      target: "es2015",
+                      loose: true,
+                    },
+                    module: {
+                      type: 'es6'
+                    }
+                  }
+                }
+              ]
+          },
           {
             test: /\.zip$/,
             use: require.resolve('./buffer-loader')
@@ -97,7 +127,6 @@ async function buildServer(cwd: string) {
           new EsbuildPlugin({
             target: 'es6',
             keepNames: true,
-
           }),
         ]
       },
@@ -137,6 +166,7 @@ async function buildServer(cwd: string) {
         const data = stats.toJson()
         if (data.errors && data.errors.length > 0) {
           console.error(data.errors)
+          return reject('Build failed')
         }
         if (data.warnings && data.warnings.length > 0) {
           console.warn('Build success with:\n', data.warnings)
