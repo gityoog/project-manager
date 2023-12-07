@@ -1,17 +1,23 @@
 import LocaleService from '@/app/common/locale'
+import ElAutocomplete from '@/common/element-ui/autocomplete'
 import ElFormItem from '@/common/element-ui/form/item'
 import ElInput from '@/common/element-ui/input'
-import ElRadio from '@/common/element-ui/radio'
-import ElRadioGroup from '@/common/element-ui/radio/group'
 import { FC } from '@/common/vue'
 
 export interface iPostEditorRender {
   locale: LocaleService
   data: {
     url: string
-    type: string
-    key: string
+    sign: {
+      key: string
+      scheme: string
+    }
+    form: {
+      sign: string
+      file: string
+    }
   }
+  queryScheme: (query: string, callback: (list: { value: string }[]) => void) => void
 }
 
 const PostEditorRender = FC<{ service: iPostEditorRender }>({
@@ -24,15 +30,20 @@ const PostEditorRender = FC<{ service: iPostEditorRender }>({
       <ElFormItem label={$t.url}>
         <ElInput style="width: 240px" vModel={data.url}></ElInput>
       </ElFormItem>
-      <ElFormItem label={$t.type}>
-        <ElRadioGroup vModel={data.type}>
-          <ElRadio label="formdata">{$t.formdata}</ElRadio>
-          <ElRadio label="binary">{$t.binary}</ElRadio>
-        </ElRadioGroup>
+      <ElFormItem label={$t.formFileKey}>
+        <ElInput placeholder='file' style="width: 240px" vModel={data.form.file}></ElInput>
       </ElFormItem>
-      {data.type === 'formdata' && <ElFormItem label={$t.key}>
-        <ElInput style="width: 240px" vModel={data.key}></ElInput>
-      </ElFormItem>}
+      <ElFormItem label={$t.formSignKey}>
+        <ElInput placeholder='sign' style="width: 240px" vModel={data.form.sign}></ElInput>
+      </ElFormItem>
+      <ElFormItem label={$t.signScheme}>
+        <ElAutocomplete fetch-suggestions={(query, callback) => {
+          service.queryScheme(query, callback)
+        }} placeholder='pkcs1-sha256' style="width: 240px" vModel={data.sign.scheme}></ElAutocomplete>
+      </ElFormItem>
+      <ElFormItem label={$t.signKey}>
+        <ElInput type='textarea' placeholder='-----BEGIN PRIVATE KEY-----\n-----END PRIVATE KEY-----' style="width: 240px" vModel={data.sign.key}></ElInput>
+      </ElFormItem>
     </>
   }
 })

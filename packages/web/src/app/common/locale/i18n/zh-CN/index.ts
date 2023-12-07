@@ -42,11 +42,11 @@ export default {
           title: '部署配置',
           type: '类型',
           post: {
-            url: '地址',
-            key: '字段',
-            type: '类型',
-            formdata: '表单',
-            binary: '文件',
+            url: '上传地址',
+            signKey: '签名秘钥',
+            signScheme: '签名协议',
+            formSignKey: '签名字段',
+            formFileKey: '文件字段',
           }
         }
       }

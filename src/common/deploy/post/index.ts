@@ -2,11 +2,18 @@ import { getErrorMessage } from "@/common/utils"
 import DeployBasic from "../basic"
 import Axios, { CancelTokenSource } from "axios"
 import FormData from 'form-data'
+import NodeRSA, { SigningSchemeHash } from 'node-rsa'
 
 type data = {
-  type: string
   url: string
-  key: string
+  sign: {
+    key: string
+    scheme: string
+  }
+  form: {
+    sign: string
+    file: string
+  }
 }
 
 
@@ -26,37 +33,40 @@ export default class DeployByPost extends DeployBasic {
       this.emitFail('No Options.Url')
       return false
     }
-    if (this.options.type === 'formdata' || this.options.type === 'binary') {
-      this.source = Axios.CancelToken.source()
-      let data
-      let headers
-      if (this.options.type === 'formdata') {
-        data = new FormData()
-        data.append(this.options.key || 'file', file)
-        headers = { "Content-Type": "multipart/form-data" }
-      } else {
-        data = file
-        headers = {}
-      }
-      Axios.post(this.options.url, data, {
-        headers,
-        cancelToken: this.source.token
-      }).then(() => {
-        this.emitSuccess()
-      }).catch((e) => {
-        if (Axios.isCancel(e)) {
-          this.emitFail('Request Cancelled')
-        } else {
-          this.emitFail('Request Error: ' + getErrorMessage(e))
+    const formData = new FormData()
+    formData.append(this.options.form?.file || 'file', file)
+    if (this.options.sign?.key) {
+      try {
+        const rsa = new NodeRSA()
+        rsa.importKey(this.options.sign.key)
+        if (this.options.sign.scheme) {
+          rsa.setOptions({
+            signingScheme: this.options.sign.scheme as SigningSchemeHash
+          })
         }
-      }).finally(() => {
-        this.source = null
-      })
-      return true
-    } else {
-      this.emitFail('Invalid Options.Type:' + this.options.type)
-      return false
+        const sign = rsa.sign(file, 'base64')
+        formData.append(this.options.form?.sign || 'sign', sign)
+      } catch (e) {
+        this.emitFail('Sign Error: ' + getErrorMessage(e))
+        return false
+      }
     }
+    this.source = Axios.CancelToken.source()
+    Axios.post(this.options.url, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+      cancelToken: this.source.token
+    }).then(() => {
+      this.emitSuccess()
+    }).catch((e) => {
+      if (Axios.isCancel(e)) {
+        this.emitFail('Request Cancelled')
+      } else {
+        this.emitFail('Request Error: ' + getErrorMessage(e))
+      }
+    }).finally(() => {
+      this.source = null
+    })
+    return true
   }
   async stop(): Promise<boolean> {
     if (this.source) {

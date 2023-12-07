@@ -8,12 +8,7 @@ import { Already, Inject, Service } from "ioc-di"
 export default class OutputDeployEditorByPost extends OutputDeployBasicEditor {
   @Inject() private service!: IPostEditorRender
   setData(data: Json): void {
-    const { url = '', type = '', key = '' } = data || {}
-    this.service.setData({
-      url,
-      type,
-      key
-    })
+    this.service.setData(data)
   }
   getData(): Json {
     return this.service.getData()

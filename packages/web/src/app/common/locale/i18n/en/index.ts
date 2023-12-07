@@ -43,10 +43,10 @@ export default {
           type: 'Type',
           post: {
             url: 'Url',
-            key: 'Key',
-            type: 'Type',
-            formdata: 'Formdata',
-            binary: 'Binary',
+            signKey: 'Sign Key',
+            signScheme: 'Sign Scheme',
+            formSignKey: 'Form Sign',
+            formFileKey: 'Form File',
           }
         }
       }
