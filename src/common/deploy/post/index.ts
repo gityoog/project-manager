@@ -39,7 +39,8 @@ export default class DeployByPost extends DeployBasic {
         headers = {}
       }
       Axios.post(this.options.url, data, {
-        headers
+        headers,
+        cancelToken: this.source.token
       }).then(() => {
         this.emitSuccess()
       }).catch((e) => {
