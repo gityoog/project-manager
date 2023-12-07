@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common"
 
 type base = {
   process: string
-  output: string
+  actived: string
 }
 
 type data = base & ({

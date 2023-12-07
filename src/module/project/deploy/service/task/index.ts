@@ -20,7 +20,7 @@ export default class ProjectDeployTask {
       this.bus.emit({
         type: data.type,
         process: this.process.id,
-        output: data.actived,
+        actived: data.actived,
         msg: data.msg,
       })
     })
