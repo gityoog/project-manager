@@ -56,7 +56,7 @@ export default {
     process: process
     info: processInfo
     deploy: {
-      status: 'running' | 'success' | 'failed'
+      type: 'running' | 'success' | 'failed'
       msg: string
       actived: string
     } | null
