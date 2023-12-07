@@ -64,7 +64,20 @@ export default {
         time: 'Time',
         action: 'Act.',
         remove: 'Remove',
-        download: 'Download'
+        download: 'Download',
+        deploy: {
+          title: 'Deploy',
+          run: 'Deploy',
+          stop: 'Stop',
+          retry: 'Retry',
+          deploying: 'Deploying',
+          successfull: 'Successfull',
+          failed: 'Failed',
+          tip: {
+            failed: 'Deploy Failed',
+            successfull: 'Deploy Successfull'
+          }
+        }
       }
     }
   },

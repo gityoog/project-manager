@@ -7,6 +7,8 @@ import AppApi from "@/app/api"
 import LocaleService from "@/app/common/locale"
 import AppWs from "@/app/ws"
 import AppConfig from "@/app/common/config"
+import ProjectDeploy from "./deploy"
+import { Notification } from "element-ui"
 
 type info = {
   pty: {
@@ -33,11 +35,13 @@ export default class IProjectDetailItem implements iProjectDetailItem {
     memory: string
   } | null = null
   toggleLoading = false
-  hasDeploy
+  get deployEnabled() {
+    return this.deploy.enabled
+  }
   table = new ITableList({
     api: () => AppApi.project.output.query({
       project: this.project,
-      process: this.id
+      process: this.main ? undefined : this.process
     }),
     page: false,
     params: {},
@@ -46,24 +50,28 @@ export default class IProjectDetailItem implements iProjectDetailItem {
 
   private ws
   private heightValue
-  private id
+  private process
   private stdout
+  private deploy
+  private main
   constructor(private project: string, options: {
     process: Project.process,
     info: info
     main?: true
+    deploy: Project.Deploy.status
   }) {
-    if (options.main !== true) {
-      this.id = options.process.id
+    this.main = options.main === true
+    this.process = options.process.id
+    if (!this.main) {
       this.name = options.process.name
       this.heightValue = new LocalStorageItem<number | null>({
-        key: 'IProjectDetailItemHeight' + '_' + this.id,
+        key: 'IProjectDetailItemHeight' + '_' + options.process.id,
         default: 65
       })
       this.height = this.heightValue.bind(this, 'height')
       this.terminal = new TerminalService
       this.ws = AppWs.process({
-        namesapce: `/${this.id}`,
+        namesapce: `/${options.process.id}`,
       })
       this.stats = options.info?.pty.stats || null
       this.status = options.info?.status || false
@@ -71,12 +79,15 @@ export default class IProjectDetailItem implements iProjectDetailItem {
         this.stdout = options.info.pty.stdout
       }
     } else {
-      this.id = undefined
       this.name = ''
       this.height = null
       this.terminal = null
     }
-    this.hasDeploy = !!options.process.deploy
+    this.deploy = new ProjectDeploy({
+      project: project,
+      process: options.process,
+      status: options.deploy
+    })
     this.init()
   }
   private destroyCallbacks: Array<() => void> = []
@@ -84,7 +95,7 @@ export default class IProjectDetailItem implements iProjectDetailItem {
 
   @Already
   private init() {
-    if (!this.id) {
+    if (this.main) {
       this.name = this.locale.t.project.detail.other
     }
   }
@@ -119,7 +130,19 @@ export default class IProjectDetailItem implements iProjectDetailItem {
         this.table.refresh()
       })
       this.ws.on('deploy', data => {
+        this.deploy.update(data)
 
+        if (data?.type === 'failed') {
+          Notification.warning({
+            title: this.locale.t.project.detail.output.deploy.tip.failed,
+            message: data.msg
+          })
+        } else if (data?.type === 'success') {
+          Notification.success({
+            title: this.locale.t.project.detail.output.deploy.tip.successfull,
+            message: this.locale.t.project.detail.output.deploy.tip.successfull
+          })
+        }
       })
     }
     this.table.refresh()
@@ -128,7 +151,7 @@ export default class IProjectDetailItem implements iProjectDetailItem {
     const action = this.status ? AppApi.project.process.stop : AppApi.project.process.start
     action({
       project: this.project,
-      id: this.id
+      id: this.process
     }).load(() => this.toggleLoading = true)
       .final(() => this.toggleLoading = false)
   }
@@ -141,11 +164,34 @@ export default class IProjectDetailItem implements iProjectDetailItem {
   remove(index: number) {
     this.table.remove(index, data => AppApi.project.output.remove({ id: data.id }))
   }
+  startDeploy(index: number) {
+    const row = this.table.getRow(index)
+    this.deploy.start(row.id)
+  }
+  stopDeploy(index: number) {
+    this.deploy.stop()
+  }
+  hasDeploy(index: number) {
+    const row = this.table.getRow(index)
+    if (this.process === row.process) {
+      return true
+    }
+    return false
+  }
+  deployStatus(index: number) {
+    const row = this.table.getRow(index)
+    if (this.process === row.process) {
+      return this.deploy.getStatus(row.id)
+    }
+    return null
+  }
   @Destroy
   destroy() {
     this.destroyCallbacks.forEach(callback => callback())
     this.destroyCallbacks = undefined!
     this.ws?.destroy()
+    this.deploy.destroy()
+    this.deploy = undefined!
     this.ws = undefined!
     this.terminal?.destroy()
     this.terminal = undefined!

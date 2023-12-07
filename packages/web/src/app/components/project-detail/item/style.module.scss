@@ -53,3 +53,40 @@
     }
   }
 }
+
+.deployBt {
+  display: flex;
+  justify-content: center;
+
+  >.normal {
+    display: block;
+  }
+
+  >.hover {
+    display: none;
+  }
+
+  &:hover {
+    >.normal {
+      display: none;
+    }
+
+    >.hover {
+      display: block;
+    }
+  }
+
+  :global {
+    .el-button+.el-button {
+      margin-left: 0;
+    }
+
+    .el-button [class*=el-icon-]+span {
+      margin-left: 1px;
+    }
+
+    .el-button--mini {
+      padding: 6px 4px;
+    }
+  }
+}

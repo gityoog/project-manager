@@ -17,6 +17,7 @@ export interface iProjectDetailItem {
   status: boolean
   toggleLoading: boolean
   toggleStatus(): void
+  deployEnabled: boolean
   stats: {
     cpu: string
     memory: string
@@ -24,6 +25,10 @@ export interface iProjectDetailItem {
   table: iTableList
   download(index: number): void
   remove(index: number): void
+  hasDeploy(index: number): boolean
+  deployStatus(index: number): Project.Deploy.status
+  startDeploy(index: number): void
+  stopDeploy(index: number): void
 }
 
 @Component
@@ -34,7 +39,7 @@ export default class ProjectDetailItem extends Vue {
   @Prop() service!: iProjectDetailItem
   protected render() {
     const $t = this.service.locale.t.project.detail
-    const { terminal, status, stats, table, toggleLoading, ready } = this.service
+    const { terminal, status, stats, table, toggleLoading, ready, deployEnabled } = this.service
     return <div class={style.component}>
       {ready && <div class={style.container}>
         {this.service.height !== null && <>
@@ -58,6 +63,28 @@ export default class ProjectDetailItem extends Vue {
             <ElTableColumn label={$t.output.filename} prop="name" />
             <ElTableColumn label={$t.output.time} width="140" prop="created_at" />
             <ElTableColumn label={$t.output.size} width="90" prop="size" />
+            {deployEnabled && <ElTableColumn label={$t.output.deploy.title} width="90" align='center' scopedSlots={{
+              default: ({ $index }) => {
+                const status = this.service.deployStatus($index)
+                return this.service.hasDeploy($index) ? <div class={style.deployBt}>
+                  {status?.type === 'running' ?
+                    <>
+                      <ElButton icon="el-icon-loading" class={style.normal} size='mini' type='text' >{$t.output.deploy.deploying}</ElButton>
+                      <ElButton icon="el-icon-video-pause" class={style.hover} size='mini' type='text' onClick={() => this.service.stopDeploy($index)} >{$t.output.deploy.stop}</ElButton>
+                    </>
+                    : status?.type === 'failed' ? <>
+                      <ElButton icon="el-icon-close" class={style.normal} size='mini' type='text' >{$t.output.deploy.failed}</ElButton>
+                      <ElButton icon="el-icon-video-play" title={status.msg} class={style.hover} size='mini' type='text' onClick={() => this.service.startDeploy($index)} >{$t.output.deploy.retry}</ElButton>
+                    </>
+                      : status?.type === 'success' ? <>
+                        <ElButton icon="el-icon-check" class={style.normal} size='mini' type='text' >{$t.output.deploy.successfull}</ElButton>
+                        <ElButton icon="el-icon-video-play" title={status.msg} class={style.hover} size='mini' type='text' onClick={() => this.service.startDeploy($index)} >{$t.output.deploy.run}</ElButton>
+                      </>
+                        : <ElButton icon="el-icon-video-play" size='mini' type='text' onClick={() => this.service.startDeploy($index)}>{$t.output.deploy.run}</ElButton>
+                  }
+                </div> : <></>
+              }
+            }} />}
             <ElTableColumn label={$t.output.action} width="160px" align="center" scopedSlots={{
               default: ({ $index }) => <div class={style.actions}>
                 <ElButton size='mini' type='text' onClick={() => this.service.download($index)}>{$t.output.download}</ElButton>
