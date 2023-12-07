@@ -36,7 +36,7 @@ namespace Project {
   } | null
   namespace Deploy {
     type status = {
-      status: 'running' | 'success' | 'failed'
+      type: 'running' | 'success' | 'failed'
       msg: string
       actived: string
     } | null
