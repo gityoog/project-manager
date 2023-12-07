@@ -64,7 +64,20 @@ export default {
         time: '时间',
         action: '操作',
         download: '下载',
-        remove: '删除'
+        remove: '删除',
+        deploy: {
+          title: '部署',
+          run: '部署',
+          stop: '停止',
+          retry: '重试',
+          deploying: '部署中',
+          successfull: '部署成功',
+          failed: '部署失败',
+          tip: {
+            failed: '部署失败',
+            successfull: '部署成功'
+          }
+        }
       }
     }
   },
