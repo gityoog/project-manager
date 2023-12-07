@@ -20,7 +20,6 @@ export default class ProjectDeployController {
   stop(@Body() data: {
     project: string
     process: string
-    output: string
   }) {
     return this.service.stop(data)
   }

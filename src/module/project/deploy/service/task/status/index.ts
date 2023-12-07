@@ -14,10 +14,12 @@ export default class ProjectDeployTaskStatus {
   }
 
   start() {
+    this.msg = ''
     this.setType('running')
   }
 
   success() {
+    this.msg = ''
     this.setType('success')
   }
 

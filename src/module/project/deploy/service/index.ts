@@ -71,7 +71,7 @@ export default class ProjectDeployService {
     process: string
   }) {
     const task = await this.factory({ project, process })
-    return task?.stop()
+    return task?.stop() || null
   }
 
   async info({
