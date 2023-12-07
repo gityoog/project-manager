@@ -1,13 +1,12 @@
-
-enum Status {
-  success = 0,
-  failed = 1,
-  running = 2
-}
-
+type type = 'running' | 'success' | 'failed'
+type callback = (data: {
+  type: type
+  msg: string
+  actived: string
+}) => void
 export default class ProjectDeployTaskStatus {
-  output: string = ''
-  status = Status.success
+  output = ''
+  type: type = 'success'
   msg = ''
 
   active(output: string) {
@@ -15,55 +14,36 @@ export default class ProjectDeployTaskStatus {
   }
 
   start() {
-    this.status = Status.running
+    this.setType('running')
   }
 
   success() {
-    this.status = Status.success
+    this.setType('success')
   }
 
   fail(msg: string) {
-    this.status = Status.failed
     this.msg = msg
+    this.setType('failed')
   }
 
   isBusy() {
-    return this.status === Status.running
+    return this.type === 'running'
   }
 
   info() {
     return {
-      status: this.status,
+      type: this.type,
       msg: this.msg,
       actived: this.output
     }
   }
-  private callbacks: {
-    start: (() => void)[]
-    success: (() => void)[]
-    fail: ((msg: string) => void)[]
-  } = {
-      start: [],
-      success: [],
-      fail: []
-    }
-  on(callback: {
-    start?: () => void
-    success?: () => void
-    fail?: (msg: string) => void
-  }) {
-    callback.start && this.onStart(callback.start)
-    callback.success && this.onSuccess(callback.success)
-    callback.fail && this.onFail(callback.fail)
+  private callbacks: Array<callback> = []
+  on(callback: callback) {
+    this.callbacks.push(callback)
   }
-  onStart(callback: () => void) {
-    this.callbacks.start.push(callback)
-  }
-  onSuccess(callback: () => void) {
-    this.callbacks.success.push(callback)
-  }
-  onFail(callback: (msg: string) => void) {
-    this.callbacks.fail.push(callback)
+  private setType(type: type) {
+    this.type = type
+    this.callbacks.forEach(callback => callback(this.info()))
   }
   destroy() {
 

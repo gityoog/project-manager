@@ -16,29 +16,13 @@ export default class ProjectDeployTask {
     bus: ProjectDeployBus
   }) {
     this.bus = bus
-    this.status.on({
-      start: () => {
-        this.bus.emit({
-          type: 'start',
-          process: this.process.id,
-          output: this.status.output
-        })
-      },
-      success: () => {
-        this.bus.emit({
-          type: 'success',
-          process: this.process.id,
-          output: this.status.output
-        })
-      },
-      fail: (msg) => {
-        this.bus.emit({
-          type: 'fail',
-          process: this.process.id,
-          output: this.status.output,
-          msg
-        })
-      }
+    this.status.on((data) => {
+      this.bus.emit({
+        type: data.type,
+        process: this.process.id,
+        output: data.actived,
+        msg: data.msg,
+      })
     })
   }
   setData(data: App.Project.Process.Config) {

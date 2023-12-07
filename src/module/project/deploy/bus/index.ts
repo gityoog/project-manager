@@ -6,11 +6,11 @@ type base = {
 }
 
 type data = base & ({
-  type: 'start'
+  type: 'running'
 } | {
   type: 'success'
 } | {
-  type: 'fail'
+  type: 'failed'
   msg: string
 })
 
