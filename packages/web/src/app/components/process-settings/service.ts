@@ -48,7 +48,6 @@ export default class IProcessSettings implements iProcessSettings {
         : [])
     this.deploy.setData(deploy)
     this.dialog.open(() => {
-      const env = this.env.getData()
       const result: {
         encoding?: string
         env?: Record<string, string>
@@ -58,20 +57,16 @@ export default class IProcessSettings implements iProcessSettings {
           data: Json
         }
       } = {}
-      if (this.data.encoding) {
-        result.encoding = this.data.encoding
-      }
+      result.encoding = this.data.encoding
+      const env = this.env.getData()
       if (env.length > 0) {
         result.env = env.reduce((t, c) => (t[c.key] = c.value, t), {} as Record<string, string>)
+      } else {
+        result.env = undefined
       }
-      if (this.data.autostart) {
-        result.autostart = this.data.autostart
-      }
-      const deploy = this.deploy.getData()
-      if (deploy) {
-        result.deploy = deploy
-      }
-      callback(Object.keys(result).length > 0 ? result : null)
+      result.autostart = this.data.autostart
+      result.deploy = this.deploy.getData()
+      callback(result)
       this.dialog.close()
     })
   }
