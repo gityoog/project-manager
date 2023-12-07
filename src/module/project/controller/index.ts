@@ -49,7 +49,7 @@ export default class ProjectController {
         const main = index === 0
         result.push({
           process: item,
-          info: main ? null : await this.process.info(item.id),
+          info: main ? null : await this.process.info(data.id, item.id),
           deploy: await this.deploy.info({
             project: data.id,
             process: item.id
