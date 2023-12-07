@@ -4,6 +4,7 @@ type data = {
   id: string
   name: string
   create_at: string
+  process: string | null
 }
 
 export default {
