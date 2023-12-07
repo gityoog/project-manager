@@ -65,6 +65,9 @@ const webpackConfig = {
 ![image](./docs/main.png)
 
 ## changelog
+### [1.3.0] 2023-12-07
+- add project deploy
+
 ### [1.2.3] 2023-11-28
 - add process resume
 
