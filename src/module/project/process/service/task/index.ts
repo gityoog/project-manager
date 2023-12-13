@@ -61,6 +61,12 @@ export default class ProjectProcessTaskService {
         host: data.host,
         port: data.port
       }
+      this.bus.emit({
+        id: this.id,
+        project: this.project.id,
+        action: 'url',
+        value: this.url
+      })
     }
   }
   private onDist = (data: { id: string, path: string }) => {
