@@ -3,6 +3,7 @@ import DeployBasic from "../basic"
 import Axios, { CancelTokenSource } from "axios"
 import FormData from 'form-data'
 import NodeRSA, { SigningSchemeHash } from 'node-rsa'
+import stream from 'stream'
 
 type data = {
   url: string
@@ -34,7 +35,7 @@ export default class DeployByPost extends DeployBasic {
       return false
     }
     const formData = new FormData()
-    formData.append(this.options.form?.file || 'file', file)
+    formData.append(this.options.form?.file || 'file', file, { filename: 'update.zip' })
     if (this.options.sign?.key) {
       try {
         const rsa = new NodeRSA()
@@ -53,7 +54,7 @@ export default class DeployByPost extends DeployBasic {
     }
     this.source = Axios.CancelToken.source()
     Axios.post(this.options.url, formData, {
-      headers: { "Content-Type": "multipart/form-data" },
+      headers: formData.getHeaders(),
       cancelToken: this.source.token
     }).then(() => {
       this.emitSuccess()
