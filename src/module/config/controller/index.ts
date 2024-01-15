@@ -23,7 +23,7 @@ export default class ConfigController {
   }
 
   @All('/save')
-  @Logging({ description: ([data]) => `shell: ${data.shell}, pty: ${data.pty}, keepProcess: ${data.keepProcess}` })
+  @Logging({ description: ([data]) => Object.keys(data).map(key => `${key}:${data[key as keyof typeof data]}`).join(', ') })
   async saveShell(@Body() data: {
     shell: string
     pty: string
