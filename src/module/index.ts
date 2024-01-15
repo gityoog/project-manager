@@ -1,53 +1,33 @@
 import { Global, Inject, Logger, MiddlewareConsumer, Module, NestModule } from "@nestjs/common"
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core'
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import Options from "@/options"
 import EncodeJSONInterceptor from "@/interceptor/encode-json"
-import HttpExceptionFilter from "@/filter/http-exception"
+import AppExceptionFilter from "@/filter/exception"
 import ProjectModule from './project'
-import SQLExceptionFilter from "@/filter/sql-exception"
 import LoggingModule from "./logging"
-import { ClsModule } from "nestjs-cls"
+import { ClsMiddleware, ClsModule } from "nestjs-cls"
 import UserStore from "@/service/user-store"
 import session from "express-session"
 import { APP_SESSION } from "@/service/session"
 import { TypeormStore } from "connect-typeorm"
 import { DataSource } from 'typeorm'
 import { Request, RequestHandler } from "express"
-import { Socket } from 'socket.io'
 import { ServeStaticModule } from '@nestjs/serve-static'
 import ConfigModule from "./config"
 import { SessionEntity } from "./session/service/entity"
 import ZipStaticModule from "./zip-static"
 import StatsModule from "./stats"
+import WebsocketsModule from "./websocket"
+import UserModule from "./user"
+import AuthModule from "./auth"
 
 @Global()
 @Module({
   imports: [
-    ClsModule.forRootAsync({
+    ClsModule.forRoot({
       global: true,
-      proxyProviders: [UserStore],
-      inject: [Logger],
-      useFactory: (logger: Logger) => ({
-        interceptor: {
-          mount: true,
-          setup: (cls, context) => {
-            if (context.getType() === 'http') {
-              const request = context.switchToHttp().getRequest<Request>()
-              cls.set('request', request)
-              cls.set('token', request.headers.token)
-              // logger.debug(`cls init ${context.getType()}(${request.url})`, 'ClsModule')
-            } else if (context.getType() === 'ws') {
-              const socket = context.switchToWs().getClient<Socket>()
-              cls.set('request', socket.request)
-              cls.set('token', socket.handshake.query.token)
-              // logger.debug(`cls init ${context.getType()}`, 'ClsModule')
-            } else {
-              logger.debug(`cls init ${context.getType()}`, 'ClsModule')
-            }
-          }
-        }
-      })
+      proxyProviders: [UserStore]
     }),
     TypeOrmModule.forRootAsync({
       inject: [Options],
@@ -72,6 +52,9 @@ import StatsModule from "./stats"
     ConfigModule,
     ZipStaticModule,
     StatsModule,
+    WebsocketsModule,
+    UserModule,
+    AuthModule,
     ServeStaticModule.forRootAsync({
       inject: [Options],
       useFactory: (options: Options) => typeof options.web === 'string' ? [{
@@ -92,11 +75,7 @@ import StatsModule from "./stats"
     },
     {
       provide: APP_FILTER,
-      useClass: HttpExceptionFilter
-    },
-    {
-      provide: APP_FILTER,
-      useClass: SQLExceptionFilter
+      useClass: AppExceptionFilter
     },
     {
       provide: APP_SESSION,
@@ -124,7 +103,7 @@ export default class AppModule implements NestModule {
   }
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(this.session)
+      .apply(this.session, ClsMiddleware)
       .forRoutes('*')
   }
 }
