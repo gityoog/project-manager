@@ -19,15 +19,17 @@ export default class Options {
   web?: string | Buffer
   isDev
   output: string
+  password
   get bak() {
     return this.db + '.bak'
   }
-  constructor({ port, db, web, dev, output }: {
+  constructor({ port, db, web, dev, output, password }: {
     port: number
     db: string
     web?: string | Buffer
     dev?: boolean
     output?: string
+    password?: string
   }) {
     if (Options._instance) {
       throw new Error("Options already initialized")
@@ -37,6 +39,7 @@ export default class Options {
     this.web = web
     this.isDev = dev || false
     this.output = output || path.resolve(process.cwd(), 'config/output')
+    this.password = password
     if (!fs.existsSync(this.output)) {
       fs.mkdirSync(this.output, { recursive: true })
     }
@@ -47,6 +50,9 @@ export default class Options {
   }
   private logger!: Logger
   private dbCache?: Uint8Array
+  hasPassword() {
+    return !!this.password
+  }
   getDB(): Uint8Array {
     const bak = fs.existsSync(this.bak) ? Uint8Array.from(fs.readFileSync(this.bak)) : undefined
     const db = fs.existsSync(this.db) ? Uint8Array.from(fs.readFileSync(this.db)) : undefined
