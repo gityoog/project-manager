@@ -9,5 +9,6 @@ declare module 'typeorm/driver/Driver' {
 declare module 'express-session' {
   interface SessionData {
     name: string
+    pwdAuth: boolean
   }
 }
