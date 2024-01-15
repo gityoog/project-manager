@@ -45,7 +45,7 @@ export default class StatsService {
       this.timeout = undefined
     }
     this.proc.get(process.pid, (usage) => {
-      if (!usage) return this.logger.log("QueryPidusage Error", 'StatsService')
+      if (!usage) return
       if (index !== this.index) return
       if (!this.status) return
       this.callback?.({

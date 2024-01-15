@@ -19,8 +19,10 @@ export default class PtyUsageStats {
     return this.data
   }
   private setData(data: stats | null) {
-    this.data = data
-    this.callback?.(this.data)
+    if (this.data !== data) {
+      this.data = data
+      this.callback?.(this.data)
+    }
   }
   onUpdate(callback: (stats: stats | null) => void) {
     this.callback = callback
@@ -42,14 +44,15 @@ export default class PtyUsageStats {
   }
   private query(pid: number, callback: (err: null | ({ name: string, err: Error }), stats?: stats) => void) {
     this.proc.get(pid, (usage) => {
+      if (!usage) {
+        return callback(null)
+      }
       const data: ProcUsage.Proc[] = []
       function add(proc: ProcUsage.Proc) {
         data.push(proc)
         proc.children.forEach(item => add(item))
       }
-      if (usage) {
-        add(usage)
-      }
+      add(usage)
       const stats = data.reduce((total, cur) => ({
         cpu: total.cpu + (cur.cpu || 0),
         memory: total.memory + (cur.mem || 0),
