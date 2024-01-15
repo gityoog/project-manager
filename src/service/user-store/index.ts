@@ -1,25 +1,38 @@
+import Options from "@/options"
 import { Inject, Logger } from "@nestjs/common"
 import { Request } from "express"
-import { ClsService, InjectableProxy } from "nestjs-cls"
+import { CLS_REQ, ClsService, InjectableProxy } from "nestjs-cls"
 
 @InjectableProxy()
 export default class UserStore {
+  @Inject() private options!: Options
   id
   name
   ip
+  private request
   constructor(
     @Inject(ClsService) private cls: ClsService
   ) {
-    const request = cls.get<Request>('request')
-    this.id = request.sessionID
-    this.name = request.session.name || `anonymous(${this.id})`
-    this.ip = request.ip
-  }
-  get token() {
-    const token = this.cls.get('token') as string | undefined
-    if (!token) {
-      throw new Error('token is not exist')
+    const request = this.request = cls.get<Request>(CLS_REQ)
+    if (!request) {
+      console.trace('request is not exist')
+    } else {
+      this.id = request.sessionID
+      this.name = `anonymous(${this.id})`
+      this.ip = request.ip
     }
-    return token
+  }
+  get authorized() {
+    if (this.options.hasPassword()) {
+      return this.request.session.pwdAuth === true
+    }
+    return true
+  }
+  setPwdAuth(value: boolean) {
+    if (value) {
+      this.request.session.pwdAuth = true
+    } else {
+      this.request.session.pwdAuth = undefined
+    }
   }
 }
