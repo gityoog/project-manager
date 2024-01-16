@@ -13,7 +13,10 @@ export default class ProjectManagerIpc {
     }): void;
     private getClient;
     emitUrl(host: string, port: number): void;
-    emitDist(path: string): void;
+    emitDist(path: string, { version, name }?: {
+        version?: string;
+        name?: string;
+    }): void;
     emitError(message: string): void;
     disconnect(): void;
     destroy(): void;

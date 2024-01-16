@@ -48,10 +48,12 @@ export default class ProjectManagerIpc {
       port
     })
   }
-  emitDist(path: string) {
+  emitDist(path: string, { version, name }: { version?: string, name?: string } = {}) {
     this.getClient()?.emit('dist', {
       id: this.id,
-      path
+      path,
+      version,
+      name
     })
   }
   emitError(message: string) {

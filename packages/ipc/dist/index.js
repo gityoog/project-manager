@@ -46,11 +46,13 @@ class ProjectManagerIpc {
             port
         });
     }
-    emitDist(path) {
+    emitDist(path, { version, name } = {}) {
         var _a;
         (_a = this.getClient()) === null || _a === void 0 ? void 0 : _a.emit('dist', {
             id: this.id,
-            path
+            path,
+            version,
+            name
         });
     }
     emitError(message) {
