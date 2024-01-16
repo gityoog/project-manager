@@ -9,7 +9,7 @@ type ControllerOptions = { name?: string }
 type RouteOptions<T extends (...args: any) => any> = {
   action?: string
   description?: (args: Parameters<T>, result: RealReturn<T>) => string
-  error?: (args: Parameters<T>, error: unknown) => string
+  error?: (args: Parameters<T>, error: unknown, message: string) => string
 }
 
 function Logging<T extends Object, K extends string>(args?: K extends keyof T ? T[K] extends (...args: any) => any ? RouteOptions<T[K]> : never : ControllerOptions) {
@@ -30,7 +30,7 @@ function Logging<T extends Object, K extends string>(args?: K extends keyof T ? 
           service.success(name, action, options?.description?.(args, result))
           return result
         } catch (e) {
-          service.fail(name, action, options?.error?.(args, e) ?? getErrorMessage(e))
+          service.fail(name, action, options?.error?.(args, e, getErrorMessage(e)) ?? getErrorMessage(e))
           throw e
         }
       }, original)
