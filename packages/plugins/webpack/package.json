@@ -1,6 +1,6 @@
 {
   "name": "project-manager-webpack-plugin",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "project manager webpack plugin",
   "main": "./dist/index.js",
   "scripts": {
@@ -18,6 +18,6 @@
     "webpack": "^5.75.0"
   },
   "dependencies": {
-    "project-manager-ipc": "^1.0.3"
+    "project-manager-ipc": "^1.0.6"
   }
 }

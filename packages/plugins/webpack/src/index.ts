@@ -14,6 +14,7 @@ export default class ProjectManagerWebpackPlugin {
   private ipc = new ProjectManagerIpc()
   constructor(private options: {
     devInfo?: () => { host: string, port: number }
+    distInfo?: () => { version?: string, name?: string }
   }) { }
   apply(compiler: Compiler) {
     this.logger = compiler.getInfrastructureLogger(this.name)
@@ -28,7 +29,7 @@ export default class ProjectManagerWebpackPlugin {
         if (compiler.options.mode === 'production') {
           const outPath = stats.toJson().outputPath
           if (outPath) {
-            this.ipc.emitDist(outPath)
+            this.ipc.emitDist(outPath, this.options.distInfo?.())
           } else {
             this.ipc.emitError('outputPath is undefined')
           }

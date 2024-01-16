@@ -22,6 +22,11 @@ const webpackConfig = {
         host: "0.0.0.0",
         port: 3000,
       }),
+      // optional, send dist info
+      distInfo: () => ({
+        version: "1.0.0",
+        name: "name",
+      }),
     }),
   ],
 };
@@ -29,4 +34,5 @@ const webpackConfig = {
 
 ### Changelog
 
+2024-01-16 v1.0.10 emit dist info
 2023-04-14 v1.0.7 support custom server id

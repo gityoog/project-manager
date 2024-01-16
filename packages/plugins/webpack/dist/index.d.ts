@@ -9,6 +9,10 @@ export default class ProjectManagerWebpackPlugin {
             host: string;
             port: number;
         };
+        distInfo?: () => {
+            version?: string;
+            name?: string;
+        };
     });
     apply(compiler: Compiler): void;
 }

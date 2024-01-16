@@ -17,6 +17,7 @@ class ProjectManagerWebpackPlugin {
             this.logger.debug(msg);
         });
         compiler.hooks.done.tap(this.name, (stats) => {
+            var _a, _b;
             if (stats.hasErrors()) {
                 this.ipc.emitError(stats.toString());
             }
@@ -24,7 +25,7 @@ class ProjectManagerWebpackPlugin {
                 if (compiler.options.mode === 'production') {
                     const outPath = stats.toJson().outputPath;
                     if (outPath) {
-                        this.ipc.emitDist(outPath);
+                        this.ipc.emitDist(outPath, (_b = (_a = this.options).distInfo) === null || _b === void 0 ? void 0 : _b.call(_a));
                     }
                     else {
                         this.ipc.emitError('outputPath is undefined');
