@@ -6,7 +6,7 @@ export default class Status {
   msg = ''
 
   private wrequest: WRequest<any> | null = null
-  use<T>(wrequest: WRequest<T>) {
+  use<T>(wrequest: WRequest<T>, noFail = false) {
     this.wrequest = wrequest
     return wrequest.load(() => {
       if (this.wrequest !== wrequest) {
@@ -24,7 +24,7 @@ export default class Status {
         return
       }
       this.msg = e
-      this.error = true
+      !noFail && (this.error = true)
     }).final(() => {
       if (this.wrequest !== wrequest) {
         return
