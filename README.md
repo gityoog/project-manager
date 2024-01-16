@@ -73,6 +73,10 @@ const webpackConfig = {
 
 ## changelog
 
+### [1.4.2] 2024-01-16
+
+- deploy post version and extra args
+
 ### [1.4.1] 2024-01-16
 
 - add project output version

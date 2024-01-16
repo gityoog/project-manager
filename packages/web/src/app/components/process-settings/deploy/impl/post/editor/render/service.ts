@@ -1,8 +1,9 @@
 import { Inject, Service } from "ioc-di"
 import { iPostEditorRender } from "."
 import LocaleService from "@/app/common/locale"
+import IEnvEditor from "@/components/env-editor/service"
 
-type data = {
+type form = {
   url: string
   sign: {
     key: string
@@ -11,6 +12,7 @@ type data = {
   form: {
     sign: string
     file: string
+    version: string
   }
 }
 
@@ -18,10 +20,18 @@ type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>
 }
 
+type data = DeepPartial<form> & {
+  payload?: {
+    key: string
+    value: string
+  }[]
+}
+
 @Service()
 export default class IPostEditorRender implements iPostEditorRender {
   @Inject() locale!: LocaleService
-  data: data = {
+  payload = new IEnvEditor
+  data: form = {
     url: '',
     sign: {
       key: '',
@@ -29,19 +39,22 @@ export default class IPostEditorRender implements iPostEditorRender {
     },
     form: {
       sign: '',
-      file: ''
+      file: '',
+      version: ''
     }
   }
-  setData(data?: DeepPartial<data>) {
+  setData(data?: data) {
     data = data || {}
     this.data.url = data.url || ''
     this.data.sign.key = data.sign?.key || ''
     this.data.sign.scheme = data.sign?.scheme || ''
     this.data.form.sign = data.form?.sign || ''
     this.data.form.file = data.form?.file || ''
+    this.data.form.version = data.form?.version || ''
+    this.payload.setData(data.payload || [])
   }
   getData() {
-    const data: DeepPartial<data> = {}
+    const data: data = {}
     if (this.data.url) {
       data.url = this.data.url
     }
@@ -54,14 +67,22 @@ export default class IPostEditorRender implements iPostEditorRender {
         data.sign.scheme = this.data.sign.scheme
       }
     }
-    if (this.data.form.sign || this.data.form.file) {
-      data.form = {}
-      if (this.data.form.sign) {
-        data.form.sign = this.data.form.sign
-      }
-      if (this.data.form.file) {
-        data.form.file = this.data.form.file
-      }
+    data.form = {}
+    if (this.data.form.sign) {
+      data.form.sign = this.data.form.sign
+    }
+    if (this.data.form.file) {
+      data.form.file = this.data.form.file
+    }
+    if (this.data.form.version) {
+      data.form.version = this.data.form.version
+    }
+    if (Object.keys(data.form).length === 0) {
+      delete data.form
+    }
+    const payload = this.payload.getData()
+    if (payload.length > 0) {
+      data.payload = payload
     }
     return data
   }

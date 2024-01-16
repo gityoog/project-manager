@@ -52,6 +52,11 @@ export default {
             signScheme: '签名协议',
             formSignKey: '签名字段',
             formFileKey: '文件字段',
+            formVersionKey: '版本字段',
+            payload: '额外参数',
+            payloadEditor: {
+              add: '添加额外参数'
+            }
           }
         }
       }

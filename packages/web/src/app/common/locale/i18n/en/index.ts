@@ -52,6 +52,11 @@ export default {
             signScheme: 'Sign Scheme',
             formSignKey: 'Form Sign',
             formFileKey: 'Form File',
+            formVersionKey: 'Form Version',
+            payload: 'Payload',
+            payloadEditor: {
+              add: 'Add Extra Arguments'
+            }
           }
         }
       }
