@@ -20,11 +20,19 @@ export default class UserController {
   }
 
   @All('/pwd')
-  @Logging({ description: ([data], result) => result.name || '' })
+  @Logging({
+    description: ([data], result) => result.name || '',
+    error: ([data], error, msg) => `${msg}: password: ${data.pwd}`
+  })
   @Anonymous()
   async pwd(@Body() data: {
     pwd: string
   }) {
     return this.service.pwd(data.pwd)
+  }
+
+  @All('/info')
+  async info() {
+    return this.service.info()
   }
 }
