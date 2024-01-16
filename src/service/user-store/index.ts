@@ -24,13 +24,13 @@ export default class UserStore {
   }
   get authorized() {
     if (this.options.hasPassword()) {
-      return this.request.session.pwdAuth === true
+      return this.request.session.pwdAuth === this.options.password
     }
     return true
   }
-  setPwdAuth(value: boolean) {
-    if (value) {
-      this.request.session.pwdAuth = true
+  setPwdAuth(password?: string) {
+    if (password) {
+      this.request.session.pwdAuth = password
     } else {
       this.request.session.pwdAuth = undefined
     }

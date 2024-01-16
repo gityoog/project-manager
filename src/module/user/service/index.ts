@@ -22,7 +22,7 @@ export default class UserService {
   pwd(password: string) {
     if (this.options.hasPassword()) {
       if (this.options.password === password) {
-        this.user.setPwdAuth(true)
+        this.user.setPwdAuth(password)
         return this.info()
       } else {
         throw new UserPwdErrorException
