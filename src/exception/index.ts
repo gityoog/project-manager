@@ -7,7 +7,7 @@ export class IKnownException extends Error {
     status?: number
     msg: string
   }) {
-    super()
+    super(data.msg)
     this.data = {
       status: data.status || 0,
       msg: data.msg
