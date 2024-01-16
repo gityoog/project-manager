@@ -3,7 +3,7 @@
 ## Usage
 
 ```bash
-npx pm-gui # [--port=4000] [--db=path/to/sqlite/db]
+npx pm-gui # [--port=4000] [--db=path/to/sqlite/db] [--pwd=123456]
 ```
 
 open browser and visit `http://localhost:4000`
@@ -19,6 +19,11 @@ open browser and visit `http://localhost:4000`
 
 - app local storage
 - default: `cwd/config/app.db`
+
+### pwd
+
+- app auth password
+- default:
 
 ## IPC
 
@@ -65,36 +70,51 @@ const webpackConfig = {
 ![image](./docs/main.png)
 
 ## changelog
+
+### [1.4.0] 2024-01-15
+
+- add password auth
+
 ### [1.3.0] 2023-12-07
+
 - add project deploy
 
 ### [1.2.3] 2023-11-28
+
 - add process resume
 
 ### [1.2.0] 2023-11-27
+
 - next project process
 
 ### [1.1.0] 2023-10-31
+
 - change usage to process
 - add db backup file
 
 ### [1.0.8] 2023-05-23
+
 - add build/dev proc `env` and `encoding`
 
 ### [1.0.7] 2023-05-22
+
 - When the project is stopped, click on the status label to display the terminal.
 
 ### [1.0.6] 2023-05-08
+
 - change project sort
 - add project created_at
 
 ### [1.0.5] 2023-05-06
+
 - category orderby sort asc
 - xterm use canvas renderer
 
 ### [1.0.4] 2023-05-06
+
 - merge project devInfo request
 - show cpu/memory on homepage
 
 ### [1.0.3] 2023-05-05
+
 - update db file save method
