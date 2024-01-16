@@ -2,6 +2,7 @@ import DeployBasic from "@/common/deploy/basic"
 import ProjectDeployBus from "../../bus"
 import DeployService from "@/common/deploy"
 import ProjectDeployTaskStatus from "./status"
+import ProjectOutputEntity from "@/module/project/ouput/service/entity"
 
 export default class ProjectDeployTask {
   private status = new ProjectDeployTaskStatus()
@@ -61,17 +62,14 @@ export default class ProjectDeployTask {
     return null
   }
   async run({ data, content }: {
-    data: {
-      id: string
-      name: string
-    }
+    data: ProjectOutputEntity
     content: Buffer
   }) {
     if (!this.isBusy()) {
       const task = this.factory()
       if (task) {
         this.status.active(data.id)
-        return task.run(content)
+        return task.run(content, data)
       }
     }
     return null
