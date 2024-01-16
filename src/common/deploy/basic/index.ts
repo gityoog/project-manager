@@ -1,5 +1,7 @@
 export default abstract class DeployBasic {
-  abstract run(file: Buffer): Promise<boolean>
+  abstract run(file: Buffer, data: {
+    version: string | null
+  }): Promise<boolean>
   abstract stop(): Promise<boolean>
   abstract setOptions(options: Json): void
   protected beforeDestroy?(): void

@@ -3,7 +3,6 @@ import DeployBasic from "../basic"
 import Axios, { CancelTokenSource } from "axios"
 import FormData from 'form-data'
 import NodeRSA, { SigningSchemeHash } from 'node-rsa'
-import stream from 'stream'
 
 type data = {
   url: string
@@ -14,14 +13,19 @@ type data = {
   form: {
     sign: string
     file: string
+    version: string
   }
+  payload?: {
+    key: string
+    value: string
+  }[]
 }
 
 
 export default class DeployByPost extends DeployBasic {
   private options: Partial<data> | null = null
   private source: CancelTokenSource | null = null
-  async run(file: Buffer): Promise<boolean> {
+  async run(file: Buffer, data: { version: string | null }): Promise<boolean> {
     if (this.source) {
       return false
     }
@@ -36,6 +40,10 @@ export default class DeployByPost extends DeployBasic {
     }
     const formData = new FormData()
     formData.append(this.options.form?.file || 'file', file, { filename: 'update.zip' })
+    formData.append(this.options.form?.version || 'version', data.version || '')
+    this.options.payload?.forEach(item => {
+      formData.append(item.key, item.value)
+    })
     if (this.options.sign?.key) {
       try {
         const rsa = new NodeRSA()
