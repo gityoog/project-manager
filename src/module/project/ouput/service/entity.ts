@@ -9,6 +9,9 @@ export default class ProjectOutputEntity extends BaseEntity {
   @Column({ type: 'text', unique: false })
   name!: string
 
+  @Column({ type: 'text', nullable: true })
+  version!: string | null
+
   @Column({ type: 'text' })
   project!: string
 

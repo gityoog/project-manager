@@ -67,6 +67,7 @@ export default {
         filename: '文件名',
         size: '大小',
         time: '时间',
+        version: '版本',
         action: '操作',
         download: '下载',
         remove: '删除',

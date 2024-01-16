@@ -24,7 +24,7 @@ export default class ProjectOutputService {
   async query(projectId: string, processId?: string) {
     if (processId) {
       return this.main.find({
-        select: ['id', 'name', 'size', 'created_at', 'process'],
+        select: ['id', 'name', 'size', 'created_at', 'process', 'version'],
         where: { project: projectId, process: processId },
         order: { created_at: 'DESC' }
       })
@@ -32,7 +32,7 @@ export default class ProjectOutputService {
       const project = await this.project.detail(projectId)
       if (!project) return []
       const result = await this.main.find({
-        select: ['id', 'name', 'size', 'created_at', 'process'],
+        select: ['id', 'name', 'size', 'created_at', 'process', 'version'],
         where: { project: projectId },
         order: { created_at: 'DESC' }
       })
@@ -69,11 +69,12 @@ export default class ProjectOutputService {
     return { data, content }
   }
 
-  async save({ project, name, content, process }: {
+  async save({ project, name, content, process, version }: {
     project: string
     process: string
     name: string
     content: Buffer
+    version?: string
   }) {
     const entity = new ProjectOutputEntity()
     entity.project = project
@@ -81,6 +82,7 @@ export default class ProjectOutputService {
     entity.process = process
     const filepath = path.resolve(this.options.output, formatDate(new Date(), 'YYYYMMDDHHmmss') + '_' + Math.random().toString(36).slice(2))
     entity.path = filepath
+    entity.version = version || null
     fs.writeFileSync(filepath, content)
     // entity.content = content
     const length = content.length

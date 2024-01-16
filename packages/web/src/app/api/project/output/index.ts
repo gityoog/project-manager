@@ -3,6 +3,7 @@ import Request from "@/common/request"
 type data = {
   id: string
   name: string
+  version: string
   create_at: string
   process: string | null
 }

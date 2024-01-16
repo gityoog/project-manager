@@ -69,9 +69,9 @@ export default class ProjectProcessTaskService {
       })
     }
   }
-  private onDist = (data: { id: string, path: string }) => {
+  private onDist = (data: { id: string, path: string, name?: string, version?: string }) => {
     if (data.id === this.key) {
-      this.saveFile(data.path)
+      this.saveFile(data.path, { name: data.name, version: data.version })
     }
   }
   private onStdin = (data: string) => {
@@ -116,7 +116,7 @@ export default class ProjectProcessTaskService {
   setData(data: data) {
     this.data = data
   }
-  private saveFile(outpath: string) {
+  private saveFile(outpath: string, { name, version }: { name?: string, version?: string } = {}) {
     ClsServiceManager.getClsService().enterWith(this.clsStore)
     this.status.setZip(true)
     this.pty.tip('ziping', outpath)
@@ -129,8 +129,9 @@ export default class ProjectProcessTaskService {
       this.output.save({
         project: this.project.id,
         process: this.data.id,
-        name: this.project.name + '_' + (this.data.name || 'default'),
-        content
+        name: name || (this.project.name + '_' + (this.data.name || 'default')),
+        content,
+        version
       }).then(() => {
         this.pty.tip('success')
         this.bus.emit({

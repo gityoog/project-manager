@@ -24,7 +24,7 @@ export default class NodeIpcService {
     }
   }
   on(event: 'url', callback: (data: { id: string, host: string, port: string }) => void): void
-  on(event: 'dist', callback: (data: { id: string, path: string }) => void): void
+  on(event: 'dist', callback: (data: { id: string, path: string, name?: string, version?: string }) => void): void
   on(event: string, callback: (data: any) => void) {
     this.init()
     ipc.server.on(event, callback)

@@ -67,6 +67,7 @@ export default {
         filename: 'Filename',
         size: 'Size',
         time: 'Time',
+        version: 'Version',
         action: 'Act.',
         remove: 'Remove',
         download: 'Download',

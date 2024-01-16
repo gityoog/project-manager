@@ -61,6 +61,7 @@ export default class ProjectDetailItem extends Vue {
         <div class={style.files}>
           <TableList size='mini' service={table}>
             <ElTableColumn label={$t.output.filename} prop="name" />
+            <ElTableColumn label={$t.output.version} width="90" prop="version" />
             <ElTableColumn label={$t.output.time} width="140" prop="created_at" />
             <ElTableColumn label={$t.output.size} width="90" prop="size" />
             {deployEnabled && <ElTableColumn label={$t.output.deploy.title} width="90" align='center' scopedSlots={{
