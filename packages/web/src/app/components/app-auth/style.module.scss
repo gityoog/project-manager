@@ -1,0 +1,48 @@
+.app {
+
+
+  height: 100%;
+  background: #252526;
+
+  >.container {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    >.form {
+      width: 60vw;
+      display: flex;
+      padding: 30px;
+      box-sizing: border-box;
+      box-shadow: 0px 0px 1px 0px #7f7f7f;
+      padding: 20px;
+      background-color: #1a1a1a;
+      border-radius: 4px;
+
+      >*+* {
+        margin-left: 10px;
+      }
+
+      :global {
+        .el-input__inner {
+          background: #303133;
+          color: #fff;
+          border-color: #303133;
+        }
+
+        .el-button {
+          background: #303133;
+          color: #fff;
+          border-color: #303133;
+        }
+      }
+    }
+  }
+
+  :global {
+    .el-loading-mask {
+      background-color: rgba(30, 30, 30, 0.9);
+    }
+  }
+}

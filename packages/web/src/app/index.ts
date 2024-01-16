@@ -8,12 +8,15 @@ import ElNotification from '@/common/element-ui/notification'
 import Websocket from '@/common/websocket'
 import LocaleService from './common/locale'
 import 'app/style/index.scss'
+import IAppAuth from './components/app-auth/service'
+import AppAuth from './components/app-auth'
 
 @Root()
 @Service()
 export default class App {
   @Inject() private provider!: VueDIProvider
   @Inject() private locale!: LocaleService
+  @Inject() private auth!: IAppAuth
 
   private token = `s_${Math.random().toString(36)}` //应用级身份标识
   vue!: Vue
@@ -21,10 +24,14 @@ export default class App {
     this.init()
   }
 
+
   @Already
   private init() {
     Request.main.bindToken(this.token)
     Request.main.bindBaseUrl(ENV.mainApi)
+    Request.main.bindNoAuthHandler(() => {
+      this.auth.noAuth()
+    })
     Request.main.bindErrorhandler(error => {
       ElNotification.warning({
         title: '操作未完成',
@@ -35,15 +42,20 @@ export default class App {
     Websocket.main.bindBaseUrl(ENV.socketApi)
 
     const self = this
+    Vue.observable(self.auth)
+    Vue.observable(this.locale)
+    this.auth.init()
+
     this.vue = new Vue({
       el: '#app',
       beforeCreate() {
         self.provider.bind(this)
       },
       render(h) {
-        return h(AppControl)
+        return self.auth.enabled
+          ? h(AppAuth, { props: { service: self.auth } })
+          : h(AppControl)
       }
     })
-    Vue.observable(this.locale)
   }
 }

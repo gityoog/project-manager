@@ -7,6 +7,11 @@ export default {
   tabs: {
     other: 'Other'
   },
+  auth: {
+    expired: 'User Expired',
+    expiredMessage: 'User authentication has expired, do you want to re-authenticate?',
+    password: 'Password',
+  },
   project: {
     card: {
       running: 'Running',
@@ -156,9 +161,11 @@ export default {
     }
   },
   tip: {
+    confirm: 'Confirm',
     save: 'Save',
     cancel: 'Cancel',
     saveSuccess: 'Save Success',
     enabled: 'Enabled',
+    submit: 'Submit',
   }
 }

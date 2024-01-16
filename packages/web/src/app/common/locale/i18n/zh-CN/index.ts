@@ -7,6 +7,11 @@ export default {
   tabs: {
     other: '其他'
   },
+  auth: {
+    expired: '用户过期',
+    expiredMessage: '用户验证已过期，是否重新验证？',
+    password: '密码',
+  },
   project: {
     card: {
       running: '运行中',
@@ -156,9 +161,11 @@ export default {
     }
   },
   tip: {
+    confirm: '确定',
     save: '保存',
     cancel: '取消',
     saveSuccess: '保存成功',
     enabled: '启用',
+    submit: '提交',
   }
 }

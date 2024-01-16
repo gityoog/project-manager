@@ -1,11 +1,13 @@
 import project from "./project"
 import logging from "./logging"
 import config from "./config"
+import user from "./user"
 
 const AppApi = {
   project,
   logging,
-  config: config
+  config,
+  user
 }
 
 export default AppApi
