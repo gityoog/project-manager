@@ -42,6 +42,8 @@ YourDevScript(() => {
 // Build Success
 YourBuildScript(() => {
   ipc.emitDist("path/to/dist");
+  // or
+  ipc.emitDist("path/to/dist", { version: "1.0.0", name: "name" }});
 });
 ```
 
@@ -70,6 +72,10 @@ const webpackConfig = {
 ![image](./docs/main.png)
 
 ## changelog
+
+### [1.4.1] 2024-01-16
+
+- add project output version
 
 ### [1.4.0] 2024-01-15
 

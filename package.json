@@ -1,6 +1,6 @@
 {
   "name": "project-manager",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "project-manager",
   "bin": {
     "pm-gui": "./dist/index.js"
@@ -63,7 +63,7 @@
     "esbuild-loader": "^3.0.1",
     "log-update": "^5.0.1",
     "nodemon": "^3.0.1",
-    "project-manager-ipc": "^1.0.5",
+    "project-manager-ipc": "^1.0.6",
     "rimraf": "^5.0.0",
     "swc-loader": "^0.2.3",
     "ts-loader": "^9.4.2",
