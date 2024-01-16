@@ -20,7 +20,6 @@ export default class IAppAuth implements iAppAuth {
     this.status.use(
       AppApi.user.info().success(data => {
         this.enabled = false
-        console.log(data)
       }).fail(error => {
         console.log(error)
       }), true
