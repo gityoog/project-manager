@@ -22,7 +22,10 @@ import logUpdate from 'log-update'
   console.log('Building server...')
   await buildServer(cwd)
   fs.unlinkSync(webzip)
-  ipc.emitDist(path.resolve(cwd, './dist'))
+  ipc.emitDist(path.resolve(cwd, './dist'), {
+    name: '项目管理可视化',
+    version: fs.readFileSync(path.resolve(cwd, 'package.json'), 'utf-8').match(/"version":\s*?"(.*?)"/)?.[1] || '1.0.0',
+  })
   ipc.destroy()
 })()
 
