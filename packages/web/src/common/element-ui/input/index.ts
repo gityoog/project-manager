@@ -20,4 +20,5 @@ export default ElInput as Tsx.ClassComponent<{
   placeholder?: string
   tabindex?: string
   validateEvent?: boolean
+  nativeOnKeypress?: (event: KeyboardEvent) => void
 }>
