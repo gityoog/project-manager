@@ -39,7 +39,7 @@
     "ts-swc-register": "^1.2.2",
     "tsconfig-paths-webpack-plugin": "^4.0.1",
     "vue-jsx-hot-loader": "^1.4.1",
-    "vue-tsx-transformer": "^1.2.3",
+    "vue-tsx-transformer": "^1.2.4",
     "webpack": "^5.76.2",
     "webpack-bundle-analyzer": "^4.8.0",
     "webpack-dev-server": "^4.12.0",
