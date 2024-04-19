@@ -68,12 +68,15 @@ export default class DeployByPost extends DeployBasic {
       cancelToken: this.source.token,
       responseType: 'stream',
       onUploadProgress: (progress) => {
-        if (progress.total) {
-          this.emitProgress('POST: ' + Math.floor(progress.loaded / progress.total * 100) + '%')
+        if (progress.progress) {
+          if (progress.progress < 1) {
+            this.emitProgress('POST: ' + Math.floor(progress.progress * 100) + '%')
+          } else {
+            this.emitProgress('Waiting...')
+          }
         }
       },
     }).then((res) => {
-      this.emitProgress('Waiting...')
       const length = res.headers['content-length'] || res.headers['Content-Length']
       if (length) {
         this.emitSuccess(
