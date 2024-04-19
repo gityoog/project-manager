@@ -72,6 +72,8 @@ const webpackConfig = {
 ![image](./docs/main.png)
 
 ## changelog
+### [1.4.3] 2024-04-19
+- add deploy post progress
 
 ### [1.4.2] 2024-01-16
 
