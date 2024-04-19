@@ -54,6 +54,15 @@
   }
 }
 
+.msg {
+  text-align: center;
+  white-space: pre-wrap;
+  max-width: 300px;
+  max-height: 100px;
+  overflow: hidden;
+  font-size: 12px;
+}
+
 .deployBt {
   display: flex;
   justify-content: center;

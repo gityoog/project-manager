@@ -8,6 +8,7 @@ import MemoryIcon from 'app/images/memory.svg'
 import TableList, { iTableList } from '@/components/table-list'
 import ElTableColumn from '@/common/element-ui/table/column'
 import LocaleService from '@/app/common/locale'
+import ElAutoPopover from '@/components/el-auto-popover'
 
 export interface iProjectDetailItem {
   locale: LocaleService
@@ -67,23 +68,30 @@ export default class ProjectDetailItem extends Vue {
             {deployEnabled && <ElTableColumn label={$t.output.deploy.title} width="90" align='center' scopedSlots={{
               default: ({ $index }) => {
                 const status = this.service.deployStatus($index)
-                return this.service.hasDeploy($index) ? <div class={style.deployBt}>
-                  {status?.type === 'running' ?
-                    <>
-                      <ElButton icon="el-icon-loading" class={style.normal} size='mini' type='text' >{$t.output.deploy.deploying}</ElButton>
-                      <ElButton icon="el-icon-video-pause" class={style.hover} size='mini' type='text' onClick={() => this.service.stopDeploy($index)} >{$t.output.deploy.stop}</ElButton>
-                    </>
-                    : status?.type === 'failed' ? <>
-                      <ElButton icon="el-icon-close" class={style.normal} size='mini' type='text' >{$t.output.deploy.failed}</ElButton>
-                      <ElButton icon="el-icon-video-play" title={status.msg} class={style.hover} size='mini' type='text' onClick={() => this.service.startDeploy($index)} >{$t.output.deploy.retry}</ElButton>
-                    </>
-                      : status?.type === 'success' ? <>
-                        <ElButton icon="el-icon-check" class={style.normal} size='mini' type='text' >{$t.output.deploy.successfull}</ElButton>
-                        <ElButton icon="el-icon-video-play" title={status.msg} class={style.hover} size='mini' type='text' onClick={() => this.service.startDeploy($index)} >{$t.output.deploy.run}</ElButton>
+                const type = status?.type
+                return this.service.hasDeploy($index) ? <ElAutoPopover
+                  trigger={type === 'running' ? 'manual' : 'hover'}
+                  value={ready && type === 'running'}
+                >
+                  <div class={style.msg}>{status?.msg}</div>
+                  <div slot='reference' class={style.deployBt}>
+                    {status?.type === 'running' ?
+                      <>
+                        <ElButton icon="el-icon-loading" class={style.normal} size='mini' type='text' >{$t.output.deploy.deploying}</ElButton>
+                        <ElButton icon="el-icon-video-pause" class={style.hover} size='mini' type='text' onClick={() => this.service.stopDeploy($index)} >{$t.output.deploy.stop}</ElButton>
                       </>
-                        : <ElButton icon="el-icon-video-play" size='mini' type='text' onClick={() => this.service.startDeploy($index)}>{$t.output.deploy.run}</ElButton>
-                  }
-                </div> : <></>
+                      : status?.type === 'failed' ? <>
+                        <ElButton icon="el-icon-close" class={style.normal} size='mini' type='text' >{$t.output.deploy.failed}</ElButton>
+                        <ElButton icon="el-icon-video-play" title={status.msg} class={style.hover} size='mini' type='text' onClick={() => this.service.startDeploy($index)} >{$t.output.deploy.retry}</ElButton>
+                      </>
+                        : status?.type === 'success' ? <>
+                          <ElButton icon="el-icon-check" class={style.normal} size='mini' type='text' >{$t.output.deploy.successfull}</ElButton>
+                          <ElButton icon="el-icon-video-play" title={status.msg} class={style.hover} size='mini' type='text' onClick={() => this.service.startDeploy($index)} >{$t.output.deploy.run}</ElButton>
+                        </>
+                          : <ElButton icon="el-icon-video-play" size='mini' type='text' onClick={() => this.service.startDeploy($index)}>{$t.output.deploy.run}</ElButton>
+                    }
+                  </div>
+                </ElAutoPopover> : <></>
               }
             }} />}
             <ElTableColumn label={$t.output.action} width="160px" align="center" scopedSlots={{
