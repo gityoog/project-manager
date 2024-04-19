@@ -73,6 +73,7 @@ export default class DeployByPost extends DeployBasic {
         }
       },
     }).then((res) => {
+      this.emitProgress('Waiting...')
       const length = res.headers['content-length'] || res.headers['Content-Length']
       if (length) {
         this.emitSuccess(
