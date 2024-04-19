@@ -1,6 +1,6 @@
 {
   "name": "project-manager",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "description": "project-manager",
   "bin": {
     "pm-gui": "./dist/index.js"
