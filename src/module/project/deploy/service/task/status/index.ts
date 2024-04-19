@@ -18,14 +18,19 @@ export default class ProjectDeployTaskStatus {
     this.setType('running')
   }
 
-  success() {
-    this.msg = ''
+  success(msg: string) {
+    this.msg = msg
     this.setType('success')
   }
 
   fail(msg: string) {
     this.msg = msg
     this.setType('failed')
+  }
+
+  progress(msg: string) {
+    this.msg = msg
+    this.setType('running')
   }
 
   isBusy() {
@@ -48,6 +53,6 @@ export default class ProjectDeployTaskStatus {
     this.callbacks.forEach(callback => callback(this.info()))
   }
   destroy() {
-
+    this.callbacks = []
   }
 }

@@ -7,8 +7,10 @@ type base = {
 
 type data = base & ({
   type: 'running'
+  msg: string
 } | {
   type: 'success'
+  msg: string
 } | {
   type: 'failed'
   msg: string

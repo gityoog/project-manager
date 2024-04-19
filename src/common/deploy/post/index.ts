@@ -3,6 +3,8 @@ import DeployBasic from "../basic"
 import Axios, { CancelTokenSource } from "axios"
 import FormData from 'form-data'
 import NodeRSA, { SigningSchemeHash } from 'node-rsa'
+import { Readable } from 'stream'
+import DataQueue from "./data-queue"
 
 type data = {
   url: string
@@ -61,11 +63,38 @@ export default class DeployByPost extends DeployBasic {
       }
     }
     this.source = Axios.CancelToken.source()
-    Axios.post(this.options.url, formData, {
+    Axios.post<Readable>(this.options.url, formData, {
       headers: formData.getHeaders(),
-      cancelToken: this.source.token
-    }).then(() => {
-      this.emitSuccess()
+      cancelToken: this.source.token,
+      responseType: 'stream',
+      onUploadProgress: (progress) => {
+        if (progress.total) {
+          this.emitProgress('POST: ' + Math.floor(progress.loaded / progress.total * 100) + '%')
+        }
+      },
+    }).then((res) => {
+      const length = res.headers['content-length'] || res.headers['Content-Length']
+      if (length) {
+        this.emitSuccess(
+          res.data.read().toString()
+        )
+      } else {
+        DataQueue.from(res.data, {
+          data: (chunk) => {
+            this.emitProgress(chunk)
+          },
+          finish: (last) => {
+            if (!last || ['ok', 'success'].includes(last)) {
+              this.emitSuccess(last)
+            } else {
+              this.emitFail(last)
+            }
+          },
+          error: (e) => {
+            this.emitFail('Request Error: ' + getErrorMessage(e))
+          }
+        })
+      }
     }).catch((e) => {
       if (Axios.isCancel(e)) {
         this.emitFail('Request Cancelled')

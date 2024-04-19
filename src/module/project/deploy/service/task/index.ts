@@ -49,11 +49,14 @@ export default class ProjectDeployTask {
           start: () => {
             this.status.start()
           },
-          success: () => {
-            this.status.success()
+          success: (msg) => {
+            this.status.success(msg)
           },
           fail: (msg) => {
             this.status.fail(msg)
+          },
+          progress: (msg) => {
+            this.status.progress(msg)
           }
         })
       }
