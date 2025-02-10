@@ -1,4 +1,13 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -17,20 +26,12 @@ class ProjectManagerWebpackPlugin {
             this.logger.debug(msg);
         });
         compiler.hooks.done.tap(this.name, (stats) => {
-            var _a, _b;
             if (stats.hasErrors()) {
                 this.ipc.emitError(stats.toString());
             }
             else {
                 if (compiler.options.mode === 'production') {
-                    const outPath = stats.toJson().outputPath;
-                    if (outPath) {
-                        this.ipc.emitDist(outPath, (_b = (_a = this.options).distInfo) === null || _b === void 0 ? void 0 : _b.call(_a));
-                    }
-                    else {
-                        this.ipc.emitError('outputPath is undefined');
-                    }
-                    this.ipc.destroy();
+                    this.outFile(stats);
                 }
                 else if (compiler.options.mode === 'development') {
                     if (this.options.devInfo) {
@@ -39,6 +40,19 @@ class ProjectManagerWebpackPlugin {
                     }
                 }
             }
+        });
+    }
+    outFile(stats) {
+        return __awaiter(this, void 0, void 0, function* () {
+            var _a, _b;
+            const outPath = stats.toJson().outputPath;
+            if (outPath) {
+                this.ipc.emitDist(outPath, yield ((_b = (_a = this.options).distInfo) === null || _b === void 0 ? void 0 : _b.call(_a)));
+            }
+            else {
+                this.ipc.emitError('outputPath is undefined');
+            }
+            this.ipc.destroy();
         });
     }
 }

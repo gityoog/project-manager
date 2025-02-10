@@ -1,4 +1,4 @@
-import { Compiler } from 'webpack'
+import { Compiler, Stats } from 'webpack'
 
 import ProjectManagerIpc from 'project-manager-ipc'
 
@@ -14,7 +14,7 @@ export default class ProjectManagerWebpackPlugin {
   private ipc = new ProjectManagerIpc()
   constructor(private options: {
     devInfo?: () => { host: string, port: number }
-    distInfo?: () => { version?: string, name?: string }
+    distInfo?: () => { version?: string, name?: string } | Promise<{ version?: string, name?: string }>
   }) { }
   apply(compiler: Compiler) {
     this.logger = compiler.getInfrastructureLogger(this.name)
@@ -27,13 +27,7 @@ export default class ProjectManagerWebpackPlugin {
         this.ipc.emitError(stats.toString())
       } else {
         if (compiler.options.mode === 'production') {
-          const outPath = stats.toJson().outputPath
-          if (outPath) {
-            this.ipc.emitDist(outPath, this.options.distInfo?.())
-          } else {
-            this.ipc.emitError('outputPath is undefined')
-          }
-          this.ipc.destroy()
+          this.outFile(stats)
         } else if (compiler.options.mode === 'development') {
           if (this.options.devInfo) {
             const { host, port } = this.options.devInfo()
@@ -42,5 +36,15 @@ export default class ProjectManagerWebpackPlugin {
         }
       }
     })
+  }
+
+  async outFile(stats: Stats) {
+    const outPath = stats.toJson().outputPath
+    if (outPath) {
+      this.ipc.emitDist(outPath, await this.options.distInfo?.())
+    } else {
+      this.ipc.emitError('outputPath is undefined')
+    }
+    this.ipc.destroy()
   }
 }
