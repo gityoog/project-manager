@@ -81,7 +81,7 @@ import AuthModule from "./auth"
       provide: APP_SESSION,
       inject: [DataSource],
       useFactory: (db: DataSource) => session({
-        secret: 'app',
+        secret: 'project-manager-app',
         resave: true,
         saveUninitialized: true,
         store: new TypeormStore({
