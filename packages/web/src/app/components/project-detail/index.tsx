@@ -21,7 +21,7 @@ const ProjectDetail = FC<{ service: iProjectDetail }>({
     const service = context.props.service
     const { dialog, locale, data } = service
     const $t = locale.t.project.detail
-    return <ElDialog class={style.detail} width='60vw' fullHeight service={dialog}>
+    return <ElDialog class={style.detail} top='5vh' width='60vw' fullHeight maxHeight='85vh' service={dialog}>
       <div class={style.title} slot="title">
         <div>{$t.title}</div>
       </div>
