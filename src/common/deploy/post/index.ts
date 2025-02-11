@@ -114,8 +114,10 @@ export default class DeployByPost extends DeployBasic {
     if (this.source) {
       this.source.cancel()
       return true
+    } else {
+      this.emitFail('Manual Stop')
     }
-    return false
+    return true
   }
   setOptions(data: Partial<data> | null): void {
     this.options = data
