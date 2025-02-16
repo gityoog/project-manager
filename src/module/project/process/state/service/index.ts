@@ -39,7 +39,7 @@ export default class ProjectProcessStateService {
 
     for (const { process, id, name } of data) {
       if (process.autostart || (keepProcess && await this.status(process.id))) {
-        const pid = await this.process.run(id, process.id)
+        const pid = await this.process.run({ project: id, id: process.id })
         this.logger.log(`Autostart ${name}[${process.id}]: ${pid}`, 'ProjectProcessStateService')
       }
     }
