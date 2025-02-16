@@ -67,6 +67,7 @@ export default {
       process: {
         start: 'Start',
         stop: 'Stop',
+        startAndDeploy: 'Start and deploy'
       },
       output: {
         filename: 'Filename',

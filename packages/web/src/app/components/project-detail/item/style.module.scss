@@ -99,3 +99,20 @@
     }
   }
 }
+
+.exList {
+  >.item {
+    display: block;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 4px;
+
+    >i {
+      margin-right: 4px;
+    }
+
+    &:hover {
+      background: rgba($color: #333, $alpha: 0.1);
+    }
+  }
+}

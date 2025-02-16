@@ -7,6 +7,7 @@ import { ClsServiceManager } from "nestjs-cls"
 import { zipFolder } from "@/common/zip"
 import ProjectProcessBus from "../../bus"
 import ProjectOutputService from "../../../ouput/service"
+import ProjectDeployService from "@/module/project/deploy/service"
 
 type data = {
   id: string
@@ -30,14 +31,17 @@ export default class ProjectProcessTaskService {
   private output
   private bus
   private pid: number | null = null
+  private deploy
   private status = new TaskStatus
   private url: {
     host: string
     port: string
   } | null = null
-  constructor({ project, data, ipc, logger, config, output, bus }: { project: project, data: data, ipc: NodeIpcService, logger: Logger, config: ConfigService, output: ProjectOutputService, bus: ProjectProcessBus }) {
+  private autoDeploy = false
+  constructor({ project, data, ipc, logger, config, output, bus, deploy }: { project: project, data: data, ipc: NodeIpcService, logger: Logger, config: ConfigService, output: ProjectOutputService, bus: ProjectProcessBus, deploy: ProjectDeployService }) {
     this.id = data.id
     this.data = data
+    this.deploy = deploy
     this.project = { ...project }
     this.key = `task_${data.id}`
     this.config = config
@@ -69,9 +73,16 @@ export default class ProjectProcessTaskService {
       })
     }
   }
-  private onDist = (data: { id: string, path: string, name?: string, version?: string }) => {
+  private onDist = async (data: { id: string, path: string, name?: string, version?: string }) => {
     if (data.id === this.key) {
-      this.saveFile(data.path, { name: data.name, version: data.version })
+      const output = await this.saveFile(data.path, { name: data.name, version: data.version })
+      if (output && this.autoDeploy) {
+        this.deploy.run({
+          project: this.project.id,
+          process: this.data.id,
+          output: output.id
+        })
+      }
     }
   }
   private onStdin = (data: string) => {
@@ -116,42 +127,47 @@ export default class ProjectProcessTaskService {
   setData(data: data) {
     this.data = data
   }
-  private saveFile(outpath: string, { name, version }: { name?: string, version?: string } = {}) {
+  private async saveFile(outpath: string, { name, version }: { name?: string, version?: string } = {}) {
     ClsServiceManager.getClsService().enterWith(this.clsStore)
     this.status.setZip(true)
     this.pty.tip('ziping', outpath)
-    zipFolder(outpath, {
-      type: 'nodebuffer',
-      compression: 'DEFLATE'
-    }).then(content => {
+    let output
+    try {
+      const content = await zipFolder(outpath, {
+        type: 'nodebuffer',
+        compression: 'DEFLATE'
+      })
       this.status.setSave(true)
       this.pty.tip('saving')
-      this.output.save({
-        project: this.project.id,
-        process: this.data.id,
-        name: name || (this.project.name + '_' + (this.data.name || 'default')),
-        content,
-        version
-      }).then(() => {
+      try {
+        output = await this.output.save({
+          project: this.project.id,
+          process: this.data.id,
+          name: name || (this.project.name + '_' + (this.data.name || 'default')),
+          content,
+          version
+        })
         this.pty.tip('success')
         this.bus.emit({
           id: this.id,
           project: this.project.id,
           action: 'file'
         })
-      }).catch((e) => {
+      } catch (e) {
         this.pty.tip('fail', e instanceof Error ? e.message : 'unknown error')
-      }).finally(() => {
-        this.status.setSave(false)
-      })
-    }).catch(err => {
-      this.pty.tip('zipfail', err.message)
-    }).finally(() => {
-      this.status.setZip(false)
-    })
+      }
+      this.status.setSave(false)
+    } catch (e) {
+      this.pty.tip('fail', e instanceof Error ? e.message : 'unknown error')
+    }
+    this.status.setZip(false)
+    return output
   }
-  async run() {
+  async run({ deploy = false }: {
+    deploy?: boolean
+  } = {}) {
     if (!this.status.get()) {
+      this.autoDeploy = deploy
       this.url = null
       this.pid = this.pty.run({
         shell: await this.config.getShell(),
@@ -167,6 +183,7 @@ export default class ProjectProcessTaskService {
 
   async stop() {
     if (this.status.canStop()) {
+      this.autoDeploy = false
       this.pty.stop()
       this.pid = null
       this.url = null

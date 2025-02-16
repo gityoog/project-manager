@@ -19,8 +19,9 @@ export default class ProjectProcessController {
   start(@Body() data: {
     project: string
     id?: string
+    deploy?: boolean
   }) {
-    return this.service.run(data.project, data.id)
+    return this.service.run(data)
   }
 
   @All('/stop')

@@ -9,6 +9,8 @@ import TableList, { iTableList } from '@/components/table-list'
 import ElTableColumn from '@/common/element-ui/table/column'
 import LocaleService from '@/app/common/locale'
 import ElAutoPopover from '@/components/el-auto-popover'
+import ElButtonGroup from '@/common/element-ui/button/group'
+import ElPopover from '@/common/element-ui/popover'
 
 export interface iProjectDetailItem {
   locale: LocaleService
@@ -30,6 +32,7 @@ export interface iProjectDetailItem {
   deployStatus(index: number): Project.Deploy.status
   startDeploy(index: number): void
   stopDeploy(index: number): void
+  runAndDeploy(): void
 }
 
 @Component
@@ -54,9 +57,22 @@ export default class ProjectDetailItem extends Vue {
                 <MemoryIcon /><span class={style.value}>{stats.memory}</span>
               </>}
             </div>}
-            <ElButton loading={toggleLoading} size='mini' icon={status ? 'el-icon-close' : 'el-icon-s-promotion'} class={style.bt} type={status ? 'danger' : 'primary'} onClick={() => this.service.toggleStatus()}>
-              {status ? $t.process.stop : $t.process.start}
-            </ElButton>
+            <ElButtonGroup>
+              <ElButton loading={toggleLoading} size='mini' icon={status ? 'el-icon-close' : 'el-icon-s-promotion'} class={style.bt} type={status ? 'danger' : 'primary'} onClick={() => this.service.toggleStatus()}>
+                {status ? $t.process.stop : $t.process.start}
+              </ElButton>
+              {deployEnabled && !status && <ElPopover trigger='hover'>
+                <ElButton slot="reference" style={{
+                  paddingLeft: '4px',
+                  paddingRight: '4px'
+                }} size='mini' type='primary' icon='el-icon-caret-bottom'></ElButton>
+                <div class={style.exList}>
+                  <div class={style.item} onClick={() => {
+                    this.service.runAndDeploy()
+                  }}><i class="el-icon-s-promotion" />{$t.process.startAndDeploy}</div>
+                </div>
+              </ElPopover>}
+            </ElButtonGroup>
           </div>
         </>}
         <div class={style.files}>

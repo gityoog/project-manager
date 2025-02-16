@@ -6,6 +6,7 @@ import NodeIpcService from "../node-ipc"
 import ConfigService from "../../../config/service"
 import ProjectOutputService from "../../ouput/service"
 import ProjectProcessBus from "../bus"
+import ProjectDeployService from "../../deploy/service"
 
 @Injectable()
 export default class ProjectProcessService {
@@ -18,6 +19,7 @@ export default class ProjectProcessService {
     private config: ConfigService,
     private output: ProjectOutputService,
     private bus: ProjectProcessBus,
+    private deploy: ProjectDeployService
   ) {
     this.projectBus.onProcessRemove((process, id) => {
       if (this.data[id] && this.data[id][process.id]) {
@@ -56,15 +58,20 @@ export default class ProjectProcessService {
         logger: this.logger,
         config: this.config,
         output: this.output,
-        bus: this.bus
+        bus: this.bus,
+        deploy: this.deploy
       })
     }
     return this.data[projectId][id] || null
   }
 
-  async run(project: string, id?: string) {
+  async run({ project, id, deploy }: {
+    project: string
+    id?: string
+    deploy?: boolean
+  }) {
     const process = await this.factory(project, id, true)
-    return process?.run() || null
+    return process?.run({ deploy }) || null
   }
   async stop(project: string, id?: string) {
     const process = await this.factory(project, id)

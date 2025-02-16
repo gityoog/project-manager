@@ -67,6 +67,7 @@ export default {
       process: {
         start: '启动',
         stop: '停止',
+        startAndDeploy: '启动并部署'
       },
       output: {
         filename: '文件名',

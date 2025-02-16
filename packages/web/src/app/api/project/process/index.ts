@@ -4,6 +4,7 @@ export default {
   start: Request.main<{
     project: string
     id?: string
+    deploy?: boolean
   }, number | null>({
     url: '/project/process/start'
   }),

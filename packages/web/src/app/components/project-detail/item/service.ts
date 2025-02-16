@@ -155,6 +155,15 @@ export default class IProjectDetailItem implements iProjectDetailItem {
     }).load(() => this.toggleLoading = true)
       .final(() => this.toggleLoading = false)
   }
+  runAndDeploy() {
+    AppApi.project.process.start({
+      project: this.project,
+      id: this.process,
+      deploy: true
+    })
+      .load(() => this.toggleLoading = true)
+      .final(() => this.toggleLoading = false)
+  }
   download(index: number) {
     const row = this.table.getRow(index)
     window.open(
