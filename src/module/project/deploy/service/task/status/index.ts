@@ -30,7 +30,9 @@ export default class ProjectDeployTaskStatus {
 
   progress(msg: string) {
     this.msg = msg
-    // this.setType('running')
+    if (this.type === 'running') {
+      this.setType('running')
+    }
   }
 
   isBusy() {
