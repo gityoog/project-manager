@@ -1,7 +1,7 @@
 import { FC } from '@/common/vue'
 import style from './style.module.scss'
 import CPUIcon from 'app/images/CPU.svg'
-import DBIcon from 'app/images/DB.svg'
+import DBIcon from 'app/images/db.svg'
 import MemoryIcon from 'app/images/memory.svg'
 import CheckSvg from 'app/images/check.svg'
 import UnCheckSvg from 'app/images/uncheck.svg'
