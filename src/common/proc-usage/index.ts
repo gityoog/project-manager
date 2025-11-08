@@ -124,13 +124,22 @@ class ProcUsage {
       const lines = stdout.trim().split(/[\n\r]+/)
       lines.splice(0, 1)
       lines.unshift('pid ppid cpu mem')
-      this.update(
-        parseTable<{
-          pid: string
-          ppid: string
-          cpu: string
-          mem: string
-        }>(lines.join('\n'), 4), callback)
+      const data = parseTable<{ 
+        pid: string
+        ppid: string
+        cpu: string
+        mem: string
+      }>(lines.join('\n'), 4)
+      this.update(data.map(item => {
+        return {
+          pid: item.pid,
+          ppid: item.ppid,
+          cpu: item.cpu,
+          mem: String(
+            Number.parseFloat(item.mem) * 1024
+          )
+        }
+      }), callback)
     })
   }
 
